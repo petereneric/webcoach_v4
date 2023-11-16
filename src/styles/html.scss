@@ -1,0 +1,32 @@
+@import "../theme/variables";
+
+p {
+  margin: 0rem;
+  padding: 0rem;
+}
+
+li {
+  margin-top: 0.5rem;
+}
+
+ion-grid {
+  --margin: 0rem !important;
+  margin: 0rem !important;
+  padding: 0rem !important;
+  --padding: 0rem !important;
+}
+
+ion-row {
+  --margin: 0rem !important;
+  margin: 0rem !important;
+  padding: 0rem !important;
+  --padding: 0rem !important;
+}
+
+ion-col {
+  --margin: 0rem !important;
+  margin: 0rem !important;
+  padding: 0rem !important;
+  --padding: 0rem !important;
+}
+

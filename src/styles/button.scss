@@ -1,0 +1,139 @@
+@import "../theme/variables";
+
+$colorHoverLight: #c2c2c2;
+$colorHoverDark: $colorDarkLight;
+
+// button
+
+// button border
+.bb-standard {
+  border-style: solid;
+  border-width: 0.05rem;
+}
+
+// button border color
+.bbc-light {
+  border-color: $colorLight;
+  &:hover {
+    border-color: $colorHoverLight;
+  }
+}
+
+.bbc-dark {
+  border-color: $colorDark;
+}
+
+// button background
+.bbg-light {
+  background: $colorLight;
+  &:hover {
+    background: $colorHoverLight;
+  }
+}
+
+.bbg-dark {
+  background: $colorDark;
+  &:hover {
+    background: $colorHoverDark;
+  }
+}
+
+.bbg-primary {
+  background: $colorPrimary;
+  &:hover {
+    background: $colorPrimaryDark;
+  }
+}
+
+.bbg-white {
+  background: $colorWhite;
+  &:hover {
+    background: $colorLight;
+  }
+}
+
+.bbg-transparent {
+  background: transparent;
+  &:hover {
+    background: $colorLight;
+  }
+}
+
+// button text color
+.btc-light {
+  color: $colorLight;
+  &:hover {
+    color: $colorHoverLight;
+  }
+}
+
+.btc-dark {
+  color: $colorDark;
+}
+
+.btc-white {
+  color: $colorWhite;
+}
+
+button {
+  all: unset;
+  box-sizing: border-box;
+  min-height: 2.5rem;
+  text-align: center;
+  @extend .tw-bold;
+  width: 100%;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+// button - light
+
+.b-1-light {
+  @extend .bbg-light;
+  @extend .tc-dark;
+  @extend .ts-standard;
+}
+
+.b-2-light {
+  @extend .bb-standard;
+  @extend .bbc-light;
+  @extend .btc-light;
+  @extend .ts-standard;
+}
+
+// button - dark
+
+.b-1-dark {
+  @extend .bbg-dark;
+  @extend .btc-white;
+  @extend .ts-standard;
+}
+
+.b-3-dark {
+  @extend .btc-dark;
+  @extend .ts-standard;
+}
+
+
+// button - primary
+
+.b-1-primary {
+  @extend .bbg-primary;
+  @extend .btc-white;
+  @extend .ts-standard;
+}
+
+
+// button -white
+
+.b-1-white {
+  @extend .bbg-white;
+  @extend .bb-standard;
+  @extend .bbc-dark;
+  @extend .tc-dark;
+  @extend .ts-standard;
+}
+
+

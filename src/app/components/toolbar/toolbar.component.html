@@ -1,0 +1,22 @@
+<div *ngIf="bDesktop" class="container">
+  <img class="logo-desktop" src="assets/logo/webcoach.webp" alt="webcoach" width="auto" height="auto" [routerLink]="'/home'">
+  <div *ngIf="!bSignedIn" style="margin-left: auto">
+    <button class="b-1-white" [routerLink]="'/login/0'">Anmelden</button>
+    <button class="b-1-dark" [routerLink]="'/registrierung/0'">Registrieren</button>
+  </div>
+  <div *ngIf="bSignedIn" style="margin-left: auto">
+    <p class="text" [routerLink]="'/meine-kurse'">Meine Kurse</p>
+  </div>
+  <div *ngIf="bSignedIn && svRole.isCoach()" style="margin-left: 1rem">
+    <p class="text" [routerLink]="'/coach'">Coach Dashboard</p>
+  </div>
+</div>
+
+<div *ngIf="!bDesktop" class="container">
+  <div class="icon">
+    <mat-icon fontIcon="menu" (click)="onMenu()"></mat-icon>
+  </div>
+  <img class="logo" src="assets/logo/webcoach.webp" alt="webcoach" width="auto" height="auto" [routerLink]="'/home'">
+</div>
+<div class="nav-shadow"></div>
+

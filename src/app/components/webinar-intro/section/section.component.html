@@ -1,0 +1,14 @@
+<div class="container" (click)="bExpand = !bExpand">
+  <div>
+    <mat-icon [ngClass]="bExpand ? 'icon-expand a-chevron' : 'icon-expand a-chevron switch'" fontIcon="keyboard_arrow_up" ></mat-icon>
+  </div>
+  <p class="title">{{oSection?.cName}}</p>
+
+</div>
+<div *ngIf="bExpand">
+  <div *ngFor="let oUnit of oSection?.lUnits">
+    <app-unit [oUnit]="oUnit"></app-unit>
+  </div>
+</div>
+<div class="divider"></div>
+

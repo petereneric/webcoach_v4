@@ -1,0 +1,32 @@
+  <div class="bg-dark">
+    <div class="page-horizontal page-vertical">
+      <div class="section-horizontal section-vertical">
+        <div class="flex align-items-center">
+          <div class="flex flex-vertical full-width">
+            <p class="subtitle">Kursvorschau</p>
+            <div class="spv-025"></div>
+            <p class="title">{{oWebinar?.cName}}</p>
+          </div>
+          <mat-icon class="icon-exit" fontIcon="close" (click)="onClose()"></mat-icon>
+        </div>
+
+        <div class="spv-1"></div>
+
+        <app-vjs-player (videoEvent)="onVideoEvent($event)" [options]="{poster: 'assets/image/eric_schumacher.jpg', fluid: false, fill: true, autoplay: true, controls: true}"></app-vjs-player>
+        <div class="spv-1"></div>
+        <p class="text">Kostenlose Beispiel-Videos</p>
+        <div class="spv-1"></div>
+
+
+        <div *ngFor="let unit of lUnits">
+          <div class="container-item flex align-items-center" (click)="selectUnit(unit)">
+            <img class="unit-image mr-1" [src]="unit?.imgThumbnail">
+            <mat-icon *ngIf="unit.id === kUnitSelect" class="icon-play mr-1" fontIcon="play_arrow"></mat-icon>
+            <div class="flex flex-vertical">
+              <p class="text-small">{{unit.cName}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

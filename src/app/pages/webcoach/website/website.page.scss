@@ -1,0 +1,23 @@
+@import "../../../../global";
+
+ion-menu {
+  --max-width: 12rem !important;
+}
+
+.menu {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+.menu-text {
+  @extend .ts-standard;
+  @extend .tc-primary;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.menu-text-highlight {
+  @extend .menu-text;
+  color: $colorPrimary;
+}

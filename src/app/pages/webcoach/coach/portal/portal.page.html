@@ -1,0 +1,20 @@
+<!--
+<ion-menu menuId="menu" contentId="main-content">
+  <div class="menu">
+    <div class="section-horizontal section-vertical">
+      <p class="menu-text-highlight" [routerLink]="'/coach/portal/kurse'" (click)="closeMenu()">Kurse</p>
+      <p class="menu-text-highlight" [routerLink]="'/coach/portal/performance'" (click)="closeMenu()">Performance</p>
+    </div>
+    <div class="divider"></div>
+  </div>
+</ion-menu>
+
+-->
+
+<div id="main-content">
+  <app-toolbar-coach (menuEvent)="menuEvent($event)"></app-toolbar-coach>
+  <router-outlet></router-outlet>
+</div>
+
+
+

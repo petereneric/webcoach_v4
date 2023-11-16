@@ -1,0 +1,131 @@
+// styles
+
+@import "styles/text";
+@import "styles/icon";
+@import "styles/dimen";
+@import "styles/color";
+@import "styles/animation";
+@import "styles/display";
+@import "styles/html";
+@import "styles/spacer";
+@import "styles/button";
+@import "styles/form";
+@import "styles/list";
+@import "styles/background";
+
+
+@import "theme/variables";
+@import "video.js/dist/video-js.css";
+
+
+
+
+// page, section & divider
+.page-horizontal {
+  max-width: $pageWidth;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-vertical {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.section-horizontal {
+  padding-left: 3rem !important;
+  padding-right: 3rem !important;
+}
+
+.section-vertical {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.content-below-menu {
+  height: calc(100dvh - 4rem);
+}
+
+.divider {
+  height: 1px;
+  //max-width: $pageWidth;
+  //margin-left: 5rem;
+  //margin-right: 5rem;
+  background-color: $colorDivider;
+}
+
+@media screen and (max-width: $screenMobile) {
+  .page-horizontal {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  .page-vertical {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .section-horizontal {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .section-vertical {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .divider {
+    width: 100%;
+    margin: 0rem;
+  }
+}
+
+// scroll horizontal
+.scroll-horizontal {
+  //flex-wrap: nowrap;
+  //overflow-x: scroll !important;
+  //overflow-x: hidden !important;
+}
+
+// nav shadow
+.nav-shadow {
+  height: 0.3rem;
+  width: 100%;
+  background-image: linear-gradient(to bottom, rgba(115, 115, 115, 0.24), rgba(115, 115, 115, 0));
+}
+
+
+// mat-menu
+.mat-menu {
+  background-color: white !important;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mat-menu-item {
+  @extend .ts-standard;
+  @extend .tc-primary;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+
+  &:hover {
+    color: $colorPrimary !important;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

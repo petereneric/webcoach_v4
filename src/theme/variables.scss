@@ -1,0 +1,59 @@
+// colors
+
+$colorPrimary: #673AB7;
+$colorPrimaryDark: #512DA8;
+
+$colorTextPrimary: #313131;
+$colorTextSecondary: #585858;
+$colorTextTertiary: #8d8d8d;
+
+$colorDivider: #cccccc;
+
+$colorHighlight: #dbdade;
+
+$colorError: #c34a4a;
+
+
+$colorWhite: #ffffff;
+
+$colorLight: #f4f2f5;
+//$colorDark: #262626;
+$colorDark: #0c0c0c;
+$colorDarkLight: #414141;
+
+$colorBackgroundLight: #f6f6f6;
+$colorBackgroundDark: $colorDark;
+
+// page
+$pageWidth: 100rem;
+
+// screen
+$screenMobile: 1024px;
+
+// font-weight
+$bold: 500;
+
+// menu
+$heightMenu: 4rem;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (prefers-color-scheme: dark) {
+  /*
+   * Dark Colors
+   * -------------------------------------------
+   */
+
+}

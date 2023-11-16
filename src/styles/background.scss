@@ -1,0 +1,12 @@
+@import "../theme/variables";
+
+// background
+.bg-dark {
+  background-color: $colorBackgroundDark;
+  --background: $colorBackgroundDark !important;
+}
+
+.bg-light {
+  background-color: $colorBackgroundLight;
+  --background: $colorBackgroundLight !important;
+}

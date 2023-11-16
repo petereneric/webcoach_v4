@@ -1,0 +1,68 @@
+@import "../../../../global";
+@import "../../../../theme/variables";
+
+.container {
+  display: flex;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $colorHighlight;
+  }
+}
+
+.container-highlight {
+  @extend .container;
+  background-color: $colorHighlight;
+
+  .subtitle {
+    @extend .tc-primary;
+  }
+}
+
+.icon-checkbox {
+  @extend .is-item;
+  @extend .ic-text-primary;
+}
+
+.container-text {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-left: 1rem;
+}
+
+.title {
+  @extend .ts-s;
+  @extend .tc-primary;
+  @extend .tw-bold;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  @extend .ts-xs;
+  @extend .tc-secondary;
+  margin-left: 0.25rem;
+  width: 100%;
+}
+
+.icon-subtitle {
+  @extend .is-item-sub;
+  @extend .ic-text-secondary;
+}
+
+.button {
+  @extend .bbg-transparent;
+  @extend .bb-standard;
+  @extend .bbc-dark;
+  @extend .btc-dark;
+  @extend .ts-xs;
+  min-height: 2rem !important;
+  width: auto;
+
+  ion-icon {
+    @extend .mr-05;
+    font-size: 1.2rem;
+  }
+}

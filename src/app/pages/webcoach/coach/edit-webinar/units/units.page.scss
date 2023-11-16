@@ -1,0 +1,109 @@
+@import "../../../../../../global";
+
+.container {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 1rem;
+}
+
+.title {
+  @extend .tw-bold;
+  @extend .ts-xl;
+}
+
+.divider-title {
+  width: 100%;
+  height: 1px;
+  background-color: $colorDivider;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.container-add {
+  border: 1px solid $colorDark;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: fit-content;
+  &:hover {
+    background-color: $colorLight;
+  }
+}
+
+.title-add {
+  @extend .t-s;
+  @extend .tw-bold;
+  margin-right: 0.5rem;
+}
+
+.icon-add {
+  @extend .is-s;
+  @extend .ic-dark;
+  margin-right: 0.5rem;
+}
+
+// section
+.section-container {
+  border: 1px solid $colorDark;
+  background-color: $colorLight;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  @extend .t-s;
+  @extend .tw-bold;
+  white-space: nowrap;
+}
+
+.section-name {
+  @extend .t-s;
+  margin-left: 0.5rem;
+}
+
+.section-icon {
+  @extend .is-xs;
+  @extend .ic-dark;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.section-name-edit {
+  border: 1px solid $colorDark;
+  height: 2rem !important;
+  width: 100% !important;
+}
+
+.container-white {
+  border: 1px solid $colorDark;
+  background-color: $colorWhite;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+.container-light {
+  border: 1px solid $colorDark;
+  background-color: $colorLight;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+// unit
+// section
+.unit-container {
+  border: 1px solid $colorDark;
+  background-color: $colorWhite;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.unit-title {
+  @extend .t-s;
+  @extend .tw-bold;
+  white-space: nowrap;
+}
+
+.unit-name {
+  @extend .t-s;
+  margin-left: 0.5rem;
+}

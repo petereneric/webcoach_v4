@@ -1,0 +1,13 @@
+
+  <div style="width: 100%" class="bg-dark">
+    <p style="padding-bottom: 4rem; padding-top: 4rem;" class="page-horizontal section-horizontal ts-xxl tc-white">Meine Kurse</p>
+  </div>
+  <div class="page-horizontal page-vertical">
+    <div class="section-horizontal section-vertical">
+      <div *ngFor="let webinar of lWebinars">
+        <!--suppress TypeScriptValidateTypes -->
+        <app-webinar-preview-small [oWebinar]="webinar"></app-webinar-preview-small>
+      </div>
+    </div>
+  </div>
+

@@ -1,0 +1,10 @@
+@import "../theme/variables";
+
+.li-check:before {
+  content: '✓';
+}
+
+ul {
+  list-style-position: inside;
+  padding-left: 0.2rem;
+}

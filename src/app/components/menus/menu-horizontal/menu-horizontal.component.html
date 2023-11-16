@@ -1,0 +1,15 @@
+
+<!-- container -->
+<div class="menu">
+
+  <!-- loop through lMenu -->
+  <div *ngFor="let item of lMenu" class="menu-item" (click)="onSelect(item)">
+
+    <!-- name -->
+    <p [ngClass]="item['bSelected'] ? 'menu-title-select' : 'menu-title'">{{item.cName}}</p>
+
+    <!-- selector -->
+    <div style="z-index: 2" *ngIf="item['bSelected']" class="menu-selector"></div>
+
+  </div>
+</div>

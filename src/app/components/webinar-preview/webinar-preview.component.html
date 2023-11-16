@@ -1,0 +1,11 @@
+<div class="container" (click)="routeWebinar()">
+  <img [src]="urlCover">
+  <div class="container-info flex">
+    <img class="img-profile" src="assets/image/eric_schumacher.jpg">
+    <div class="container-text">
+      <p class="title">{{oWebinar?.cName}}</p>
+      <p class="subtitle">{{'Eric Schumacher • 135 Teilnehmer • ' + (oWebinar?.sNet! > 0 ? uNumbers.euro(oWebinar?.sNet!) : 'Kostenlos')}}</p>
+    </div>
+  </div>
+</div>
+

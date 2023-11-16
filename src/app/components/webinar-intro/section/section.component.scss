@@ -1,0 +1,28 @@
+@import "../../../../global";
+@import "../../../../theme/variables";
+
+
+.container {
+  display: flex;
+  padding: 1rem;
+  background-color: #efefef;
+  cursor: pointer;
+  align-items: center;
+}
+
+.icon-expand {
+  @extend .is-item;
+  @extend .ic-text-primary;
+  cursor: pointer;
+  margin-left: 0.1rem;
+}
+
+
+
+.title {
+  @extend .ts-standard;
+  @extend .tc-primary;
+  @extend .tw-bold;
+  margin-left: 1rem;
+  margin-bottom: 0.25rem;
+}

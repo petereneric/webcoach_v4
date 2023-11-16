@@ -1,0 +1,14 @@
+@import "../../../../../global";
+
+.title {
+  @extend .tsm-xl;
+  @extend .tc-primary;
+  @extend .tw-bold;
+
+}
+
+.subtitle {
+  @extend .tsm-l;
+  @extend .tc-primary;
+  @extend .tw-bold;
+}

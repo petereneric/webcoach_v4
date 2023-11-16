@@ -1,0 +1,83 @@
+
+
+
+    <div style="display: flex; position: relative; justify-content: center" (click)="onPreview()">
+      <mat-icon fontIcon="play-arrow" class="icon-play"></mat-icon>
+      <img #vCover [src]="urlCover">
+    </div>
+    <div class="page-horizontal page-vertical">
+      <div class="section-horizontal section-vertical">
+        <p class="title">{{oWebinar?.cName}}</p>
+        <div class="spv-025"></div>
+        <p class="description-short" [innerHTML]="oWebinar?.cDescriptionShort"></p>
+
+        <div class="spv-05"></div>
+
+        <p class="t-standard">{{'Erstellt von ' + oWebinar?.oCoach?.oPlayer?.cName}}</p>
+
+        <div class="spv-1"></div>
+
+        <div class="container-learn">
+          <p class="title">Das wirst Du lernen</p>
+          <div class="spv-025"></div>
+          <p class="t-standard" [innerHTML]="oWebinar?.cStudyContent"></p>
+        </div>
+
+        <div class="spv-1"></div>
+        <div class="container-content">
+          <div *ngFor="let section of lSections">
+            <app-section [oSection]="section"></app-section>
+          </div>
+        </div>
+
+
+        <div class="spv-2"></div>
+
+        <div class="divider"></div>
+
+        <div class="spv-2"></div>
+
+        <p class="title">Anforderungen</p>
+        <p class="t-standard" [innerHTML]="oWebinar?.cRequirements"></p>
+
+        <div class="spv-2"></div>
+
+        <div class="divider"></div>
+
+        <div class="spv-2"></div>
+
+        <p class="title">Beschreibung</p>
+        <p class="t-standard" [innerHTML]="oWebinar?.cDescriptionLong"></p>
+
+        <div class="spv-2"></div>
+
+        <div class="divider"></div>
+
+        <div class="spv-2"></div>
+
+        <p class="title">Coach</p>
+        <div class="flex align-items-center">
+          <img src="assets/image/eric_schumacher.jpg" class="img-coach">
+          <div class="flex-vertical">
+            <p class="subtitle-coach">Eric Schumacher</p>
+            <p class="t-standard">Software Entwickler | Gründer Webcoach</p>
+          </div>
+        </div>
+        <div class="spv-1"></div>
+        <p class="t-standard" [innerHTML]="oWebinar?.oCoach?.htmlDescription"></p>
+      </div>
+    </div>
+    <app-footer></app-footer>
+    <br>
+    <br>
+    <br>
+
+  <div class="container-bottom-background">
+    <div class="container-bottom">
+      <p class="text-bottom">{{oWebinar?.sNet! > 0 ? uNumber.euro(oWebinar?.sNet!) : 'Kostenlos'}}</p>
+      <button (click)="onStart()" class="b-1-primary">{{oWebinar?.sNet! > 0 ? 'Jetzt kaufen' : 'Jetzt starten'}}</button>
+    </div>
+  </div>
+
+
+

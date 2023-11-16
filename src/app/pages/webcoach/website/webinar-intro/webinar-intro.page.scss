@@ -1,0 +1,87 @@
+@import "../../../../../global";
+
+ion-content {
+
+}
+
+.height {
+  height: calc(100dvh - 4rem - 4rem);
+}
+
+.icon-play {
+  font-size: 3rem;
+  color: $colorDark;
+  background-color: $colorLight;
+  border-radius: 100%;
+  padding:1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.title {
+  @extend .tsl-xl;
+  @extend .tc-primary;
+  @extend .tw-bold;
+  margin-bottom: 0.5rem;
+}
+
+.description-short {
+  @extend .t-standard;
+  @extend .tsl-l;
+}
+
+.container-learn {
+  border: 1px solid $colorDivider;
+  padding: 1rem;
+}
+
+.container-content {
+  border: 1px solid $colorDivider;
+}
+
+.img-coach {
+  height: 5rem;
+  border-radius: 100%;
+  margin-right: 1rem;
+}
+
+.subtitle-coach {
+  @extend .ts-l;
+  @extend .tc-primary;
+  @extend .tw-bold;
+  margin-bottom: 0.5rem;
+  margin-top: 0rem;
+}
+
+.container-bottom-background {
+  width: 100%;
+  background: $colorWhite;
+  //position: absolute;
+  //bottom: 0rem;
+  height: 4rem;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.container-bottom {
+  @extend .page-horizontal;
+  @extend .section-horizontal;
+  display: flex;
+  align-items: center;
+  //background: $colorWhite;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  justify-content: center;
+}
+
+.text-bottom {
+  @extend .ts-standard;
+  @extend .tw-bold;
+  margin-right: 1rem;
+  white-space: nowrap;
+}
+
+

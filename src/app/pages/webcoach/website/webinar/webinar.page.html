@@ -1,0 +1,60 @@
+
+  <app-toolbar-webinar [oWebinar]="oWebinar"></app-toolbar-webinar>
+  <div class="menu-divider"></div>
+
+
+      <div>
+        <div class="video-container" #video style="position: relative">
+          <app-vjs-player (videoEvent)="onVideoEvent($event)"
+                          [options]="{poster: 'assets/image/eric_schumacher.jpg', fluid: false, fill: true, autoplay: true, controls: true}">
+
+          </app-vjs-player>
+          <div #videoButtons class="button-next-container" style="position: absolute">
+            <button #videoButtonLeft class="button-next" style="border-left: 0" (mouseenter)="mouseEnter('button-video-left')" (click)="onBack()" (mouseleave)="mouseLeave('button-video-left')">
+              <mat-icon class="ic-light is-standard button-icon" fontIcon="chevron-left"></mat-icon>
+            </button>
+            <button #videoButtonTextLeft style="margin-left: 0.5rem;" class="button-next-text">Text</button>
+
+              <button #videoButtonTextRight style="margin-left: auto; margin-right: 0.5rem" class="button-next-text">Text</button>
+              <button #videoButtonRight class="button-next" style="border-right: 0" (mouseenter)="mouseEnter('button-video-right')" (click)="onForward()" (mouseleave)="mouseLeave('button-video-right')">
+                <mat-icon class="ic-light is-standard button-icon" fontIcon="chevron-right"></mat-icon>
+              </button>
+          </div>
+        </div>
+
+
+        <div style="position: relative">
+          <div style="position: absolute; width: 100%; bottom: 0; height: 0.1rem !important; z-index: 1;"
+               class="divider"></div>
+          <div style="padding-top: 1rem;" class="page-horizontal">
+            <div class="section-horizontal">
+              <div class="menu">
+                <div *ngFor="let item of menu" class="menu-item" (click)="menuSelector = item.id">
+                  <!-- [routerLink]="'/webinar/' + kWebinar + item.url" -->
+                  <p [ngClass]="menuSelector === item.id ? 'menu-title-select' : 'menu-title'">{{item.name}}</p>
+                  <div style="z-index: 2" *ngIf="menuSelector === item.id" class="menu-selector"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <app-content *ngIf="menuSelector === 0" (eventUnit)="onEventUnit($event)" [lSections]="lSections"
+                     [bPadding]="true"></app-content>
+        <app-overview *ngIf="menuSelector === 1" [oWebinar]="oWebinar" [lSections]="lSections"></app-overview>
+        <app-live *ngIf="menuSelector === 2" [oWebinar]="oWebinar"></app-live>
+
+
+        <!--<router-outlet></router-outlet>-->
+        <app-footer></app-footer>
+      </div>
+      <div>
+        <div style="overflow: auto; height: calc(100vh - 3rem);">
+          <app-content *ngIf="bDesktop" (eventUnit)="onEventUnit($event)" [lSections]="lSections"
+                       [bPadding]="false"></app-content>
+        </div>
+
+      </div>
+
+
+

@@ -1,0 +1,13 @@
+<div class="content-below-menu">
+  <div class="page-horizontal page-vertical">
+        <div *ngFor="let oMenu of lMenu">
+          <p class="menu-topic">{{oMenu.topic}}</p>
+          <div *ngFor="let oItem of oMenu.items">
+            <p [routerLink]="'/coach/kurs-bearbeiten/'+kWebinar+'/'+oItem.link" class="menu-item">{{oItem.item}}</p>
+          </div>
+        </div>
+        <router-outlet></router-outlet>
+
+  </div>
+
+</div>

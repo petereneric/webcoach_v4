@@ -1,0 +1,62 @@
+@import "../theme/variables";
+
+// icon size
+$isStandard: 1.5rem;
+$isItem: 1rem;
+$isItemSub: 0.8rem;
+
+.is-xs {
+  font-size: 1rem;
+}
+
+.is-s {
+  font-size: 1.2rem;
+}
+
+.is-standard {
+  font-size: $isStandard;
+}
+
+.is-l {
+  font-size: 1.8rem;
+}
+
+.is-xl {
+  font-size: 2.5rem;
+}
+
+.is-xxl {
+  font-size: 3rem;
+}
+
+.is-item {
+  font-size: $isItem;
+}
+
+.is-item-sub {
+
+}
+
+// icon color
+.ic-text-primary {
+  color: $colorTextPrimary;
+}
+
+.ic-text-secondary {
+  color: $colorTextSecondary;
+}
+
+.ic-light {
+  color: $colorLight;
+}
+
+.ic-dark {
+  color: $colorDark;
+}
+
+// specific
+.i-eye {
+  @extend .is-s;
+  @extend .ic-text-primary;
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,98 @@
+<div class="section-vertical section-horizontal">
+  <div class="container">
+    <p class="title">Kursplan</p>
+    <div class="divider-title"></div>
+
+    <div cdkDropList (cdkDropListDropped)="dropSection($event, oWebinar.lSections)">
+      <div *ngFor="let section of oWebinar.lSections; let index = index" cdkDrag>
+        <div class="section-container">
+          <div *ngIf="!section['bEdit']" class="flex align-items-center"
+               (mouseenter)="section['sectionHeaderVisibility'] = true"
+               (mouseleave)="section['sectionHeaderVisibility'] = false">
+            <p class="section-title">{{'Abschnitt ' + (section['nPosition']+1) + ':'}}</p>
+            <p class="section-name">{{section['cName']}}</p>
+            <div *ngIf="section['sectionHeaderVisibility'] === null || section['sectionHeaderVisibility']">
+              <mat-icon fontIcon="edit" class="section-icon" (click)="section['bEdit'] = true"></mat-icon>
+              <mat-icon fontIcon="delete" class="section-icon" (click)="deleteSection(section['id'], oWebinar.lSections, index)"></mat-icon>
+            </div>
+          </div>
+
+          <div *ngIf="section['id'] === 0 || section['bEdit']" class="flex container-white" style="width: 100%">
+            <p class="section-title">{{'Abschnitt ' + (section['nPosition'] + 1 + ':')}}</p>
+            <div style="margin-left: 0.5rem; width: 100%">
+              <input class="section-name-edit" [ngModel]="section['cName']" (ngModelChange)="section['cName'] = $event">
+              <div class="flex" style="margin-top: 0.5rem;">
+                <button *ngIf="section['id'] === 0" class="b-3-dark" (click)="oWebinar['lSections'].splice(index, 1)">Abbrechen</button>
+                <button *ngIf="section['id'] > 0" class="b-3-dark" (click)="section['bEdit'] = false">Abbrechen</button>
+
+                <button *ngIf="section['id'] === 0" class="b-1-dark" style="margin-left: 1rem" (click)="onAddSection(section)">Abschnitt hinzufügen</button>
+                <button *ngIf="section['id'] > 0" class="b-1-dark" style="margin-left: 1rem" (click)="onSaveSection(section)">Abschnitt speichern</button>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div cdkDropList (cdkDropListDropped)="dropUnit($event, section.lUnits)">
+            <div *ngFor="let unit of section.lUnits; let index = index" style="margin-top:1rem" cdkDrag>
+              <div class="unit-container">
+                <div class="flex align-items-center">
+                  <p class="unit-title">{{'Kurseinheit ' + (unit['nPosition']+1) + ':'}}</p>
+                  <p class="unit-name">{{unit['cName']}}</p>
+                  <mat-icon fontIcon="edit" class="section-icon" (click)="unit['bEdit'] = true"></mat-icon>
+                  <mat-icon fontIcon="delete" class="section-icon" (click)="deleteUnit(unit['id'], section.lUnits, index)"></mat-icon>
+                  <mat-icon [matMenuTriggerFor]="menu" class="is-xs ic-dark" style="margin-left: auto; cursor: pointer" fontIcon="keyboard_arrow_down"></mat-icon>
+                  <mat-menu #menu="matMenu" class="mat-menu">
+                    <div *ngFor="let item of menuUnit">
+                      <!--
+                      <button fileSaver
+                              method="'GET'"
+                              fileName="unit['cName']+'.mp4'"
+                              url="'https://webcoach-api.digital/coach/unit/video/'+unit['id']" mat-menu-item class="mat-menu-item"
+                              (click)="onDownloadVideo(unit)">{{item.cName}}</button>
+                              -->
+                      <button mat-menu-item class="mat-menu-item" (click)="videoUpload.click()">Video hochladen</button>
+                    </div>
+                  </mat-menu>
+                  <input style="display: none" type="file" (change)="onAddVideo(videoUpload.files, unit)" #videoUpload>
+                </div>
+                <div class="flex align-items-center">
+                  <p class="t-s">{{'Kursvideo vorhanden: ' + (unit['bVideo'] ? 'Ja' : 'Nein')}}</p>
+                </div>
+
+                <div *ngIf="unit['id'] === 0 || unit['bEdit'] === true" class="flex container-light" style="width: 100%">
+                  <p class="unit-title">{{'Neue Kurseinheit: '}}</p>
+                  <div style="margin-left: 0.5rem; width: 100%">
+                    <input class="section-name-edit" [ngModel]="unit['cName']" (ngModelChange)="unit['cName'] = $event">
+                    <div class="flex" style="margin-top: 0.5rem;">
+                      <button *ngIf="unit['id'] === 0" class="b-3-dark" (click)="section['lUnits'].splice(index, 1)">Abbrechen</button>
+                      <button *ngIf="unit['id'] > 0" class="b-3-dark" (click)="unit['bEdit'] = false">Abbrechen</button>
+                      <button *ngIf="unit['id'] === 0" class="b-1-dark" style="margin-left: 1rem"
+                              (click)="onAddUnit(section, unit)">{{unit['id'] === 0 ? 'Kurseinheit hinzufügen' : 'Speichern'}}</button>
+                      <button *ngIf="unit['id'] > 0" class="b-1-dark" style="margin-left: 1rem" (click)="onUpdateUnit(unit)">Speichern</button>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="container-add">
+            <mat-icon fontIcon="add" class="icon-add"></mat-icon>
+            <p (click)="addUnit(section)" class="title-add">Kurseinheit</p>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container-add" (click)="addSection()">
+      <mat-icon fontIcon="add" class="icon-add"></mat-icon>
+      <p class="title-add" >Abschnitt</p>
+    </div>
+  </div>
+
+</div>

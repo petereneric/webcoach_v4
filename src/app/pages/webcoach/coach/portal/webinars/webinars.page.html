@@ -1,0 +1,29 @@
+<div class="content-below-menu">
+  <div class="page-vertical page-horizontal">
+    <div class="section-vertical section-horizontal">
+
+      <div *ngIf="!bAdd">
+        <div *ngFor="let webinar of lWebinars">
+          <app-webinar-coach (click)="onWebinar(webinar.id)" [oWebinar] = webinar></app-webinar-coach>
+        </div>
+
+        <!-- add webinar button -->
+        <div class="container-add" (click)="onAddWebinar()">
+          <mat-icon class="is-s" style="margin-right: 0.5rem" fontIcon="add"></mat-icon>
+          <p class="t-s tw-bold">Hinzufügen</p>
+        </div>
+      </div>
+
+      <!-- add webinar form -->
+      <div *ngIf="bAdd" class="flex-vertical">
+        <input class="section-name-edit" [ngModel]="cWebinarAdd" (ngModelChange)="cWebinarAdd = $event">
+        <div class="spv-1"></div>
+        <div class="flex">
+          <button class="b-3-dark" (click)="bAdd = false">Abbrechen</button>
+          <button class="b-1-dark" (click)="onCreateWebinar()">Erstellen</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

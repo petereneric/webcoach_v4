@@ -1,0 +1,12 @@
+@import "../../../../../../global";
+
+.title {
+  @extend .tsm-standard;
+  @extend .tc-primary;
+  @extend .tw-bold;
+}
+
+.link-privacy-policy {
+  @extend .t-link;
+  color: $colorTextPrimary;
+}

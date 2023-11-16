@@ -1,0 +1,103 @@
+<!-- -1px is needed for iphone overlap issue -->
+
+
+
+
+  <div autoscroll="true" #vCover style="width: 100%; height: calc(200dvh - 1px); background-color: #3a7be0; position: absolute; top: 0; z-index: 6; overflow: auto;">
+    <p style="text-align: center">Please swipe up to start video</p>
+    <p style="text-align: center">Please swipe up to start video</p>
+    <p style="text-align: center">Please swipe up to start video</p>
+    <p style="text-align: center">Please swipe up to start video</p>
+    <p style="text-align: center">Please swipe up to start video</p>
+  </div>
+
+  <!-- -1px needed so that the toolbar is not overlapped -->
+  <div class="flex flex-vertical bg-dark" style=" width: 100%; position: fixed; height: calc(100dvh); width: 100%; z-index: 5;">
+
+
+    <!-- needed for catching the swipe gesture -->
+    <div #vGesture (click)="onClickVideo()" (panend)="onEnd($event)" (panmove)="onMove($event)"
+         style=" z-index: 4; position: absolute; height: calc(100dvh - 3.5rem); width: 100%"></div>
+
+
+    <!-- video elements -->
+    <div #videoWrapper
+         style="width: 100%; z-index: 2; position:relative; margin-bottom: 3.5rem; top: 0; height: calc(100dvh - 3.5rem); transform: translateY(calc(-100dvh + 3.5rem))">
+
+      <!-- video preview top -->
+      <div #videoTop class="bg-dark" style="width: 100%; z-index: 2; background-color: #7b1fa2; position: relative; height: calc(100dvh - 3.5rem)"></div>
+
+      <!-- video center -->
+      <video #video style="z-index: 2;width: 100%; position:relative; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" controls playsinline
+             preload="none"></video>
+
+      <!-- video preview bottom -->
+      <div #videoBottom class="bg-dark" style="width: 100%; z-index: 2; background-color: #3a7be0; position: relative; height: calc(100dvh - 3.5rem)"></div>
+
+    </div>
+
+
+    <!-- centered play icon -->
+
+    <div style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <mat-icon [ngClass]="classPlay" class="is-xxl ic-light" style="opacity: 0;" fontIcon="play_arrow"></mat-icon>
+    </div>
+
+    <!-- centered pause icon -->
+
+    <div style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <mat-icon [ngClass]="classPause" class="is-xxl ic-light" style="opacity: 0;" fontIcon="pause"></mat-icon>
+    </div>
+
+    <!-- list for choosing items -->
+
+    <div #vList class="list" style="z-index: 5; height: 20rem; width: 100%; background-color: white; position: absolute; bottom: 0">
+      <div *ngFor="let oSection of svWebinar.bsSections.value">
+        <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
+      </div>
+    </div>
+
+    <div #vProcess class="process" style="z-index: 5; width: 0%; background-color: white; height: 0.2rem; position: absolute; bottom: 0; margin-bottom: 3.5rem"></div>
+
+    <div #vTabs class="bg-dark" style="z-index: 5; display: flex; position: absolute; bottom: 0; height: 3.5rem; width: 100%;  !important;">
+      <div class="tab" style="z-index: 5">
+        <mat-icon style="z-index: 5" #vTabIconHome (click)="onTabHome()" class="is-standard ic-light" fontIcon="home"></mat-icon>
+      </div>
+      <div class="tab" style="z-index: 5">
+        <mat-icon style="z-index: 5" #vTabIconList (click)="onTabList()" class="is-standard ic-light" fontIcon="list"></mat-icon>
+      </div>
+    </div>
+
+  </div>
+
+
+
+<!-- tabs -->
+
+
+<!--
+<video #video style="position:absolute; height: calc(100dvh - 3.5rem)" class="bg-light vjs-custom video-js" controls playsinline preload="none"></video>
+
+
+<div #videoBottom class="bg-dark" style="background-color: #3a7be0; position: relative; height: calc(100dvh - 3.5rem)"></div>
+
+
+<div #videoTop class="bg-dark" style=" background-color: #7b1fa2; position: relative; height: calc(100dvh - 3.5rem)"></div>
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

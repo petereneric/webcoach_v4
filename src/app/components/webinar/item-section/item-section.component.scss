@@ -1,0 +1,35 @@
+@import "../../../../global";
+@import "../../../../theme/variables";
+
+
+.container {
+  display: flex;
+  padding: 1rem;
+  background-color: #efefef;
+  cursor: pointer;
+}
+
+.icon-expand {
+  @extend .is-item;
+  @extend .ic-text-primary;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+
+.container-text {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.title {
+  @extend .ts-standard;
+  @extend .tc-primary;
+  @extend .tw-bold;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  @extend .ts-xs;
+  @extend .tc-primary
+}

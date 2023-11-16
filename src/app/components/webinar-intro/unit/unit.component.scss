@@ -1,0 +1,20 @@
+@import "../../../../global";
+@import "../../../../theme/variables";
+
+.container {
+  display: flex;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  align-items: center;
+}
+
+.title {
+  @extend .ts-s;
+  @extend .tc-primary;
+  margin-left: 1rem;
+}
+
+
+.icon {
+  @extend .is-s;
+  @extend .ic-text-primary;
+}

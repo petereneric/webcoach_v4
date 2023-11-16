@@ -1,0 +1,11 @@
+
+
+.a-chevron {
+  transform: rotate(0deg);
+  transition: transform 0.1875s linear;
+}
+
+.a-chevron.switch {
+  transform: rotate(180deg);
+  transition: transform 0.1875s linear;
+}

@@ -1,0 +1,16 @@
+<!--
+<ion-menu menuId="menu" contentId="main-content">
+  <div class="menu">
+    <div class="section-horizontal section-vertical">
+      <p class="menu-text-highlight" [routerLink]="'/login/0'" >Anmelden</p>
+      <p class="menu-text-highlight" [routerLink]="'/registrierung/0'"">Registrieren</p>
+    </div>
+    <div class="divider"></div>
+  </div>
+</ion-menu>
+-->
+<div id="main-content">
+  <app-toolbar (menuEvent)="menuEvent($event)"></app-toolbar>
+  <router-outlet></router-outlet>
+</div>
+

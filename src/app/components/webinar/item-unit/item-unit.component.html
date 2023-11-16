@@ -1,0 +1,25 @@
+<div #container [ngClass]="this.oUnit?.id === this.currentUnit?.id ? 'container-highlight' : 'container'">
+  <div>
+    <mat-icon class="icon-checkbox" [fontIcon]="oUnit?.oUnitPlayer?.tStatus === 2 ? 'check_box' : 'check_box_outline_blank'" (click)="onCheck()"></mat-icon>
+  </div>
+  <div class="container-text" (click)="onSelect(oUnit)">
+    <p class="title">{{oUnit?.cName}}</p>
+    <div class="flex align-items-center">
+      <div class="flex">
+        <mat-icon class="icon-subtitle" fontIcon="play_circle"></mat-icon>
+      </div>
+      <p class="subtitle">{{uDateTime.secondsToDefault(oUnit?.secDuration!) + " Min."}}</p>
+    </div>
+  </div>
+  <button *ngIf="oUnit?.bMaterial" class="button" mat-button [matMenuTriggerFor]="menu"> <!-- (click)="onMaterial()" -->
+    <div class="flex align-items-center">
+      <mat-icon fontIcon="download"></mat-icon>
+      <p>Materialien</p>
+    </div>
+  </button>
+  <mat-menu #menu="matMenu" class="mat-menu">
+    <div *ngFor="let material of oUnit?.lMaterials">
+      <button mat-menu-item class="mat-menu-item" (click)="onMaterial(material.cName)">{{material.cName}}</button>
+    </div>
+  </mat-menu>
+</div>

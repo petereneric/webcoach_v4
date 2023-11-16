@@ -1,0 +1,12 @@
+@import "../webinar.page";
+
+.img-coach {
+  height: 5rem;
+  border-radius: 100%;
+  margin-right: 1rem;
+}
+
+.subtitle-coach {
+  @extend .subtitle;
+  margin-top: 0rem;
+}
