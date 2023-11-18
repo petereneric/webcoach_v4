@@ -1,5 +1,4 @@
-
-
+// chevron
 .a-chevron {
   transform: rotate(0deg);
   transition: transform 0.1875s linear;
@@ -8,4 +7,64 @@
 .a-chevron.switch {
   transform: rotate(180deg);
   transition: transform 0.1875s linear;
+}
+
+
+// popup
+.a-popup {
+  animation: a-pop-keyframes 1s;
+}
+@keyframes a-pop-keyframes {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+// slide
+$slideTransition: 0.5s;
+
+// slide-30
+$slide30: 30rem;
+
+.slid-in-30 {
+  transform: translateY(0rem);
+  overflow: auto
+}
+
+.slid-out-30 {
+  transform: translateY($slide30);
+  overflow: auto
+}
+
+.a-slide-in-30 {
+  animation: ka-slide-in-30 $slideTransition forwards;
+}
+
+@keyframes ka-slide-in-30 {
+  0% {
+    transform: translateY($slide30);
+  }
+  100% {
+    transform: translateY(0rem);
+  }
+}
+
+.a-slide-out-30 {
+  animation: ka-slide-out-30 $slideTransition forwards;
+}
+
+@keyframes ka-slide-out-30 {
+  0% {
+    transform: translateY(0rem);
+  }
+  100% {
+    transform: translateY($slide30);
+  }
 }
