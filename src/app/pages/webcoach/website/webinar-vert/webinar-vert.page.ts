@@ -269,7 +269,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
       // animation
       this.svAnimation.slideOut30(this.vList)
+
+      // list closed and video played
+      return true
     }
+    // nothing happened cause list was already closed
+    return false
 
   }
 
@@ -408,21 +413,23 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   onClickVideo() {
-    this.onCloseList()
+    if (!this.onCloseList()) {
+      // list wasn't closed
 
-    if (this.player.paused()) {
-      // play
-      this.player.play()
+      if (this.player.paused()) {
+        // play
+        this.player.play()
 
-      // animation of play icon
-      this.svAnimation.popup(this.vPlay)
+        // animation of play icon
+        this.svAnimation.popup(this.vPlay)
 
-    } else {
-      // pause
-      this.player.pause()
+      } else {
+        // pause
+        this.player.pause()
 
-      // animation of pause icon
-      this.svAnimation.popup(this.vPause)
+        // animation of pause icon
+        this.svAnimation.popup(this.vPause)
+      }
     }
   }
 

@@ -1,66 +1,56 @@
-<!-- -1px is needed for iphone overlap issue -->
 
-
-<div autoscroll="true" #vCover style="width: 100%; height: calc(200dvh); background-color: green; position: absolute; top: 0; z-index: 7; overflow: auto;">
-  <p style="text-align: center">Please swipe up to start video</p>
-  <p style="text-align: center">Please swipe up to start video</p>
-  <p style="text-align: center">Please swipe up to start video</p>
-  <p style="text-align: center">Please swipe up to start video</p>
+<!-- cover shown in the beginning and needed for making user swipe so that nav bar shrinks in safari/ios -->
+<div autoscroll="true" #vCover style=" position: absolute; top: 0; z-index: 9; width: 100%; height: calc(200dvh); overflow: auto; background-color: green; ">
   <p style="text-align: center">Please swipe up to start video</p>
 </div>
 
-
-<!-- list for choosing items -->
-<div #vList style="transform: translateY(30rem); z-index: 7; height: 30rem; width: 100%; background-color: white; position: fixed; bottom: 0">
+<!-- list showing sections and units of webinar -->
+<div #vList style="position: fixed; bottom: 0; z-index: 7; height: 30rem; width: 100%; transform: translateY(30rem); overflow: auto; background-color: white; ">
   <div *ngFor="let oSection of svWebinar.bsSections.value">
     <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
   </div>
 </div>
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
-<div class="bg-dark" style="transform: translateY(30rem); z-index: 8; height: 30rem; width: 100%; position: fixed; bottom: 0"></div>
+<div class="bg-dark" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
 
-<!-- tabs - need to be on top -->
+<!-- tabs - need to be also on top -->
 <div #vTabs (panmove)="onProcessMove($event)" (panend)="onProcessEnd($event)" class="bg-dark"
-     style="z-index: 6; display: flex; justify-content: center; align-items: center; position: fixed; bottom: 0; height: 3.5rem; width: 100%;">
+     style="position: fixed; bottom: 0; z-index: 6; height: 3.5rem; width: 100%; display: flex; justify-content: center; align-items: center; ">
 
   <!-- needed so that the pan gesture works on the whole tab bar -->
-  <mat-icon class="bg-dark" style=" opacity: 0; position: absolute; width: 100%; height: 100%; z-index: 6" #vTabIconHome (click)="onTabHome()"
-            class="is-standard ic-light" fontIcon="home"></mat-icon>
+  <mat-icon style=" opacity: 0; position: absolute; z-index: 6; width: 100%; height: 100%;" class="is-standard ic-light" fontIcon="home"></mat-icon>
 
-  <mat-icon style=" margin-left: auto; margin-right: auto; position: relative; z-index: 6" #vTabIconHome (click)="onTabHome()" class="is-standard ic-light"
-            fontIcon="home"></mat-icon>
+  <!-- home icon -->
+  <mat-icon style="position: relative; z-index: 6; margin-left: auto; margin-right: auto;" (click)="onTabHome()" class="is-standard ic-light" fontIcon="home"></mat-icon>
 
-  <mat-icon style="margin-left: auto; margin-right: auto; position: relative;  z-index: 6" #vTabIconList (click)="onOpenList()" class="is-standard ic-light"
-            fontIcon="list"></mat-icon>
-
-
+  <!-- list icon -->
+  <mat-icon style="position: relative;  z-index: 6; margin-left: auto; margin-right: auto;" (click)="onOpenList()" class="is-standard ic-light" fontIcon="list"></mat-icon>
 </div>
 
+<!-- process bar for showing how much of the video has been played-->
+<div #vProcess class="process" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
+
+
+<!-- container for video -->
 <div class="flex flex-vertical bg-dark" style="position: fixed; height: calc(100dvh - 3.5rem); width: 100%; z-index: 5;">
 
-
-
-
   <!-- needed for catching the swipe gesture -->
-  <div #vSwipe (click)="onClickVideo()" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)"
-       style=" z-index: 4; position: absolute; height: calc(100dvh - 3.5rem); width: 100%"></div>
-
+  <div #vSwipe (click)="onClickVideo()" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; z-index: 4; height: calc(100dvh - 3.5rem); width: 100%"></div>
 
   <!-- video elements -->
   <div #videoWrapper
-       style="width: 100%; z-index: 2; position:relative; margin-bottom: 3.5rem; top: 0; height: calc(100dvh - 3.5rem); transform: translateY(calc(-100dvh + 3.5rem))">
+       style="position:relative; top: 0; z-index: 2; width: 100%; height: calc(100dvh - 3.5rem); transform: translateY(calc(-100dvh + 3.5rem)); margin-bottom: 3.5rem;">
 
-    <!-- video preview top -->
-    <div #videoTop class="bg-dark" style="width: 100%; z-index: 2; background-color: #7b1fa2; position: relative; height: calc(100dvh - 3.5rem)"></div>
+    <!-- video preview top - no real video preview -->
+    <div #videoTop class="bg-dark" style="position: relative; z-index: 2; height: calc(100dvh - 3.5rem); width: 100%; background-color: #7b1fa2;"></div>
 
-    <!-- video center -->
-    <video #video style="z-index: 2;width: 100%; position:relative; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" controls playsinline
+    <!-- video center - used with video.js -->
+    <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline
            preload="none"></video>
 
-    <!-- video preview bottom -->
-    <div #videoBottom class="bg-dark" style="width: 100%; z-index: 2; position: relative; height: calc(100dvh - 3.5rem)"></div>
-
+    <!-- video preview bottom - no real video preview -->
+    <div #videoBottom class="bg-dark" style="position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)"></div>
   </div>
 
 
@@ -76,32 +66,16 @@
 
 
 
-
-
   <!-- needed so that it lays below nav bar and makes it black -->
+  <!--
   <div class="bg-dark" style="z-index: 6; height: 40rem; width: 100%; position: absolute; bottom: 0; transform: translateY(calc(40rem - 1px))">
   </div>
+  -->
 
-  <!-- process bar for showing how much of the video has been played-->
-  <div #vProcess class="process" style="z-index: 6; width: 0%; background-color: white; height: 0.2rem; position: fixed; bottom: 0; margin-bottom: 3.5rem"></div>
+
 
 
 </div>
-
-
-<!-- tabs -->
-
-
-<!--
-<video #video style="position:absolute; height: calc(100dvh - 3.5rem)" class="bg-light vjs-custom video-js" controls playsinline preload="none"></video>
-
-
-<div #videoBottom class="bg-dark" style="background-color: #3a7be0; position: relative; height: calc(100dvh - 3.5rem)"></div>
-
-
-<div #videoTop class="bg-dark" style=" background-color: #7b1fa2; position: relative; height: calc(100dvh - 3.5rem)"></div>
-
--->
 
 
 
