@@ -62,4 +62,15 @@ export class ItemSectionComponent  implements OnInit {
     })
     return bExists
   }
+
+  onExpand() {
+    this.bExpand = !this.bExpand
+    if (!this.bExpand) {
+      let event = {
+        cEvent: 'collapse',
+        unit: null,
+      }
+      this.eventUnit.emit(event)
+    }
+  }
 }

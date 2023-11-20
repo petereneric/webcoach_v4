@@ -4,12 +4,44 @@
   <p style="text-align: center">Please swipe up to start video</p>
 </div>
 
+
 <!-- list showing sections and units of webinar -->
-<div #vList style="position: fixed; bottom: 0; z-index: 7; height: 30rem; width: 100%; transform: translateY(30rem); overflow: auto; background-color: white; ">
-  <div *ngFor="let oSection of svWebinar.bsSections.value">
-    <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
+<!-- for testing z-index becomes 10 / normal is 7 -->
+<div #vList  class="bg-dark" style="position: fixed; top: 844px; z-index: 10; width: 100%; height: 30rem; overflow: auto; border-radius: 0.5rem 0.5rem 0rem 0rem">
+
+  <!-- header -->
+  <div #vListHeader (panstart)="onListHeaderStart($event)" (panmove)="onListHeaderMove($event)" (panend)="onListHeaderEnd($event)"
+       class="bg-dark" style="position: fixed; z-index: 7; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center;">
+    <!-- slide-bar -->
+    <div class="slide-bar">
+      <p style="opacity: 0">dummy text so that div gets shown as bar</p>
+    </div>
+    <!-- text and icons -->
+    <div style="position:static; display: flex; align-items: center; box-sizing:border-box; width: 100%; padding: 0.75rem; margin-top: auto; margin-bottom: auto">
+      <!-- title -->
+      <p class="ts-standard tc-light tw-bold">Kurseinheiten</p>
+      <!-- title two -->
+      <p class="ts-s tc-light-two ml-05">34</p>
+      <!-- icons -->
+      <div style="margin-left: auto; display: none">
+        <!-- close -->
+        <mat-icon class="is-standard ic-light" fontIcon="close"></mat-icon>
+      </div>
+    </div>
   </div>
+
+  <!-- content -->
+  <!-- needs to be with margin below header -->
+  <div #vListOutside style="height: 26rem; z-index: 6; margin-top: 4rem;">
+    <div #vListInside (panstart)="onListUnitStart($event)" (panmove)="onListUnitsMove($event)" (panend)="onListUnitsEnd($event)" style="position: relative;  z-index: 6; width: 100%">
+      <div *ngFor="let oSection of svWebinar.bsSections.value">
+        <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
+      </div>
+    </div>
+  </div>
+
 </div>
+
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
 <div class="bg-dark" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>

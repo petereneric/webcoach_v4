@@ -25,16 +25,35 @@ export class AnimationService {
   }
 
   slideIn30(element) {
+    this.renderer.setStyle(element.nativeElement, 'transition', 1 + 's')
+    this.renderer.setStyle(element.nativeElement, 'top', window.innerHeight-element.nativeElement.offsetHeight + 'px')
+    setTimeout(() => {
+        this.renderer.setStyle(element.nativeElement, 'transition', '0s')
+      },
+      1 * 1000);
+    /*
     this.renderer.removeClass(element.nativeElement, 'slide-in-30')
     this.renderer.addClass(element.nativeElement, 'slide-out-30')
     this.renderer.removeClass(element.nativeElement, 'a-slide-out-30')
     this.renderer.addClass(element.nativeElement, 'a-slide-in-30')
+
+     */
   }
 
   slideOut30(element) {
+    this.renderer.setStyle(element.nativeElement, 'transition', 1 + 's')
+    this.renderer.setStyle(element.nativeElement, 'top', window.innerHeight + 'px')
+    setTimeout(() => {
+        this.renderer.setStyle(element.nativeElement, 'transition', '0s')
+      },
+      1 * 1000);
+
+    /*
     this.renderer.removeClass(element.nativeElement, 'slide-out-30')
     this.renderer.addClass(element.nativeElement, 'slide-in-30')
     this.renderer.removeClass(element.nativeElement, 'a-slide-in-30')
     this.renderer.addClass(element.nativeElement, 'a-slide-out-30')
+
+     */
   }
 }
