@@ -41,6 +41,12 @@
                 "input": "src/index.prod.html",
                 "output": "index.html"
               },
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.stag.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",

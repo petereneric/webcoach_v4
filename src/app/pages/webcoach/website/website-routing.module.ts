@@ -64,7 +64,11 @@ const routes: Routes = [
       {
         path: 'kontoeinstellungen',
         loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
-      }
+      },
+      {
+        path: 'test-scroll',
+        loadChildren: () => import('../../../pages/test-scroll/test-scroll.module').then( m => m.TestScrollPageModule)
+      },
     ]
   },
 

@@ -7,6 +7,7 @@ import * as videojs from "video.js";
 import {interval, Subscription} from "rxjs";
 import {WebinarService} from "../../../../services/data/webinar.service";
 import {AnimationService} from "../../../../services/animation.service";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
   selector: 'app-webinar-vert',
@@ -37,10 +38,10 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   // constants
   readonly THRESHOLD_COVER_SCROLL = 3
-  readonly THRESHOLD_VIDEO_VELOCITY = 0.25 // px
-  readonly THRESHOLD_LIST_VELOCITY = 0.25 // px
+  readonly THRESHOLD_VIDEO_VELOCITY = 0.25 // px/ms
+  readonly THRESHOLD_LIST_VELOCITY = 0.15 // px/ms
   readonly TRANSITION_VIDEO_SWIPE = 0.35 // s
-  readonly TRANSITION_LIST_SWIPE = 0.35 // s
+  readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
   readonly INTERVAL_PROCESS_UPDATER = 100 // ms
 
   // tracker for list of units
@@ -54,12 +55,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   // set when pan movement of list is started
   // works with deltaY as scroll reference for new topList
-  private topListStart = 0
+  private offsetTopListStart = 0
 
   // TODO description
-  private topListInsideStart = 0
+  private offsetTopListInsideStart = 0
   private heightList = 0
   private hWindow = 0
+  private hListOutside = 0
 
   // becomes true when the player is played the first time
   private bDocumentInteraction = false
@@ -140,7 +142,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.stopProcessUpdater()
 
     // close slider
-    this.svAnimation.slideOut30(this.vList)
+    this.svAnimation.slideOut(this.vList)
   }
 
 
@@ -263,121 +265,175 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.player.play()
   }
 
-  onListUnitStart(event: any) {
-    this.topListStart = this.vList.nativeElement.offsetTop
-    this.topListInsideStart = this.vListInside.nativeElement.offsetTop
+  onListInsideStart(event: any) {
+    // offsetTop of list
+    this.offsetTopListStart = this.vList.nativeElement.offsetTop
+
+    // offsetTop of list-inside (start would be the height of the list-header)
+    this.offsetTopListInsideStart = this.vListInside.nativeElement.offsetTop
   }
 
 
-  onListUnitsMove(event: any) {
-    console.log(event)
+  onListInsideMove(event: any) {
 
-
-    const hListOutside = this.vListOutside.nativeElement.offsetHeight
     const hListInside = this.vListInside.nativeElement.offsetHeight
     const hListHeader = this.vListHeader.nativeElement.offsetHeight
-    const topListNew = this.topListInsideStart - this.vListHeader.nativeElement.offsetHeight + event.deltaY
 
+    // since offsetTopListInside is in the beginning the height of list-header this height needs to be subtracted because top-list
+    // is in the beginning zero
+    const topListInsideNew = this.offsetTopListInsideStart - hListHeader + event.deltaY
+
+    // difference between height list-outside and height list-inside
+    // negative: list-inside is bigger than list-outside
+    // positive: list inside is smaller than list-outside
+    const gapListInsideOutside = this.hListOutside - hListInside
+
+    // console outputs
     console.log('deltay: ', event.deltaY)
     console.log('hListHeader: ' + hListHeader)
-    console.log('topListStart: ' + this.topListInsideStart)
-    console.log('hListOutside: ' + hListOutside)
+    console.log('topListStart: ' + this.offsetTopListInsideStart)
+    console.log('hListOutside: ' + this.hListOutside)
     console.log('hListInside: ' + hListInside)
-    console.log('topListNew: ' + topListNew)
+    console.log('topListInsideNew: ' + topListInsideNew)
 
-    if (hListOutside >= hListInside) {
-      if (topListNew >= 0) {
-        // only bouncing and closing
+
+    if (this.hListOutside >= hListInside) {
+      // list-inside is smaller than list-outside and therefore no scrolling of list-inside
+
+      if (topListInsideNew >= 0) {
+        // animation closing of list
+        console.log("animation list closing")
+
+        this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + topListInsideNew + 'px')
       }
     } else {
-      console.log("range movement")
-      // range for movement
-      if (topListNew >= hListOutside - hListInside && topListNew <= 0) { // topListNew >= hListOutside - hListInside &&
-        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListNew + 'px')
-        console.log(this.vListInside.nativeElement.offsetTop)
+      // scrolling of list-inside within its boundaries
+      console.log("scrolling of list-inside within its boundaries")
+
+      if (topListInsideNew >= gapListInsideOutside && topListInsideNew <= 0) {
+        // actual scrolling
+        console.log("actual scrolling")
+
+        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideNew + 'px')
       }
 
-      if (topListNew > 0) {
-        console.log("animation list closing")
+      if (topListInsideNew > 0) {
         // animation closing of list
-        const topList = this.vList.nativeElement.offsetTop
-        console.log('TopList: ' + topList)
-        this.renderer.setStyle(this.vList.nativeElement, 'top', this.topListStart + topListNew + 'px')
+        console.log("animation list closing")
 
+        this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + topListInsideNew + 'px')
       }
 
-      if (topListNew < hListOutside - hListInside) {
-        console.log("overstretch")
-        // animate intern bounce back
-        console.log("yeeeah!")
-        console.log(hListOutside - hListInside + Math.pow(Math.abs(topListNew + (hListOutside - hListInside)), 0.5))
-        this.renderer.setStyle(this.vListInside.nativeElement, 'top', hListOutside - hListInside - Math.pow(Math.abs(topListNew + (hListInside - hListOutside)), 0.75) + 'px')
+      if (topListInsideNew < gapListInsideOutside) {
+        // animation overstretching with decreasing impact due to square algorithm
+        console.log("animation overstretching with decreasing impact due to square algorithm")
+
+        this.renderer.setStyle(this.vListInside.nativeElement, 'top', gapListInsideOutside - Math.pow(Math.abs(topListInsideNew - gapListInsideOutside), 0.75) + 'px')
       }
     }
   }
 
 
-  onListUnitsEnd(event: any) {
-    console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+  onListInsideEnd(event: any) {
+    console.log("ON LIST INSIDE END")
+    console.log("------------------")
 
+    // values
     const velocityY = event.velocityY;
     const deltaY = event.deltaY;
-    const topListInside = this.vListInside.nativeElement.offsetTop
-    const hHeader = this.vListHeader.nativeElement.offsetHeight
+    const offsetTopListInside = this.vListInside.nativeElement.offsetTop
+    const hListHeader = this.vListHeader.nativeElement.offsetHeight
+    const topListInside = offsetTopListInside - hListHeader
     const hListInside = this.vListInside.nativeElement.offsetHeight
     const hListOutside = this.vListOutside.nativeElement.offsetHeight
+    const gapListInsideOutside = this.hListOutside - hListInside
 
+    // console outputs
     console.log('VELOCITY: ' + event.velocityY)
     console.log('topListInsideOld: ' + topListInside)
     console.log('DELTA: ' + event.deltaY)
 
 
-    if (hListInside > hListOutside && ((deltaY < 0 && velocityY < -this.THRESHOLD_LIST_VELOCITY) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_VELOCITY))) {
+    if (hListInside > hListOutside && topListInside >= gapListInsideOutside && ((deltaY < 0 && velocityY < this.THRESHOLD_LIST_VELOCITY) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_VELOCITY) && topListInside < 0)) {
+      // fadeout scrolling
+      console.log("fadeout scrolling")
+
+      // further scrolling depending on velocity and variable overscroll list
+      // can change if topListInsideEnd is out of boundary of list
+      let overScroll = Math.abs(velocityY) * environment.OVERSCROLL_LIST
+
       if (deltaY < 0) {
-        // more scrolling
-        console.log("HHIIIER und JOOO DOWN")
-        const moreScroll = velocityY * 300
-        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
-        console.log("MORE SCROLL: " + moreScroll)
-        console.log("MORE SCROLL END: " + (topListInside + moreScroll))
-        const newPosition = topListInside + deltaY + moreScroll
-        console.log("NEW POSITION: ", newPosition)
-        this.renderer.setStyle(this.vListInside.nativeElement, 'top', newPosition + 'px')
+        // fadeout scrolling down
+
+        // taking topListInside into account instead of false offsetTopListInside
+        let topListInsideEnd = topListInside + deltaY - overScroll
+
+        if (topListInsideEnd < gapListInsideOutside) {
+          topListInsideEnd = gapListInsideOutside - Math.pow(Math.abs(topListInsideEnd - gapListInsideOutside), 0.625)
+          overScroll = topListInsideEnd - topListInside - deltaY
+        }
+
+        const secScroll = Math.abs(overScroll / velocityY) / 1000
+        console.log("secScroll: ", secScroll)
+
+
+        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', secScroll + 's ease-out')
+
+
+        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideEnd + 'px')
+
+        // code is executed after fadeout
         setTimeout(() => {
             this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
 
-            // check for bounce back
-            if (topListInside + moreScroll - hHeader < hListOutside - hListInside) {
-              console.log("bounce BACK ON SCROLLING UP LIST INSIDE")
-              console.log("jooooooooooo")
+            if (topListInsideEnd < gapListInsideOutside) {
+              // topListInsideEnd overstretched the boundary therefore bouncing back
+              console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
+
               this.renderer.setStyle(this.vListInside.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
-              this.renderer.setStyle(this.vListInside.nativeElement, 'top', hListOutside - hListInside + 'px')
+              this.renderer.setStyle(this.vListInside.nativeElement, 'top', gapListInsideOutside + 'px')
               setTimeout(() => {
                   this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
                 },
                 this.TRANSITION_LIST_SWIPE * 1000);
             }
-
           },
-          this.TRANSITION_LIST_SWIPE * 1000);
+          secScroll * 1000);
       }
 
+      if (deltaY > 0) {
+        // fadeout scrolling up
+        console.log("fadeout scrolling up")
 
 
-      if (hListInside > hListOutside && deltaY > 0) {
-        // more scrolling
-        console.log("HHIIIER und JOOO UP")
-        const moreScroll = velocityY * 300
-        console.log("MOORE SCROLL: ", moreScroll)
-        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', 1 + 's')
-        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInside + deltaY + moreScroll + 'px')
+        let overScroll = Math.abs(velocityY) * environment.OVERSCROLL_LIST
+        console.log("overscroll: ", overScroll)
+        // taking topListInside into account instead of false offsetTopListInside
+        let topListInsideEnd = topListInside + deltaY + overScroll
+
+        if (topListInsideEnd > 0) {
+          topListInsideEnd = Math.pow(Math.abs(topListInsideEnd), 0.625)
+          overScroll = topListInsideEnd - topListInside
+        }
+
+        const secScroll = Math.abs(overScroll / velocityY) / 1000
+        console.log("secScroll: ", secScroll)
+
+
+        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', secScroll + 's ease-out')
+        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideEnd + 'px')
+
+
+
+
+        // code is executed after fadeout
         setTimeout(() => {
             this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
 
-            // check for bounce back
-            if (topListInside + deltaY + moreScroll > 0) {
-              console.log("bounce BACK ON SCROLLING UP LIST INSIDE")
-              console.log("jooooooooooo")
+            if (topListInsideEnd > 0) {
+              // topListInsideEnd overstretched the boundary therefore bouncing back
+              console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
+
               this.renderer.setStyle(this.vListInside.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
               this.renderer.setStyle(this.vListInside.nativeElement, 'top', 0 + 'px')
               setTimeout(() => {
@@ -387,72 +443,49 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
             }
 
           },
-          1 * 1000);
+          secScroll * 1000);
       }
-
-
-
-
     }
 
 
+    // list movement > 0
+    const offsetTopList = this.vList.nativeElement.offsetTop
+    const middleList = this.heightList / 2
+    const movementList = offsetTopList - this.offsetTopListStart
 
+    if (movementList >= middleList || (movementList > 0 && (event.velocityY >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0))) {
+      // list is moved more than half or less but fast enough
+      // closing list
+      console.log("closing list")
 
-    const topList = this.vList.nativeElement.offsetTop
-    const middle = this.heightList / 2
-    const movement = topList - this.topListStart
-
-    console.log('heightWindow: ' + this.hWindow)
-    console.log('heightList: ' + this.heightList)
-    console.log('topList: ' + topList)
-    console.log('movement: ' + movement);
-    console.log('middle: ' + middle);
-    console.log('velocity: ' + event.velocityY)
-
-    if (movement >= middle || (movement > 0 && (event.velocityY > this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0))) {
-      this.bListOpen = false
-
-      // swipe out
-      console.log("SWIPE OUT")
       this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
+      this.bListOpen = false
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
 
         },
         this.TRANSITION_LIST_SWIPE * 1000);
-
-
     }
-    if(movement < middle && (movement > 0 && event.velocityY <= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
-      // bounce back
-      console.log("BOUNCE BACK")
+
+    if(movementList < middleList && (movementList > 0 && event.velocityY < this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
+      // movement less than half and velocity too low for closing therefore bounce back
+      console.log("movement less than half and velocity too low for closing therefore bounce back")
+
       this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
-      this.renderer.setStyle(this.vList.nativeElement, 'top', this.topListStart + 'px')
+      this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + 'px')
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
         },
         this.TRANSITION_LIST_SWIPE * 1000);
     }
-
-
-
-
 
 
     // list inside
+    if (topListInside < gapListInsideOutside) {
+      // bounce back list-inside on bottom when user overstretched the list already while holding it
+      console.log("bounce back list-inside on bottom when user overstretched the list already while holding it")
 
-
-    const topListInsideNew = this.vListInside.nativeElement.offsetTop
-
-    console.log('hListOutside: ' + hListOutside)
-    console.log('hListInside: ' + hListInside)
-    console.log('topListInsideNEW: ' + topListInsideNew)
-    console.log('hHeader: ' + hHeader)
-
-    if (hListInside > hListOutside && topListInsideNew - hHeader < hListOutside - hListInside) {
-      console.log("bounce BACK ON SCROLLING UP LIST INSIDE")
-      console.log("jooooooooooo")
       this.renderer.setStyle(this.vListInside.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
       this.renderer.setStyle(this.vListInside.nativeElement, 'top', hListOutside - hListInside + 'px')
       setTimeout(() => {
@@ -460,18 +493,11 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         },
         this.TRANSITION_LIST_SWIPE * 1000);
     }
-
-    if (topListInsideNew > hHeader) {
-      console.log("bounce BACK ON SCROLLING DOWN LIST INSIDE")
-    }
-
-
-
   }
 
 
   onListHeaderStart(event: any) {
-    this.topListStart = this.vList.nativeElement.offsetTop
+    this.offsetTopListStart = this.vList.nativeElement.offsetTop
   }
 
 
@@ -479,44 +505,27 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     console.log(event)
 
 
-    const hListOutside = this.vListOutside.nativeElement.offsetHeight
-    const hListInside = this.vListInside.nativeElement.offsetHeight
-    const hListHeader = this.vListHeader.nativeElement.offsetHeight
-    const topListNew = this.topListInsideStart - this.vListHeader.nativeElement.offsetHeight + event.deltaY
-
-    console.log('deltay: ', event.deltaY)
-    console.log('hListHeader: ' + hListHeader)
-    console.log('topListStart: ' + this.topListInsideStart)
-    console.log('hListOutside: ' + hListOutside)
-    console.log('hListInside: ' + hListInside)
-    console.log('topListNew: ' + topListNew)
-
     if (event.deltaY >= 0) {
+      // header closing
       console.log("header closing")
-      this.renderer.setStyle(this.vList.nativeElement, 'top', this.topListStart + event.deltaY + 'px')
+
+      this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + event.deltaY + 'px')
     }
   }
 
 
   onListHeaderEnd(event: any) {
-    const topList = this.vList.nativeElement.offsetTop
-    const middle = this.heightList / 2
-    const movement = topList - this.topListStart
+    const offsetTopList = this.vList.nativeElement.offsetTop
+    const middleList = this.heightList / 2
+    const movementList = offsetTopList - this.offsetTopListStart
 
-    console.log('heightWindow: ' + this.hWindow)
-    console.log('heightList: ' + this.heightList)
-    console.log('topList: ' + topList)
-    console.log('movement: ' + movement);
-    console.log('middle: ' + middle);
-    console.log('velocity: ' + event.velocityY)
+    if (movementList >= middleList || (Math.abs(event.velocityY) >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
 
-    if (movement >= middle || (Math.abs(event.velocityY) > this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
-      this.bListOpen = false
 
-      // swipe out
-
+      // close list
       this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
+      this.bListOpen = false
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
 
@@ -527,7 +536,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     } else {
       // bounce back
       this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
-      this.renderer.setStyle(this.vList.nativeElement, 'top', this.topListStart + 'px')
+      this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + 'px')
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
         },
@@ -542,10 +551,10 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       this.bListOpen = true
 
       // pause video
-      //this.pauseVideo() TODO error to check, should be enabled again
+      this.pauseVideo()
 
       // animation
-      this.svAnimation.slideIn30(this.vList)
+      this.svAnimation.slideIn(this.vList)
     }
   }
 
@@ -558,7 +567,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       this.playVideo()
 
       // animation
-      this.svAnimation.slideOut30(this.vList)
+      this.svAnimation.slideOut(this.vList)
 
       // list closed and video played
       return true
@@ -734,6 +743,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.hVideoWrapper = this.videoWrapper.nativeElement.offsetHeight
     this.heightList = this.vList.nativeElement.offsetHeight
     this.hWindow = window.innerHeight
+
+    // height of list-outside (container of the list-inside with constant height)
+    this.hListOutside = this.vListOutside.nativeElement.offsetHeight
   }
 
 

@@ -15,6 +15,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {VjsPlayerModule} from "./components/vjs-player/vjs-player.module";
 import {HttpClientModule} from "@angular/common/http";
 import {DatePipe} from "@angular/common";
+import {ListDirective} from "./directives/list.directive";
 
 
 export class MyHammerConfig extends HammerGestureConfig {
@@ -26,13 +27,15 @@ export class MyHammerConfig extends HammerGestureConfig {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule, HammerModule, MatFormFieldModule, MatMenuModule, MatToolbarModule, MatButtonModule, BrowserAnimationsModule, MatDialogModule, VjsPlayerModule, HttpClientModule
   ],
-  providers: [DatePipe, { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }],
+  providers: [DatePipe, {provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig}],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
