@@ -1,17 +1,17 @@
 
 <!-- cover shown in the beginning and needed for making user swipe so that nav bar shrinks in safari/ios -->
-<div autoscroll="true" #vCover style=" position: absolute; top: 0; z-index: 9; width: 100%; height: calc(200dvh); overflow: auto; background-color: green; ">
-  <p style="text-align: center">Please swipe up to start video</p>
+<div class="no-marker" autoscroll="true" #vCover style=" position: absolute; top: 0; z-index: 9; width: 100%; height: calc(200dvh); overflow: auto; background-color: green; ">
+  <p class="ts-standard" style="text-align: center">Please swipe up to start video</p>
 </div>
 
 
 <!-- list showing sections and units of webinar -->
 <!-- for testing z-index becomes 10 / normal is 7 -->
-<div #vList  class="bg-dark" style="position: fixed; top: 844px; z-index: 10; width: 100%; height: 30rem; overflow: auto; border-radius: 0.5rem 0.5rem 0rem 0rem">
+<div #vList  class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1rem 1rem 0rem 0rem">
 
   <!-- header -->
   <div #vListHeader (panstart)="onListHeaderStart($event)" (panmove)="onListHeaderMove($event)" (panend)="onListHeaderEnd($event)"
-       class="bg-dark" style="position: fixed; z-index: 7; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center;">
+       class="bg-dark" style="position: fixed; z-index: 7; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center; border-radius: 1rem 1rem 0rem 0rem">
     <!-- slide-bar -->
     <div class="slide-bar">
       <p style="opacity: 0">dummy text so that div gets shown as bar</p>
@@ -32,8 +32,8 @@
 
   <!-- content -->
   <!-- needs to be with margin below header -->
-  <div #vListOutside style="height: 26rem; z-index: 6; margin-top: 4rem;">
-    <div #vListInside (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 6; width: 100%;">
+  <div #vListOutside style="height: calc(100% - 4rem); z-index: 6; margin-top: 4rem;">
+    <div #vListInside (tap)="onListInsideTap($event)" (press)="onListInsidePress($event)" (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 6; width: 100%;">
       <div *ngFor="let oSection of svWebinar.bsSections.value">
         <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
       </div>
@@ -44,48 +44,132 @@
 
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
-<div class="bg-dark" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
+<div class="bg-dark no-marker" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
 
 <!-- tabs - need to be also on top -->
-<div #vTabs (panmove)="onProcessMove($event)" (panend)="onProcessEnd($event)" class="bg-dark"
+<div class="no-marker" #vTabs (panmove)="onProcessMove($event)" (panend)="onProcessEnd($event)" class="bg-dark"
      style="position: fixed; bottom: 0; z-index: 6; height: 3.5rem; width: 100%; display: flex; justify-content: center; align-items: center; ">
 
   <!-- needed so that the pan gesture works on the whole tab bar -->
   <mat-icon style=" opacity: 0; position: absolute; z-index: 6; width: 100%; height: 100%;" class="is-standard ic-light" fontIcon="home"></mat-icon>
 
-  <!-- home icon -->
-  <mat-icon style="position: relative; z-index: 6; margin-left: auto; margin-right: auto;" (click)="onTabHome()" class="is-standard ic-light" fontIcon="home"></mat-icon>
+  <!-- home -->
+  <div class="tab-container">
+    <mat-icon (click)="onTabHome()" class="is-standard ic-light" fontIcon="home"></mat-icon>
+    <p class="tab-title">Start</p>
+  </div>
 
-  <!-- note icon -->
-  <mat-icon style="position: relative; z-index: 6; margin-left: auto; margin-right: auto;" (click)="onOpenList()" class="is-standard ic-light" fontIcon="push_pin"></mat-icon>
+  <!-- notes -->
+  <div class="tab-container">
+    <mat-icon (click)="onOpenList()" class="is-standard ic-light" fontIcon="edit_note"></mat-icon>
+    <p class="tab-title">Notizen</p>
+  </div>
 
-  <!-- list icon -->
-  <mat-icon style="position: relative;  z-index: 6; margin-left: auto; margin-right: auto;" (click)="onOpenList()" class="is-standard ic-light" fontIcon="list"></mat-icon>
+
+  <!-- list -->
+  <div class="tab-container">
+    <mat-icon (click)="onOpenList()" class="is-standard ic-light" fontIcon="list"></mat-icon>
+    <p class="tab-title">Übersicht</p>
+  </div>
 </div>
 
 <!-- process bar for showing how much of the video has been played-->
-<div #vProcess class="process" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
+<div #vProcess class="process no-marker" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
 
 
 <!-- container for video -->
-<div class="flex flex-vertical bg-dark" style="position: fixed; height: calc(100dvh - 3.5rem); width: 100%; z-index: 5;">
+<div class="flex flex-vertical bg-dark no-marker" style="position: fixed; height: calc(100dvh - 3.5rem); width: 100%; z-index: 5;">
 
-  <!-- needed for catching the swipe gesture -->
-  <div #vSwipe (click)="onClickVideo()" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; z-index: 4; height: calc(100dvh - 3.5rem); width: 100%"></div>
+  <!-- needed for catching the swipe gesture, however only for 75% witdh of screen so that icons can be clicked on the right side -->
+  <div #vSwipe (click)="onClickVideo()" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; z-index: 4; height: calc(100dvh - 3.5rem); width: 75%"></div>
 
   <!-- video elements -->
   <div #videoWrapper
        style="position:relative; top: 0; z-index: 2; width: 100%; height: calc(100dvh - 3.5rem); transform: translateY(calc(-100dvh + 3.5rem)); margin-bottom: 3.5rem;">
 
     <!-- video preview top - no real video preview -->
-    <div #videoTop class="bg-dark" style="position: relative; z-index: 2; height: calc(100dvh - 3.5rem); width: 100%; background-color: #7b1fa2;"></div>
+    <img #videoTop [src]="svWebinar.bsUnitThumbnailLast.value ?? ''" style="object-fit: cover; position: relative; z-index: 2; height: calc(100dvh - 3.5rem); width: 100%; background-color: #7b1fa2;">
 
-    <!-- video center - used with video.js -->
+    <!-- video center container -->
+    <div style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)">
+
+      <!-- interaction overlay of video -->
+      <div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+
+        <!-- title -->
+        <p class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem; width: 75%">{{svWebinar.bsWebinar.value?.cName}}</p>
+
+        <!-- information -->
+        <div class="flex-vertical" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem">
+
+            <!-- author -->
+            <div style="display: flex; align-items: center">
+              <img style="width: 2rem; height: 2rem; border-radius: 100%" width="50" height="50" class="sh-box-soft" [src]="svWebinar.bsCoachThumbnail.value ?? ''">
+              <p class="ts-xs tc-light tw-bold sh-text-soft" style="margin-left: 0.5rem">{{'@' + svWebinar.bsWebinar.value?.oCoach?.oPlayer?.cName}}</p>
+            </div>
+
+            <!-- unit name -->
+            <p class="ts-standard tc-light sh-text-soft" style="margin-top: 0.75rem">{{svWebinar.bsUnit.value?.cName}}</p>
+
+            <!-- section name -->
+            <p class="ts-xxs tc-light sh-text-soft" style="margin-top: 0.375rem">{{svWebinar.bsSection.value?.cName}}</p>
+
+        </div>
+
+        <!-- sidebar which enables click on icons and also applies swipe gesture due to pan events-->
+        <div (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; bottom: 0; right: 0; width: 25%; height: 100%;">
+
+          <!-- settings -->
+          <div class="flex" style="position: absolute; top: 0; right: 0; margin: 1rem">
+            <mat-icon class="is-standard ic-light sh-icon" fontIcon="more_vert"></mat-icon>
+          </div>
+
+          <!-- container for moving content to right bottom -->
+          <div class="flex-vertical" style="position: absolute; bottom: 0; right: 0; align-items: center; margin: 1rem">
+            <!-- like -->
+            <div class="sidebar-container">
+              <mat-icon class="sidebar-icon" fontIcon="thumb_up_off_alt"></mat-icon>
+              <p class="sidebar-subtext">3245</p>
+            </div>
+
+            <!-- comment -->
+            <div class="sidebar-container">
+              <mat-icon class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
+              <p class="sidebar-subtext">293</p>
+            </div>
+
+            <!-- share -->
+            <div class="sidebar-container">
+              <mat-icon (click)=onClickShare() class="sidebar-icon" fontIcon="share"></mat-icon>
+              <p class="sidebar-subtext">Teilen</p>
+            </div>
+
+            <!-- check -->
+            <div class="sidebar-container">
+              <mat-icon (click)=onClickCheck() class="sidebar-icon" [fontIcon]="svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'check_circle' : 'radio_button_unchecked'"></mat-icon>
+              <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'Abgehakt' : 'Abhaken'}}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- video center - used with video.js -->
+      <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="none">
+
+      </video>
+
+    </div>
+
+    <!--
     <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline
-           preload="none"></video>
+           preload="none">
+    </video>
+    -->
 
     <!-- video preview bottom - no real video preview -->
-    <div #videoBottom class="bg-dark" style="position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)"></div>
+    <img #videoBottom [src]="svWebinar.bsUnitThumbnailNext.value ?? ''" style="object-fit: cover; position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920" >
   </div>
 
 
@@ -106,9 +190,6 @@
   <div class="bg-dark" style="z-index: 6; height: 40rem; width: 100%; position: absolute; bottom: 0; transform: translateY(calc(40rem - 1px))">
   </div>
   -->
-
-
-
 
 </div>
 

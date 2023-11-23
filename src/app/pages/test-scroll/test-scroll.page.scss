@@ -1,0 +1,69 @@
+.main {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+pie {
+  border-radius: 50%;
+  background-color: green;
+}
+
+.piechart {
+  --x: 0%;
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--x);
+  transition: 3s ease-in-out;
+  -webkit-transition: background-image 2s ease-in-out;
+  transition: background-image 2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 2;
+}
+
+.piechart-other {
+  --x: 50%;
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--x);
+  transition: 3s ease-in-out;
+  -webkit-transition: background-image 2s ease-in-out;
+  transition: background-image 2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 1;
+}
+
+.number {
+  color: #171717;
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 600;
+}
+
+.circle {
+  height: 5rem;
+  width: 5rem;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 10px solid red;
+}
+
+.circle-inside {
+  position: absolute;
+  height: 9rem;
+  width: 9rem;
+  border-radius: 50%;
+}
+
+.circle-container {
+
+}
+

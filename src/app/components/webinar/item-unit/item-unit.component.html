@@ -1,4 +1,4 @@
-<div #container [ngClass]="this.oUnit?.id === this.currentUnit?.id ? 'container-highlight' : 'container'">
+<div #container [ngClass]="this.oUnit?.id === this.currentUnit?.id ? 'container-highlight' : 'container'" class="bg-light">
   <div>
     <mat-icon class="icon-checkbox" [fontIcon]="oUnit?.oUnitPlayer?.tStatus === 2 ? 'check_box' : 'check_box_outline_blank'" (click)="onCheck()"></mat-icon>
   </div>

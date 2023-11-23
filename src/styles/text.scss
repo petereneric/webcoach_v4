@@ -4,6 +4,7 @@
 
 .ts-xxl {
   font-size: 2rem;
+  line-height: 2rem;
 }
 
 .tsl-xxl {
@@ -18,6 +19,7 @@
 
 .ts-xl {
   font-size: 1.5rem;
+  line-height: 1.5rem;
 }
 
 .tsl-xl {
@@ -32,6 +34,7 @@
 
 .ts-l {
   font-size: 1.2rem;
+  line-height: 1.2rem;
 }
 
 .tsl-l {
@@ -46,6 +49,7 @@
 
 .ts-standard {
   font-size: 1rem;
+  line-height: 1rem;
 }
 
 .tsl-standard {
@@ -60,15 +64,17 @@
 
 .ts-s {
   font-size: 0.9rem;
+  line-height: 0.9rem;
 }
 
 .tsl-s {
   @extend .ts-s;
-  line-height: 1.4rem;
+  line-height: 1.2rem;
 }
 
 .ts-xs {
   font-size: 0.8rem;
+  line-height: 0.8rem;
 }
 
 .tsl-xs {
@@ -78,11 +84,22 @@
 
 .ts-xxs {
   font-size: 0.7rem;
+  line-height: 0.7rem;
 }
 
 .tsl-xxs {
   @extend .ts-xxs;
   line-height: 1.2rem;
+}
+
+.ts-xxxs {
+  font-size: 0.6rem;
+  line-height: 0.6rem;
+}
+
+.tsl-xxxs {
+  @extend .ts-xxs;
+  line-height: 1rem;
 }
 
 .ts-toolbar {

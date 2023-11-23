@@ -8,6 +8,8 @@ import {interval, Subscription} from "rxjs";
 import {WebinarService} from "../../../../services/data/webinar.service";
 import {AnimationService} from "../../../../services/animation.service";
 import {environment} from "../../../../../environments/environment";
+import * as Hammer from 'hammerjs';
+import {CoachService} from "../../../../services/data/coach.service";
 
 @Component({
   selector: 'app-webinar-vert',
@@ -39,10 +41,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // constants
   readonly THRESHOLD_COVER_SCROLL = 3
   readonly THRESHOLD_VIDEO_VELOCITY = 0.25 // px/ms
-  readonly THRESHOLD_LIST_VELOCITY = 0.15 // px/ms
+  readonly THRESHOLD_LIST_VELOCITY = 0.25 // px/ms
+  readonly THRESHOLD_LIST_INSIDE_VELOCITY = 0.30 // px/ms
   readonly TRANSITION_VIDEO_SWIPE = 0.35 // s
   readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
   readonly INTERVAL_PROCESS_UPDATER = 100 // ms
+  readonly DIRECTION_LIST_START_UP = 1
+  readonly DIRECTION_LIST_START_DOWN = 2
 
   // tracker for list of units
   private bListOpen = false
@@ -62,6 +67,11 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   private heightList = 0
   private hWindow = 0
   private hListOutside = 0
+  private bClickListInsideDisabled = true
+  private bScrollListInsideEnabled = false
+
+  // used to respect threshold only in the beginning of the scroll
+  private tDirectionListStart = 0
 
   // becomes true when the player is played the first time
   private bDocumentInteraction = false
@@ -82,7 +92,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // and updates the ui process bar
   process!: Subscription;
 
-  constructor(private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
+  constructor(private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -133,7 +143,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     // this.vCover.nativeElement.style.top = "0px"
 
     // for testing of list
-    this.onOpenList()
+    //this.onOpenList()
   }
 
 
@@ -197,11 +207,14 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // threshold reached and therefore bouncing showing either last or next video
 
       if (ev.deltaY < 0) {
-        // swipe up
+        // swipe up --> next video
 
         // transition is set and after swipe taken away for instant movement in onSwipeMove()
         this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', this.TRANSITION_VIDEO_SWIPE + 's')
         this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', -this.hVideoWrapper + 'px')
+
+        // set video poster with enough time to load before end of swipe
+        this.player.poster("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.getNextUnit()?.id)
         setTimeout(() => {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', '0s')
 
@@ -209,17 +222,21 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', 0 + 'px')
 
             // play next unit
-            this.svWebinar.nextUnit()
+            this.svWebinar.setNextUnit()
           },
           this.TRANSITION_VIDEO_SWIPE * 1000);
       }
 
       if (ev.deltaY > 0) {
-        // swipe down
+        // swipe down --> last video
 
         // transition is set and after swipe taken away for instant movement in onSwipeMove()
         this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', this.TRANSITION_VIDEO_SWIPE + 's')
         this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', this.hVideoWrapper + 'px')
+
+        // set video poster with enough time to load before end of swipe
+        this.player.poster("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.lastUnit()?.id)
+        console.log("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.lastUnit()?.id)
         setTimeout(() => {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', '0s')
 
@@ -265,12 +282,47 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.player.play()
   }
 
+
+  onListInsideTap($event) {
+    // tap enables click on item, normal build in click would be to sensitive since too much movement is allowed
+    this.bClickListInsideDisabled = false
+  }
+
+
+  onListInsidePress(event) {
+    // needed when list fades already in one direction but needs to be interrupted due to new touch and possibly different scroll direction
+    console.log("onListInsidePress")
+    this.bScrollListInsideEnabled = false
+    if (event.deltaY == 0 && event.deltaX == 0) {
+      console.log("joooo")
+      // disable scrolling so that there is no bouncing which otherwise is applied after a timeout of fading
+      this.bScrollListInsideEnabled = false
+      this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+      this.renderer.setStyle(this.vListInside.nativeElement, 'top', this.vListInside.nativeElement.offsetTop - this.vListHeader.nativeElement.offsetHeight + 'px')
+    }
+  }
+
+
   onListInsideStart(event: any) {
+    // enable scrolling
+    //this.bScrollListInsideEnabled = true
+    console.log("ssstttarrrt")
+    console.log(event);
+
+    // reset transition so that action takes place immediately
+    this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+
     // offsetTop of list
     this.offsetTopListStart = this.vList.nativeElement.offsetTop
 
     // offsetTop of list-inside (start would be the height of the list-header)
     this.offsetTopListInsideStart = this.vListInside.nativeElement.offsetTop
+
+    // disables effect of click on item so that only tap can enable it which is not so sensitive
+    this.bClickListInsideDisabled = true
+
+    // saving the information whether user started to scroll up or down in the beginning
+    this.tDirectionListStart = event.deltaY > 0 ? this.DIRECTION_LIST_START_UP : this.DIRECTION_LIST_START_DOWN
   }
 
 
@@ -281,7 +333,17 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // since offsetTopListInside is in the beginning the height of list-header this height needs to be subtracted because top-list
     // is in the beginning zero
-    const topListInsideNew = this.offsetTopListInsideStart - hListHeader + event.deltaY
+    let topListInsideNew = this.offsetTopListInsideStart - hListHeader + event.deltaY
+
+    // Depending on the start direction of the list movement threshold needs to added or removed during this whole period of scrolling
+    if (this.tDirectionListStart === this.DIRECTION_LIST_START_DOWN) {
+      topListInsideNew = topListInsideNew + environment.THRESHOLD_PAN
+    }
+
+    if (this.tDirectionListStart === this.DIRECTION_LIST_START_UP) {
+      topListInsideNew = topListInsideNew - environment.THRESHOLD_PAN
+    }
+
 
     // difference between height list-outside and height list-inside
     // negative: list-inside is bigger than list-outside
@@ -337,6 +399,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   onListInsideEnd(event: any) {
     console.log("ON LIST INSIDE END")
     console.log("------------------")
+    // overstretching only possible when user released press/touch not while holding
+    this.bScrollListInsideEnabled = true
 
     // values
     const velocityY = event.velocityY;
@@ -354,7 +418,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     console.log('DELTA: ' + event.deltaY)
 
 
-    if (hListInside > hListOutside && topListInside >= gapListInsideOutside && ((deltaY < 0 && velocityY < this.THRESHOLD_LIST_VELOCITY) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_VELOCITY) && topListInside < 0)) {
+    if (hListInside > hListOutside && topListInside >= gapListInsideOutside && ((deltaY < 0 && velocityY < this.THRESHOLD_LIST_INSIDE_VELOCITY) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_INSIDE_VELOCITY) && topListInside < 0) && velocityY !== 0) {
       // fadeout scrolling
       console.log("fadeout scrolling")
 
@@ -369,24 +433,25 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         let topListInsideEnd = topListInside + deltaY - overScroll
 
         if (topListInsideEnd < gapListInsideOutside) {
+          // topListInsideEnd is out of boundary and therefore cut
           topListInsideEnd = gapListInsideOutside - Math.pow(Math.abs(topListInsideEnd - gapListInsideOutside), 0.625)
           overScroll = topListInsideEnd - topListInside - deltaY
         }
 
+        // seconds for scrolling are calculated based on velocity (px/ms) and overscroll
         const secScroll = Math.abs(overScroll / velocityY) / 1000
         console.log("secScroll: ", secScroll)
 
-
+        // ease out for smooth transition
         this.renderer.setStyle(this.vListInside.nativeElement, 'transition', secScroll + 's ease-out')
-
-
         this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideEnd + 'px')
 
         // code is executed after fadeout
         setTimeout(() => {
             this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
 
-            if (topListInsideEnd < gapListInsideOutside) {
+            if (topListInsideEnd < gapListInsideOutside && this.bScrollListInsideEnabled) {
+              // bScrollListInsideEnabled checks if scroll was interrupted by another press/touch on the list
               // topListInsideEnd overstretched the boundary therefore bouncing back
               console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
 
@@ -398,6 +463,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
                 this.TRANSITION_LIST_SWIPE * 1000);
             }
           },
+
           secScroll * 1000);
       }
 
@@ -405,32 +471,30 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         // fadeout scrolling up
         console.log("fadeout scrolling up")
 
-
-        let overScroll = Math.abs(velocityY) * environment.OVERSCROLL_LIST
-        console.log("overscroll: ", overScroll)
         // taking topListInside into account instead of false offsetTopListInside
         let topListInsideEnd = topListInside + deltaY + overScroll
 
         if (topListInsideEnd > 0) {
+          // topListInsideEnd is out of boundary and therefore cut
           topListInsideEnd = Math.pow(Math.abs(topListInsideEnd), 0.625)
           overScroll = topListInsideEnd - topListInside
         }
 
+        // seconds for scrolling are calculated based on velocity (px/ms) and overscroll
         const secScroll = Math.abs(overScroll / velocityY) / 1000
         console.log("secScroll: ", secScroll)
 
-
+        // ease out for smooth transition
         this.renderer.setStyle(this.vListInside.nativeElement, 'transition', secScroll + 's ease-out')
         this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideEnd + 'px')
-
-
 
 
         // code is executed after fadeout
         setTimeout(() => {
             this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
 
-            if (topListInsideEnd > 0) {
+            if (topListInsideEnd > 0 && this.bScrollListInsideEnabled) {
+              // bScrollListInsideEnabled checks if scroll was interrupted by another press/touch on the list
               // topListInsideEnd overstretched the boundary therefore bouncing back
               console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
 
@@ -468,7 +532,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         this.TRANSITION_LIST_SWIPE * 1000);
     }
 
-    if(movementList < middleList && (movementList > 0 && event.velocityY < this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
+    if (movementList < middleList && (movementList > 0 && event.velocityY < this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
       // movement less than half and velocity too low for closing therefore bounce back
       console.log("movement less than half and velocity too low for closing therefore bounce back")
 
@@ -519,10 +583,10 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     const middleList = this.heightList / 2
     const movementList = offsetTopList - this.offsetTopListStart
 
-    if (movementList >= middleList || (Math.abs(event.velocityY) >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
-
-
+    if (movementList >= middleList || (event.velocityY >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
       // close list
+      console.log("close list")
+
       this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
       this.bListOpen = false
@@ -535,6 +599,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     } else {
       // bounce back
+      console.log("bounce back")
+
       this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + 'px')
       setTimeout(() => {
@@ -583,6 +649,32 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+  onClickShare() {
+    if (navigator.share !== undefined) {
+
+      let shareData = {
+        title: "Webcoach",
+        text: this.svWebinar.bsWebinar.value?.cName,
+        url: "https://www.webcoach.digital/webinar-intro/" + this.svWebinar.bsWebinar.value?.id,
+      };
+
+      navigator
+        .share(
+          shareData
+        )
+        .then(() => console.log("Shared!"))
+        .catch(err => console.error(err));
+    } else {
+      console.log("Error while sharing")
+    }
+  }
+
+  onClickCheck() {
+    this.svWebinar.bsUnit.value!.oUnitPlayer!.tStatus = this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 1 : 2
+    this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value!.oUnitPlayer!)
+  }
+
+
   startProcessUpdater() {
     // set to true when process bar moved
     this.bStopProcessUpdater = false
@@ -609,37 +701,37 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
       // unit selected
       case 'select':
-        // upload status and time of current unit
-        let aUnitOld: Unit = event.unitOld
-        if (aUnitOld !== null) {
-          aUnitOld.oUnitPlayer!.tStatus = 1
-          aUnitOld.oUnitPlayer!.secVideo = this.getTime()
-          this.svWebinar.uploadUnitPlayer(aUnitOld)
+        if (!this.bClickListInsideDisabled) {
+          // upload status and time of current unit
+          let aUnitOld: Unit = event.unitOld
+          if (aUnitOld !== null) {
+            aUnitOld.oUnitPlayer!.tStatus = 1
+            aUnitOld.oUnitPlayer!.secVideo = this.getTime()
+            this.svWebinar.uploadUnitPlayer(aUnitOld.oUnitPlayer)
+          }
+
+          // set selected unit
+          this.svWebinar.setUnit(event.unit)
+
+          // close list
+          this.onCloseList()
         }
-
-        // set selected unit
-        this.svWebinar.setUnit(event.unit)
-
-        // close list
-        this.onCloseList()
-
         break
 
       // unit checked
       case 'check':
         // upload status and time of checked unit
-        let unit = event.unit
+        let unit: Unit = event.unit
         unit.oUnitPlayer!.tStatus = unit.oUnitPlayer?.tStatus! < 2 ? 2 : 0
         unit.oUnitPlayer!.secVideo = 0
-        this.svWebinar.uploadUnitPlayer(unit)
+        this.svWebinar.uploadUnitPlayer(unit.oUnitPlayer)
 
         break
       case 'collapse':
         console.log("collapse")
 
         // timeout needed so that collapse can take effect in first place
-        setTimeout(() =>
-          {
+        setTimeout(() => {
             const topListInside = this.vListInside.nativeElement.offsetTop // is not 0 when on top, has listheader added
             const heightListInside = this.vListInside.nativeElement.offsetHeight
             const heightListOutside = this.vListOutside.nativeElement.offsetHeight
@@ -675,18 +767,18 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       fill: true,
       autoplay: true,
       controls: false,
-      poster: 'assets/image/eric_schumacher.jpg'
     }
 
     this.player = videojs.default(this.video?.nativeElement, options, function () {
     })
+
 
     // TODO add environment variable for dev and prod mode
     this.player.volume(0)
 
     // ended callback
     this.player.on('ended', data => {
-      this.svWebinar.nextUnit()
+      this.svWebinar.setNextUnit()
     });
 
     // play callback
@@ -709,9 +801,11 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.updatePlayer(this.connApi.getUrl('webinar/unit/video/' + unit?.id))
   }
 
+
   playVideo() {
     if (this.player.paused()) this.player.play()
   }
+
 
   pauseVideo() {
     if (!this.player.paused()) this.player.pause()
@@ -721,7 +815,6 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   updatePlayer(source: string) {
     if (this.player !== undefined) {
       this.player.src({src: source, type: 'video/mp4'});
-      this.player.poster('assets/logo/webcoach.webp')
       this.player.play();
     }
   }
@@ -792,4 +885,6 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   protected readonly event = event;
+
+
 }

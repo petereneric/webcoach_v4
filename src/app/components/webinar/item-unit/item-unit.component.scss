@@ -7,6 +7,11 @@
   align-items: center;
   cursor: pointer;
 
+  // used to prevent marking while scrolling
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+
   &:hover {
     //background-color: $colorHighlight;
   }

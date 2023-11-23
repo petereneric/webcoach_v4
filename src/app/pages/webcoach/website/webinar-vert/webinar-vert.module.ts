@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 
@@ -11,14 +11,15 @@ import {MatIconModule} from "@angular/material/icon";
 import {ItemSectionModule} from "../../../../components/webinar/item-section/item-section.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    WebinarVertPageRoutingModule,
-    VjsPlayerModule,
-    MatIconModule,
-    ItemSectionModule,
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        WebinarVertPageRoutingModule,
+        VjsPlayerModule,
+        MatIconModule,
+        ItemSectionModule,
+        NgOptimizedImage,
+    ],
   declarations: [WebinarVertPage]
 })
 export class WebinarVertPageModule {

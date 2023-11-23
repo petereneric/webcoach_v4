@@ -2,6 +2,7 @@ import {UnitPlayer} from "./unit-player";
 
 export interface Unit {
   id: number
+  kSection: number
   cName: string
   secDuration: number
   oUnitPlayer: UnitPlayer | null

@@ -2,5 +2,6 @@
 
 export const environment = {
   TRANSITION_LIST_SWIPE: 0.35, // s
-  OVERSCROLL_LIST: 850, // px
+  OVERSCROLL_LIST: 700, // px
+  THRESHOLD_PAN: 10
 }

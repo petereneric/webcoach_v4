@@ -190,6 +190,19 @@ export class ConnApiService {
     })
   }
 
+  safeDownloadImage(url: string, bodyFunction: any) {
+    this.http.get(`${this.urlApi}${url}`, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}).set('Authorization', `Bearer ${localStorage.getItem('token')}`),
+      responseType: 'blob'
+    }).subscribe({
+      next: (response: any) => {
+        bodyFunction(this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(response)))
+      }, error: error => {
+        console.log(error)
+      }
+    })
+  }
+
   safeDownload(url: string): any {
     return this.http.get(`${this.urlApi}${url}`, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}).set('Authorization', `Bearer ${localStorage.getItem('token')}`),

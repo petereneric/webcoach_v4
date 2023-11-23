@@ -42,10 +42,12 @@ export class ItemUnitComponent implements OnInit {
   }
 
   ngOnInit() {
+    // deactivated so that scrolling on mobile doesn't highlight item
+    /*
     this.svCommunication.currentUnit.subscribe(unit => {
       this.currentUnit = unit
-      console.log(unit)
     })
+     */
 
     this.svWebinar.bsUnit.subscribe(unit => {
       this.currentUnit = unit
@@ -61,7 +63,7 @@ export class ItemUnitComponent implements OnInit {
     }
     this.eventUnit.emit(event)
 
-    this.svCommunication.currentUnit.next(oUnit)
+    //this.svCommunication.currentUnit.next(oUnit)
   }
 
   onCheck() {

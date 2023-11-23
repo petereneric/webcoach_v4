@@ -12,13 +12,16 @@
 @import "styles/form";
 @import "styles/list";
 @import "styles/background";
+@import "styles/shadow";
 
 
 @import "theme/variables";
 @import "video.js/dist/video-js.css";
 
 
-
+p {
+  line-height: 0px;
+}
 
 // page, section & divider
 .page-horizontal {
@@ -126,6 +129,16 @@
   margin-top: 0.5rem;
   border-radius: 0.75rem;
 }
+
+.no-marker {
+  // used to prevent marking, e.g. while scrolling
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; /* Standard syntax */
+}
+
 
 
 

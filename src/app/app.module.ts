@@ -16,12 +16,14 @@ import {VjsPlayerModule} from "./components/vjs-player/vjs-player.module";
 import {HttpClientModule} from "@angular/common/http";
 import {DatePipe} from "@angular/common";
 import {ListDirective} from "./directives/list.directive";
+import {environment} from "../environments/environment";
 
 
 export class MyHammerConfig extends HammerGestureConfig {
   override overrides = <any>{
     swipe: {direction: Hammer.DIRECTION_ALL},
-    pan: {direction: Hammer.DIRECTION_ALL, threshold: 0},
+    pan: {direction: Hammer.DIRECTION_ALL, threshold: environment.THRESHOLD_PAN},
+    press: {time: 1},
   };
 }
 
