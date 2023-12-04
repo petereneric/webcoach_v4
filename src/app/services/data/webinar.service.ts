@@ -13,6 +13,7 @@ import {UnitPlayer} from "../../interfaces/unit-player";
 export class WebinarService {
 
   bsWebinar: BehaviorSubject<Webinar | null> = new BehaviorSubject<Webinar | null>(null)
+  bsWebinarThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsSections: BehaviorSubject<Section[] | null> = new BehaviorSubject<Section[] | null>(null)
   bsSection: BehaviorSubject<Section | null> = new BehaviorSubject<Section | null>(null)
   bsUnit: BehaviorSubject<Unit | null> = new BehaviorSubject<Unit | null>(null)
@@ -69,6 +70,14 @@ export class WebinarService {
     })
   }
 
+  loadWebinarThumbnail(kWebinar: number) {
+    this.api.getImage('webinar/cover/' +  kWebinar, (urlImage: any) => {
+      console.log("loaded")
+      console.log(urlImage)
+      this.bsWebinarThumbnail.next(urlImage)
+    })
+  }
+
   loadCoachThumbnail(kCoach: number) {
     this.api.safeDownloadImage('webinar/coach/thumbnail/' + kCoach, (urlThumbnail: any) => {
       this.bsCoachThumbnail.next(urlThumbnail)
@@ -76,18 +85,40 @@ export class WebinarService {
     })
   }
 
-  setUnit(aUnit: Unit | null) {
+  setUnit(aUnit: Unit | null, secVideo = 0) {
+    this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
+    if (secVideo > 0 && this.bsUnit.value!.oUnitPlayer!.tStatus == 0) {
+      this.bsUnit.value!.oUnitPlayer!.tStatus = 1
+    }
+    this.uploadUnitPlayer(this.bsUnit.value?.oUnitPlayer!)
+
     if (aUnit !== null) this.bsUnit.next(aUnit)
   }
 
 
-
   uploadUnitPlayer(aUnitPlayer: UnitPlayer | null) {
+    console.log(aUnitPlayer)
     this.api.safePost('webinar/auth/unit-player', aUnitPlayer, null)
   }
 
+
+  updateWebinarPlayer() {
+    const data = {
+      kWebinar: this.bsWebinar.value?.id,
+      kCurrentUnit: this.bsUnit.value?.id
+    }
+
+    this.api.safePost('webinar/auth/webinar-player', data, () => {})
+  }
+
+
   // + 1
-  setNextUnit() {
+  setNextUnit(secVideo = 0) {
+    this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
+    if (secVideo > 0 && this.bsUnit.value!.oUnitPlayer!.tStatus == 0) {
+      this.bsUnit.value!.oUnitPlayer!.tStatus = 1
+    }
+    this.uploadUnitPlayer(this.bsUnit.value?.oUnitPlayer!)
     this.bsUnit.next(this.getNextUnit())
   }
 
@@ -165,13 +196,25 @@ export class WebinarService {
     })
 
     // last
-    this.api.safeDownloadImage('webinar/unit/thumbnail/' + this.lastUnit()?.id, (urlThumbnail: any) => {
-      this.bsUnitThumbnailLast.next(urlThumbnail)
-    })
+    const aLastUnit = this.lastUnit()
+
+    if (aLastUnit !== null) {
+      this.api.safeDownloadImage('webinar/unit/thumbnail/' + aLastUnit?.id, (urlThumbnail: any) => {
+        this.bsUnitThumbnailLast.next(urlThumbnail)
+      })
+    } else {
+      this.bsUnitThumbnailLast.next(null)
+    }
 
     // next
-    this.api.safeDownloadImage('webinar/unit/thumbnail/' + this.getNextUnit()?.id, (urlThumbnail: any) => {
-      this.bsUnitThumbnailNext.next(urlThumbnail)
-    })
+    const aNextUnit = this.getNextUnit()
+
+    if (aNextUnit !== null) {
+      this.api.safeDownloadImage('webinar/unit/thumbnail/' + aNextUnit?.id, (urlThumbnail: any) => {
+        this.bsUnitThumbnailNext.next(urlThumbnail)
+      })
+    } else {
+      this.bsUnitThumbnailNext.next(null)
+    }
   }
 }

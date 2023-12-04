@@ -13,15 +13,22 @@
 @import "styles/list";
 @import "styles/background";
 @import "styles/shadow";
+@import "styles/page";
+@import "styles/border";
+@import "styles/input";
 
 
 @import "theme/variables";
 @import "video.js/dist/video-js.css";
 
 
-p {
-  line-height: 0px;
+.mat-form-field {
+  background: black;
 }
+
+
+
+
 
 // page, section & divider
 .page-horizontal {
@@ -37,6 +44,9 @@ p {
   padding-bottom: 2rem;
 }
 
+.page {
+}
+
 .section-horizontal {
   padding-left: 3rem !important;
   padding-right: 3rem !important;
@@ -45,6 +55,25 @@ p {
 .section-vertical {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.section {
+
+}
+
+.window-horizontal {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.window-vertical {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.window {
+  @extend .window-horizontal;
+  @extend .window-vertical;
 }
 
 .content-below-menu {
@@ -59,7 +88,12 @@ p {
   background-color: $colorDivider;
 }
 
+.divider-section {
+  @extend .divider;
+}
+
 @media screen and (max-width: $screenMobile) {
+
   .page-horizontal {
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
@@ -68,6 +102,14 @@ p {
     padding-top: 1rem;
     padding-bottom: 1rem;
   }
+
+  .page {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
   .section-horizontal {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
@@ -78,9 +120,36 @@ p {
     padding-bottom: 1rem;
   }
 
+  .section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .window-horizontal {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .window-vertical {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .window {
+    @extend .window-horizontal;
+    @extend .window-vertical;
+  }
+
   .divider {
     width: 100%;
     margin: 0rem;
+  }
+
+  .divider-section {
+    width: calc(100% - 2rem);
+    margin: 1rem !important;
   }
 }
 
@@ -138,6 +207,32 @@ p {
   -ms-user-select: none;
   user-select: none; /* Standard syntax */
 }
+
+
+
+::placeholder {
+  color: $colorLightTwo;
+  opacity: 1; /* Firefox */
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  @extend .ts-s;
+  border: 1px solid $colorLight;
+  -webkit-text-fill-color: $colorLight !important;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
 
 
 

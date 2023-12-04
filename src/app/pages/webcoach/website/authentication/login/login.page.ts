@@ -58,7 +58,7 @@ export class LoginPage implements OnInit {
 
         // navigate
         if (this.kWebinar > 0) {
-          this.router.navigate(['/webinar/' + this.kWebinar])
+          this.router.navigate(['/webinar-vert/' + this.kWebinar])
         } else {
           this.router.navigate(['/home']);
         }
@@ -77,5 +77,9 @@ export class LoginPage implements OnInit {
 
   get errorControl() {
     return this.form.controls
+  }
+
+  onBack() {
+    this.router.navigate(['/konto'])
   }
 }

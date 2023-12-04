@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
 import {Alert} from "../../../../../utils/alert";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-password-request',
@@ -19,7 +20,7 @@ export class PasswordRequestPage implements OnInit {
     cEmail: ['', Validators.required]
   })
 
-  constructor(private alert: Alert, private connApi: ConnApiService, private formBuilder: FormBuilder) {
+  constructor(private router: Router, private alert: Alert, private connApi: ConnApiService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
@@ -52,5 +53,9 @@ export class PasswordRequestPage implements OnInit {
 
   get errorControl() {
     return this.form.controls
+  }
+
+  onBack() {
+    this.router.navigate(['/konto'])
   }
 }

@@ -1,14 +1,15 @@
 <div class="container" (click)="bExpand = !bExpand">
-  <div>
-    <mat-icon [ngClass]="bExpand ? 'icon-expand a-chevron' : 'icon-expand a-chevron switch'" fontIcon="keyboard_arrow_up" ></mat-icon>
-  </div>
-  <p class="title">{{oSection?.cName}}</p>
+  <p class="title">{{(oSection!.nPosition+1) + '. ' + oSection?.cName}}</p>
+  <mat-icon [ngClass]="bExpand ? 'icon-expand a-chevron' : 'icon-expand a-chevron switch'" fontIcon="keyboard_arrow_up"></mat-icon>
+
 
 </div>
 <div *ngIf="bExpand">
   <div *ngFor="let oUnit of oSection?.lUnits">
-    <app-unit [oUnit]="oUnit"></app-unit>
+    <app-unit (eventUnit)="onUnit($event)" [oUnit]="oUnit"></app-unit>
   </div>
+  <div class="spv-1"></div>
 </div>
+
 <div class="divider"></div>
 

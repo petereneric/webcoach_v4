@@ -1,49 +1,49 @@
-<div class="content-below-menu">
-  <div class="page-horizontal page-vertical">
-    <div class="section-horizontal section-vertical">
-      <p class="title">Melde Dich bei deinem Webcoach-Konto an</p>
+<app-title (outputBack)="onBack()" [bBack]=true [cTitle]="'Mit deinem Konto anmelden'"></app-title>
+<div class="page-horizontal page-vertical">
+  <div class="section-horizontal section-vertical">
 
-      <div class="spv-05"></div>
+    <div class="spv-05"></div>
 
-      <form [formGroup]="form" (ngSubmit)="login()">
+    <form [formGroup]="form" (ngSubmit)="login()">
 
-          <input label="E-Mail" labelPlacement="floating" formControlName="cEmail" type="email">
+      <p class="i-label">E-Mail</p>
+      <input class="i" label="E-Mail" labelPlacement="floating" formControlName="cEmail" type="email" placeholder="Bitte E-Mail Adresse eingeben...">
 
-        <div class="spv-025"></div>
+      <div class="spv-025"></div>
 
-        <div class="input-info-container">
-          <p *ngIf="bSubmitted && errorControl.cEmail.errors?.['required']" class="input-info-text-error">Bitte
-            E-Mail Adresse eingeben</p>
-        </div>
+      <div class="input-info-container">
+        <p *ngIf="bSubmitted && errorControl.cEmail.errors?.['required']" class="input-info-text-error">Bitte
+          E-Mail Adresse eingeben</p>
+      </div>
 
-        <div class="spv-05"></div>
+      <div class="spv-1"></div>
 
-          <input label="Passwort" labelPlacement="floating" formControlName="cPassword" type="password">
+      <p class="i-label">Passwort</p>
+      <input class="i" label="Passwort" labelPlacement="floating" formControlName="cPassword" type="password" placeholder="Bitte Passwort eingeben...">
 
 
-        <div class="spv-025"></div>
+      <div class="spv-025"></div>
 
-        <div class="input-info-container">
-          <p *ngIf="bSubmitted && errorControl.cPassword.errors?.['required']" class="input-info-text-error">Bitte
-            gebe ein Passwort ein</p>
+      <div class="input-info-container">
+        <p *ngIf="bSubmitted && errorControl.cPassword.errors?.['required']" class="input-info-text-error">Bitte
+          gebe ein Passwort ein</p>
 
-        </div>
+      </div>
 
-        <div class="spv-1"></div>
+      <div class="spv-2"></div>
 
-        <button class="b-1-primary" type="submit">Anmelden</button>
+      <button class="b-1-light" type="submit">Anmelden</button>
 
-        <div class="spv-1"></div>
+      <div class="spv-1"></div>
 
-        <p class="tsl-s text-align-center">oder <span class="t-link" [routerLink]="'/passwort-vergessen'">Passwort vergessen</span></p>
+      <p class="ts-s tc-light-two text-align-center">oder <span class="t-link" [routerLink]="'/passwort-vergessen'">Passwort vergessen</span></p>
 
-        <div class="spv-1"></div>
-        <div class="divider"></div>
-        <div class="spv-1"></div>
+      <div class="spv-1"></div>
+      <div class="divider"></div>
+      <div class="spv-1"></div>
 
-        <p class="tsl-s text-align-center">Kein Konto? <span class="t-link" [routerLink]="'/registrierung/' + kWebinar">Kostenlos registrieren</span></p>
-      </form>
-    </div>
+      <p class="ts-s tc-light-two text-align-center">Kein Konto? <span class="t-link" [routerLink]="'/registrierung/' + kWebinar">Kostenlos registrieren</span></p>
+    </form>
   </div>
-  <app-footer></app-footer>
 </div>
+

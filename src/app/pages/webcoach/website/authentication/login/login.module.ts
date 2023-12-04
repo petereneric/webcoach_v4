@@ -7,6 +7,8 @@ import {LoginPageRoutingModule} from './login-routing.module';
 
 import {LoginPage} from './login.page';
 import {FooterModule} from "../../../../../components/footer/footer.module";
+import {TitleModule} from "../../../../../components/title/title.module";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   imports: [
@@ -14,7 +16,9 @@ import {FooterModule} from "../../../../../components/footer/footer.module";
     FormsModule,
     LoginPageRoutingModule,
     FooterModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TitleModule,
+    MatInputModule
   ],
   declarations: [LoginPage]
 })

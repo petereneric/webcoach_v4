@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -24,13 +25,14 @@ import {WebinarService} from "../../../services/data/webinar.service";
   styleUrls: ['./item-unit.component.scss'],
   providers: [DateTime]
 })
-export class ItemUnitComponent implements OnInit {
+export class ItemUnitComponent implements OnInit, AfterViewInit {
 
   // viewChild
   @ViewChild('container') vContainer: ElementRef | null = null;
 
   // input
   @Input() oUnit: Unit | null = null
+  @Input() aHeights: any
 
   // output
   @Output() eventUnit = new EventEmitter<any>()
@@ -52,14 +54,17 @@ export class ItemUnitComponent implements OnInit {
     this.svWebinar.bsUnit.subscribe(unit => {
       this.currentUnit = unit
     })
+  }
 
+  ngAfterViewInit(): void {
+    this.aHeights.pxHeightUnit = this.vContainer?.nativeElement.offsetHeight
   }
 
   onSelect(oUnit: Unit | null) {
     let event = {
       cEvent: 'select',
       unit: oUnit,
-      unitOld: this.svCommunication.currentUnit.value
+      unitOld: this.svWebinar.bsUnit.value
     }
     this.eventUnit.emit(event)
 
@@ -93,4 +98,5 @@ export class ItemUnitComponent implements OnInit {
       this.file.openBlob(blob)
     })
   }
+
 }

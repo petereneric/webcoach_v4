@@ -177,7 +177,7 @@ export class ConnApiService {
     });
   }
 
-  downloadImage(url: string, bodyFunction: any) {
+  getImage(url: string, bodyFunction: any) {
     this.http.get(`${this.urlApi}${url}`, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       responseType: 'blob'

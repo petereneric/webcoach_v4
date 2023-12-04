@@ -17,7 +17,7 @@ export class WebinarPreviewSmallComponent  implements OnInit {
   constructor(private connApi: ConnApiService) { }
 
   ngOnInit() {
-    this.connApi.downloadImage('webinar/cover/' +  this.oWebinar?.id, (urlCover: any) => {
+    this.connApi.getImage('webinar/cover/' +  this.oWebinar?.id, (urlCover: any) => {
       this.urlCover = urlCover
     })
   }

@@ -1,17 +1,20 @@
-<div class="container" (click)="onExpand()">
-  <div class="container-text">
-    <p class="title">{{oSection?.cName}}</p>
-    <p class="subtitle">{{secSection}}</p>
+<div #vSection>
+  <div class="container" (click)="onExpand()">
+    <div class="container-text">
+      <p class="title">{{oSection?.cName}}</p>
+      <p class="subtitle">{{secSection}}</p>
+    </div>
+    <div>
+      <!--<ion-icon class="icon-expand" [name]="bExpand ? 'chevron-down' : 'chevron-up'" (click)="bExpand = !bExpand"></ion-icon>-->
+      <mat-icon [ngClass]="oSection!.bExpand ? 'icon-expand a-chevron' : 'icon-expand a-chevron switch'" fontIcon="keyboard_arrow_up" ></mat-icon>
+    </div>
   </div>
-  <div>
-    <!--<ion-icon class="icon-expand" [name]="bExpand ? 'chevron-down' : 'chevron-up'" (click)="bExpand = !bExpand"></ion-icon>-->
-    <mat-icon [ngClass]="bExpand ? 'icon-expand a-chevron' : 'icon-expand a-chevron switch'" fontIcon="keyboard_arrow_up" ></mat-icon>
+  <div *ngIf="this.oSection!.bExpand">
+    <div *ngFor="let oUnit of oSection?.lUnits">
+      <app-item-unit (eventUnit)="onEventUnit($event)" [aHeights]="aHeights" [oUnit]="oUnit"></app-item-unit>
+    </div>
   </div>
+  <div class="divider"></div>
 </div>
-<div *ngIf="bExpand">
-  <div *ngFor="let oUnit of oSection?.lUnits">
-    <app-item-unit (eventUnit)="onEventUnit($event)" [oUnit]="oUnit"></app-item-unit>
-  </div>
-</div>
-<div class="divider"></div>
+
 

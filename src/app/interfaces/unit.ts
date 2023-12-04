@@ -11,4 +11,5 @@ export interface Unit {
   lMaterials: any[]
   bVideo: boolean
   nPosition: number
+  bSample: number
 }

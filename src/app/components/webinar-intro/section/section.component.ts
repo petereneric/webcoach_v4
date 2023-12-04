@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Section} from "../../../interfaces/section";
 
 @Component({
@@ -12,8 +12,18 @@ export class SectionComponent  implements OnInit {
   @Input() oSection!: Section
   @Input() bExpand!: boolean
 
+  // output
+  @Output() eventUnit: EventEmitter<any> = new EventEmitter<any>()
+
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.oSection.nPosition === 0) {
+      this.bExpand = true
+    }
+  }
 
+  onUnit($event: any) {
+    this.eventUnit.emit($event)
+  }
 }

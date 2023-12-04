@@ -1,64 +1,64 @@
-<div class="content-below-menu">
-  <div class="page-horizontal page-vertical">
-    <div class="section-horizontal section-vertical">
-      <p class="title">Jetzt kostenlos registrieren und direkt loslegen</p>
+<app-title (outputBack)="onBack()" [bBack]=true [cTitle]="'Jetzt kostenlos registrieren'"></app-title>
 
-      <div class="spv-05"></div>
+<div class="window">
 
-      <form [formGroup]="form" (ngSubmit)="register()">
-        <label class="input-border" lines="none">
-          <input label="Vollständiger Name" labelPlacement="floating" formControlName="cName" type="text">
-        </label>
+  <div class="spv-05"></div>
 
-        <div class="spv-025"></div>
+  <form [formGroup]="form" (ngSubmit)="register()">
+    <p class="i-label">Vollständiger Name</p>
+    <input class="i" formControlName="cName" type="text" placeholder="Bitte Namen eingeben...">
 
-        <div class="input-info-container">
-          <p *ngIf="bSubmitted && errorControl.cEmail.errors?.['required']" class="input-info-text-error">Bitte
-            Namen eingeben</p>
-        </div>
+    <div class="spv-025"></div>
 
-        <div class="spv-05"></div>
-
-          <input label="E-Mail" labelPlacement="floating" formControlName="cEmail" type="email">
-
-
-        <div class="spv-025"></div>
-
-        <div class="input-info-container">
-          <p *ngIf="bSubmitted && errorControl.cEmail.errors?.['required']" class="input-info-text-error">Bitte
-            E-Mail Adresse eingeben</p>
-        </div>
-
-        <div class="spv-05"></div>
-
-          <input label="Passwort" labelPlacement="floating" formControlName="cPassword" [type]="bShowPassword ? 'text' : 'password'">
-          <!--<mat-icon class="i-eye" [name]="bShowPassword ? 'eye-off' : 'eye'" (click)="bShowPassword = !bShowPassword"></mat-icon>-->
-
-
-        <div class="spv-025"></div>
-
-        <div class="input-info-container">
-          <p *ngIf="bSubmitted && errorControl.cPassword.errors?.['required']" class="input-info-text-error">Bitte
-            gebe ein Passwort ein</p>
-
-        </div>
-
-        <div class="spv-1"></div>
-
-        <button class="b-1-primary" type="submit">Kostenlos registrieren</button>
-
-        <div class="spv-1"></div>
-
-        <p class="tsl-xs text-align-center">Mit der Registrierung stimmst Du unseren <span class="link-privacy-policy" [routerLink]="'/datenschutzbestimmungen'">Datenschutzbestimmungen</span> zu.</p>
-
-        <div class="spv-1"></div>
-        <div class="divider"></div>
-        <div class="spv-1"></div>
-
-        <p class="tsl-s text-align-center">Du hast schon ein Konto? <span class="t-link" [routerLink]="'/login/' +  kWebinar">Anmelden</span></p>
-
-      </form>
+    <div class="input-info-container">
+      <p *ngIf="bSubmitted && errorControl.cEmail.errors?.['required']" class="input-info-text-error">Bitte
+        Namen eingeben</p>
     </div>
-  </div>
-  <app-footer></app-footer>
+
+    <div class="spv-1"></div>
+
+    <p class="i-label">E-Mail Adresse</p>
+    <input class="i" formControlName="cEmail" type="email" placeholder="Bitte E-Mail Adresse eingeben...">
+
+
+    <div class="spv-025"></div>
+
+    <div class="input-info-container">
+      <p *ngIf="bSubmitted && errorControl.cEmail.errors?.['required']" class="input-info-text-error">Bitte
+        E-Mail Adresse eingeben</p>
+    </div>
+
+    <div class="spv-1"></div>
+
+    <p class="i-label">Passwort</p>
+    <input class="i" formControlName="cPassword" [type]="bShowPassword ? 'text' : 'password'" placeholder="Bitte Passwort eingeben...">
+    <!--<mat-icon class="i-eye" [name]="bShowPassword ? 'eye-off' : 'eye'" (click)="bShowPassword = !bShowPassword"></mat-icon>-->
+
+
+    <div class="spv-025"></div>
+
+    <div class="input-info-container">
+      <p *ngIf="bSubmitted && errorControl.cPassword.errors?.['required']" class="input-info-text-error">Bitte
+        gebe ein Passwort ein</p>
+
+    </div>
+
+    <div class="spv-2"></div>
+
+    <button class="b-1-light" type="submit">Kostenlos registrieren</button>
+
+    <div class="spv-1"></div>
+
+    <p class="tsl-xs tc-light-two text-align-center">Mit der Registrierung stimmst Du unseren <span class="link-privacy-policy"
+                                                                                       [routerLink]="'/datenschutzbestimmungen'">Datenschutzbestimmungen</span> zu.</p>
+
+    <div class="spv-1"></div>
+    <div class="divider"></div>
+    <div class="spv-1"></div>
+
+    <p class="ts-s tc-light-two text-align-center">Du hast schon ein Konto? <span class="t-link" [routerLink]="'/login/' +  kWebinar">Anmelden</span></p>
+
+  </form>
 </div>
+
+

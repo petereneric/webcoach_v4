@@ -1,0 +1,20 @@
+<app-title [cTitle]="'Konto'"></app-title>
+<main *ngIf="svAuth.isLoggedIn(); else vLoggedOut" class="page">
+
+  <section *ngFor="let aMenu of lMenu" class="section">
+    <div [routerLink]="aMenu.cPath" class="flex align-items-center" style="height: 3rem; width: 100%">
+      <p class="tc-light tsl-standard" style="margin-top: auto; margin-bottom: auto">{{aMenu.cName}}</p>
+      <mat-icon class="ic-light is-s " style="padding-top: 0.35rem; margin-left: auto" fontIcon="keyboard_arrow_right"></mat-icon>
+    </div>
+  </section>
+  <section class="section">
+    <button (click)="onLogout()" class="b-1-light">Abmelden</button>
+  </section>
+
+</main>
+
+<ng-template #vLoggedOut>
+  <main class="window">
+    <button class="b-1-light" [routerLink]="'/login/0'">Anmelden</button>
+  </main>
+</ng-template>

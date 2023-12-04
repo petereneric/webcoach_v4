@@ -1,4 +1,8 @@
-<div class="container">
-      <mat-icon class="icon" fontIcon="play_circle"></mat-icon>
-      <p class="title">{{oUnit?.cName}}</p>
+<div class="container" (click)="onUnit()">
+  <mat-icon [ngClass]="oUnit?.bSample ? 'icon-play' : 'icon'" fontIcon="play_circle"></mat-icon>
+  <div class="flex-vertical" style="margin-left: 1rem">
+    <p class="title">{{oUnit?.cName}}</p>
+    <p *ngIf="oUnit?.bSample" class="tsl-xs tc-light-two" style="padding-top: 0.25rem;">Abspielen</p>
+  </div>
+
 </div>

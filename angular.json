@@ -43,7 +43,7 @@
               },
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.stag.ts",
+                  "replace": "src/environments/environment.dev.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],

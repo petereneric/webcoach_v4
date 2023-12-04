@@ -7,15 +7,17 @@ import { RegistrationPageRoutingModule } from './registration-routing.module';
 
 import { RegistrationPage } from './registration.page';
 import {FooterModule} from "../../../../../components/footer/footer.module";
+import {TitleModule} from "../../../../../components/title/title.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    RegistrationPageRoutingModule,
-    ReactiveFormsModule,
-    FooterModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        RegistrationPageRoutingModule,
+        ReactiveFormsModule,
+        FooterModule,
+        TitleModule
+    ],
   declarations: [RegistrationPage]
 })
 export class RegistrationPageModule {}

@@ -1,7 +1,7 @@
 @import "../theme/variables";
 
 $colorHoverLight: #c2c2c2;
-$colorHoverDark: $colorDarkLight;
+$colorHoverDark: $colorDarkTwo;
 
 // button
 
@@ -121,6 +121,7 @@ button {
 
 .b-1-primary {
   @extend .bbg-primary;
+  //@extend .btc-dark;
   @extend .btc-white;
   @extend .ts-standard;
 }

@@ -6,4 +6,5 @@ export interface Section {
   nPosition: number
   lUnits: Unit[]
   bEdit: boolean
+  bExpand: boolean
 }

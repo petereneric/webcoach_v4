@@ -4,27 +4,34 @@ ion-content {
 
 }
 
+
+
 .height {
   height: calc(100dvh - 4rem - 4rem);
 }
 
 .icon-play {
-  font-size: 3rem;
-  color: $colorDark;
-  background-color: $colorLight;
+  @extend .is-xxl;
+  @extend .ic-light;
   border-radius: 100%;
-  padding:1rem;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0.9;
+  opacity: 1;
   cursor: pointer;
 }
 
 .title {
   @extend .tsl-xl;
   @extend .tc-primary;
+  @extend .tw-bold;
+  margin-bottom: 0.5rem;
+}
+
+.title-two {
+  @extend .tsl-xl;
+  @extend .tc-light;
   @extend .tw-bold;
   margin-bottom: 0.5rem;
 }
@@ -44,7 +51,7 @@ ion-content {
 }
 
 .img-coach {
-  height: 5rem;
+  height: 4rem;
   border-radius: 100%;
   margin-right: 1rem;
 }
@@ -57,29 +64,25 @@ ion-content {
   margin-top: 0rem;
 }
 
-.container-bottom-background {
-  width: 100%;
-  background: $colorWhite;
-  //position: absolute;
-  //bottom: 0rem;
-  height: 4rem;
-  padding-bottom: env(safe-area-inset-bottom);
-}
+
 
 .container-bottom {
-  @extend .page-horizontal;
-  @extend .section-horizontal;
+  @extend .window-horizontal;
+  @extend .bg-dark;
+  width: 100%;
+  position: fixed;
+  bottom: 0rem;
+  height: 4rem;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
   //background: $colorWhite;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  justify-content: center;
 }
 
 .text-bottom {
   @extend .ts-standard;
   @extend .tw-bold;
+  @extend .tc-light;
   margin-right: 1rem;
   white-space: nowrap;
 }

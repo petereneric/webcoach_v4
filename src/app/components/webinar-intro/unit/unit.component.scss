@@ -9,12 +9,16 @@
 
 .title {
   @extend .ts-s;
-  @extend .tc-primary;
-  margin-left: 1rem;
+  @extend .tc-light;
 }
 
 
 .icon {
   @extend .is-s;
-  @extend .ic-text-primary;
+  @extend .ic-light-two;
+}
+
+.icon-play {
+  @extend .icon;
+  @extend .ic-primary;
 }

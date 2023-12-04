@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ConnApiService} from "../conn-api/conn-api.service";
 import {RoleService} from "../authentication/role.service";
 import {Webinar} from "../../interfaces/webinar";
@@ -15,7 +15,8 @@ resolving true.
 })
 export class WebinarPlayerGuardService {
 
-  constructor(private router: Router, private roleService: RoleService, private connApi: ConnApiService) {}
+  constructor(private router: Router, private roleService: RoleService, private connApi: ConnApiService) {
+  }
 
   canActivate(route: any): Promise<boolean> {
     return new Promise((resolve) => {
@@ -32,8 +33,11 @@ export class WebinarPlayerGuardService {
             console.log("1")
             resolve(true)
           } else {
+            //if (webinarPlayer.bAccess === 1) {
             if (webinarPlayer.bAccess === 1) {
-              this.router.navigate(['/webinar/' + kWebinar])
+              console.log(webinarPlayer)
+              resolve(true)
+              //this.router.navigate([(webinarPlayer.aWebinar?.bVertical ? 'webinar-vert/' : 'webinar/') + webinarPlayer.kWebinar])
             } else {
               console.log("2")
               resolve(true)

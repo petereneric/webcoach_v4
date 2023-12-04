@@ -1,6 +1,11 @@
 // colors
 
-$colorPrimary: #673AB7;
+//$colorPrimary: #ff00ea;
+//$colorPrimary: #ff00ea;
+//$colorPrimary: #e80de3;
+//$colorPrimary: #ea0ac5;
+$colorPrimary: #ea0bdf;
+//$colorPrimary: #ff00fb;
 $colorPrimaryDark: #512DA8;
 
 $colorTextPrimary: #313131;
@@ -19,13 +24,17 @@ $colorWhite: #ffffff;
 
 $colorLight: #f4f2f5;
 $colorLightTwo: #b0acb0;
+$colorLightThree: #696669;
 
 //$colorDark: #262626;
-$colorDark: #0c0c0c;
-$colorDarkLight: #414141;
+//$colorDark: #090a10;
+$colorDark: #0c0c17;
+//$colorDark: #0e0e17;
+$colorDarkTwo: #201c21;
 
 $colorBackgroundLight: #f6f6f6;
 $colorBackgroundDark: $colorDark;
+$colorBackgroundDarkTwo: $colorDarkTwo;
 
 // page
 $pageWidth: 100rem;

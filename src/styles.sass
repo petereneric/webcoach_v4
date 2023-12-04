@@ -1,9 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import "global.scss"
+
 body
   margin: 0
   padding: 0
-  background-color: #0c0c0c
+  background-color: $colorDark
+
+
+div
+  //background-color: $colorDark
+
+li
+  margin-bottom: 0.75rem
+
+// needed for list checkmark
+ul
+  padding-left: 2rem
+  text-indent: -0.8rem
+  list-style: none !important
+  list-style-position: outside !important
+
+.list-checkmark li:before
+  content: '✓'
+  margin-left: -1em
+  margin-right: 1rem
+
+.list-bulletpoint li:before
+  content: '•'
+  margin-left: -1em
+  margin-right: 1rem
+
+
+.dialog-container .mat-dialog-container
+  background-color: black
+  @extend .bg-dark
+
+
+
+
+
 
 
 

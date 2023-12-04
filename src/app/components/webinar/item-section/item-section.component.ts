@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Section} from "../../../interfaces/section";
 import {DateTime} from "../../../utils/date-time";
 import {EventUnit} from "../../../interfaces/events/eventUnit";
@@ -12,34 +12,41 @@ import {WebinarService} from "../../../services/data/webinar.service";
   styleUrls: ['./item-section.component.scss'],
   providers: [DateTime]
 })
-export class ItemSectionComponent  implements OnInit {
+export class ItemSectionComponent implements OnInit, AfterViewInit {
+
+  // view-childs
+  @ViewChild('vSection') vSection!: ElementRef
 
   // input
   @Input() oSection: Section | null = null
+  @Input() aHeights: any
 
   // output
   @Output() eventUnit = new EventEmitter<any>()
 
   // variables
-  bExpand: boolean = false
   secSection: string = ''
 
-  constructor(private svWebinar: WebinarService, private svCommunication: Communication, private uDateTime: DateTime) { }
+  constructor(private svWebinar: WebinarService, private svCommunication: Communication, private uDateTime: DateTime) {
+  }
 
   ngOnInit() {
     this.sumTime()
 
     // subscribe to unit
     this.svCommunication.currentUnit.subscribe(unit => {
-      if (this.unitInSection(unit)) this.bExpand = true
+      if (this.unitInSection(unit)) this.oSection!.bExpand = true
     })
 
     // subscribe to unit
     this.svWebinar.bsUnit.subscribe(aUnit => {
-      if (this.unitInSection(aUnit)) this.bExpand = true
+      this.oSection!.bExpand = this.unitInSection(aUnit)
     })
+  }
 
-
+  ngAfterViewInit(): void {
+    this.aHeights.pxHeightSection = this.vSection.nativeElement.offsetHeight
+    console.log(this.aHeights)
   }
 
   sumTime() {
@@ -64,8 +71,8 @@ export class ItemSectionComponent  implements OnInit {
   }
 
   onExpand() {
-    this.bExpand = !this.bExpand
-    if (!this.bExpand) {
+    this.oSection!.bExpand = !this.oSection!.bExpand
+    if (!this.oSection!.bExpand) {
       let event = {
         cEvent: 'collapse',
         unit: null,
@@ -73,4 +80,6 @@ export class ItemSectionComponent  implements OnInit {
       this.eventUnit.emit(event)
     }
   }
+
+
 }

@@ -6,7 +6,19 @@
   --background: $colorBackgroundDark !important;
 }
 
+.bg-dark-two {
+  background-color: $colorBackgroundDarkTwo;
+}
+
 .bg-light {
   background-color: $colorBackgroundLight;
   --background: $colorBackgroundLight !important;
+}
+
+.bg-divider {
+  background: $colorDivider;
+}
+
+.bg-primary {
+  background: $colorPrimary;
 }

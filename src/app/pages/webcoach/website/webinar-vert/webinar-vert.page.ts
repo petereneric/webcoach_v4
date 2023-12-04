@@ -4,12 +4,13 @@ import {Unit} from "../../../../interfaces/unit";
 import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
 import {Communication} from "../../../../services/communication/communication.service";
 import * as videojs from "video.js";
-import {interval, Subscription} from "rxjs";
+import {interval, Subscription, timeout} from "rxjs";
 import {WebinarService} from "../../../../services/data/webinar.service";
 import {AnimationService} from "../../../../services/animation.service";
 import {environment} from "../../../../../environments/environment";
 import * as Hammer from 'hammerjs';
 import {CoachService} from "../../../../services/data/coach.service";
+import {environment2} from "../../../../../environments/environment.dev";
 
 @Component({
   selector: 'app-webinar-vert',
@@ -32,6 +33,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vCover') vCover!: ElementRef
   @ViewChild('vPlay') vPlay!: ElementRef
   @ViewChild('vPause') vPause!: ElementRef
+  @ViewChild('vTitle') vTitle!: ElementRef
+  @ViewChild('vInformation') vInformation!: ElementRef
+  @ViewChild('vSidebar') vSidebar!: ElementRef
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
 
   // output
@@ -45,9 +49,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   readonly THRESHOLD_LIST_INSIDE_VELOCITY = 0.30 // px/ms
   readonly TRANSITION_VIDEO_SWIPE = 0.35 // s
   readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
+  readonly TRANSITION_LIST_CLOSE = 0.1 // s
   readonly INTERVAL_PROCESS_UPDATER = 100 // ms
   readonly DIRECTION_LIST_START_UP = 1
   readonly DIRECTION_LIST_START_DOWN = 2
+  readonly TIME_INFORMATION_START = 5 // sec
+  readonly TIME_SIDEBAR_END = 10 // sec
 
   // tracker for list of units
   private bListOpen = false
@@ -69,6 +76,17 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   private hListOutside = 0
   private bClickListInsideDisabled = true
   private bScrollListInsideEnabled = false
+  private bSidebarShown = false
+  private bSidebarHidden = false
+  private bInformationShown = false
+  private bInformationHidden = false
+  private bVisibilityChange = false
+
+  // data object for heights of section and unit
+  public aHeights = {pxHeightSection: 0, pxHeightUnit: 0}
+
+  // black line at the top due to IOS pixel line before first scroll
+  public bShowBlackLineTop = true
 
   // used to respect threshold only in the beginning of the scroll
   private tDirectionListStart = 0
@@ -99,7 +117,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // get kWebinar and start service that loads webinar
     this.activatedRoute.params.subscribe(params => {
-      this.svWebinar.load(params['kWebinar']);
+      const kWebinar = params['kWebinar'];
+      this.svWebinar.load(kWebinar);
+      this.svWebinar.loadWebinarThumbnail(kWebinar)
     })
 
     // initiate player
@@ -108,10 +128,6 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     // checker for process
     this.startProcessUpdater()
 
-    // subscription to unit change
-    this.svWebinar.bsUnit.subscribe(aUnit => {
-      this.playUnit(aUnit)
-    })
 
     // callback for change of visibility, e.g. on tab change
     // for coming back from other tab and primary putting cover on top before that
@@ -121,6 +137,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         case "visible":
           break;
         case "hidden":
+          // update unit-player
+          this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo = this.player.currentTime()
+          this.svWebinar.bsUnit.value!.oUnitPlayer!.tStatus = 1
+          this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value!.oUnitPlayer)
+
+
           this.player.pause()
           // put cover on top
           this.vCover.nativeElement.style.zIndex = 7
@@ -129,6 +151,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
           // close list
           this.onCloseList()
+
+          this.bVisibilityChange = true
           break;
       }
     });
@@ -136,6 +160,23 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit(): void {
+    // subscription to unit change
+    this.svWebinar.bsUnit.subscribe(aUnit => {
+      if (this.vCover !== undefined && this.vCover.nativeElement.style.zIndex == 0) {
+        // only play when cover is not shown
+        this.playUnit(aUnit)
+        this.player.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
+
+        // update webinar-player set current-unit
+        this.svWebinar.updateWebinarPlayer()
+      } else {
+        this.playUnit(aUnit, false)
+        this.player.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
+      }
+
+    })
+
+
     // initial size calls
     this.setHeight()
     this.wWindow = window.innerWidth;
@@ -144,10 +185,14 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // for testing of list
     //this.onOpenList()
+    setTimeout(() => {
+
+    }, this.TIME_INFORMATION_START * 1000)
   }
 
 
   ngOnDestroy(): void {
+
     this.player.dispose();
     this.stopProcessUpdater()
 
@@ -169,9 +214,23 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     // count scrolling when enabled
     if (!this.bScrollDisabled) this.nScroll++
 
-    if (this.nScroll > this.THRESHOLD_COVER_SCROLL) {
+    if (this.nScroll === this.THRESHOLD_COVER_SCROLL) {
       // scrolling at the beginning when window is covered for triggered user engagement
       // in order for shrinking nav bar in ios mobile devices
+
+      // info: There was a bug on ios which blocked the click on the video screen so that video couldn't be started or stopped
+      // It was either solved by setting nScroll === Threshold or by timeout for scroll to bottom or by the order
+      // where zIndex is set in the end. In the result user can swipe now and immediately click to play without waiting till scroll bar finished
+      // giving only then the click for play free
+      // giving only then the click for play free
+
+
+
+      setTimeout(() => {
+
+        window.scroll({ top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto" });
+
+      }, 10);
 
       // hide cover
       this.vCover.nativeElement.style.zIndex = 0
@@ -180,6 +239,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // Note: player can only be started manually when user interacted with the document
       // for some reason scroll event is triggered when changing tab, therefore a check
       // for visibility is necessary
+
+      //if (this.player.paused()) this.player.play()
+
+
+
+
+
       if (this.bDocumentInteraction && this.documentVisible()) this.player.play()
     }
   }
@@ -192,6 +258,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   onSwipeEnd(ev) {
+    // hide black line since the IOS pixel line bug is only shown before first scroll
+    if (this.bShowBlackLineTop) this.bShowBlackLineTop = false
+
     if (Math.abs(ev.deltaY) < this.hVideoWrapper / 2 && Math.abs(ev.velocityY) < this.THRESHOLD_VIDEO_VELOCITY) {
       // threshold not reached and therefore bouncing video back - no video change
 
@@ -215,6 +284,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
         // set video poster with enough time to load before end of swipe
         this.player.poster("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.getNextUnit()?.id)
+        this.hideSidebar()
+        this.bStopProcessUpdater = true
         setTimeout(() => {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', '0s')
 
@@ -222,7 +293,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', 0 + 'px')
 
             // play next unit
-            this.svWebinar.setNextUnit()
+            this.svWebinar.setNextUnit(this.player.currentTime())
+
           },
           this.TRANSITION_VIDEO_SWIPE * 1000);
       }
@@ -236,7 +308,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
         // set video poster with enough time to load before end of swipe
         this.player.poster("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.lastUnit()?.id)
-        console.log("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.lastUnit()?.id)
+        this.hideSidebar()
+        this.bStopProcessUpdater = true
         setTimeout(() => {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', '0s')
 
@@ -244,7 +317,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', 0 + 'px')
 
             // play last unit
-            this.svWebinar.setUnit(this.svWebinar.lastUnit())
+            this.svWebinar.setUnit(this.svWebinar.lastUnit(), this.player.currentTime())
           },
           this.TRANSITION_VIDEO_SWIPE * 1000);
       }
@@ -522,14 +595,14 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // closing list
       console.log("closing list")
 
-      this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
+      this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_CLOSE + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
       this.bListOpen = false
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
 
         },
-        this.TRANSITION_LIST_SWIPE * 1000);
+        this.TRANSITION_LIST_CLOSE * 1000);
     }
 
     if (movementList < middleList && (movementList > 0 && event.velocityY < this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
@@ -546,17 +619,27 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
     // list inside
-    if (topListInside < gapListInsideOutside) {
-      // bounce back list-inside on bottom when user overstretched the list already while holding it
-      console.log("bounce back list-inside on bottom when user overstretched the list already while holding it")
-
+    if (gapListInsideOutside > 0) {
       this.renderer.setStyle(this.vListInside.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
-      this.renderer.setStyle(this.vListInside.nativeElement, 'top', hListOutside - hListInside + 'px')
+      this.renderer.setStyle(this.vListInside.nativeElement, 'top', 0 + 'px')
       setTimeout(() => {
           this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
         },
         this.TRANSITION_LIST_SWIPE * 1000);
+    } else {
+      if (topListInside < gapListInsideOutside) {
+        // bounce back list-inside on bottom when user overstretched the list already while holding it
+        console.log("bounce back list-inside on bottom when user overstretched the list already while holding it")
+
+        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
+        this.renderer.setStyle(this.vListInside.nativeElement, 'top', hListOutside - hListInside + 'px')
+        setTimeout(() => {
+            this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+          },
+          this.TRANSITION_LIST_SWIPE * 1000);
+      }
     }
+
   }
 
 
@@ -587,14 +670,14 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // close list
       console.log("close list")
 
-      this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_SWIPE + 's')
+      this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_CLOSE + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
-      this.bListOpen = false
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
 
         },
-        this.TRANSITION_LIST_SWIPE * 1000);
+        this.TRANSITION_LIST_CLOSE * 1000);
+      this.onCloseList(false)
 
 
     } else {
@@ -613,6 +696,22 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   onOpenList() {
     if (!this.bListOpen) {
+
+      // set position depending on current unit
+      const position = this.aHeights.pxHeightSection * (this.svWebinar.bsSection.value!.nPosition + 1) + this.aHeights.pxHeightUnit * (this.svWebinar.bsUnit.value!.nPosition > 0 ? (this.svWebinar.bsUnit.value!.nPosition - 1) : this.svWebinar.bsUnit.value!.nPosition)
+
+      const gap = this.vListOutside.nativeElement.offsetHeight - this.vListInside.nativeElement.offsetHeight
+      if (gap > 0) {
+        this.renderer.setStyle(this.vListInside.nativeElement, 'top', 0 + 'px')
+      } else {
+        if (-position < gap) {
+          // list shall not be overstretched, position is therefore set to end
+          this.renderer.setStyle(this.vListInside.nativeElement, 'top', gap + 'px')
+        } else {
+          this.renderer.setStyle(this.vListInside.nativeElement, 'top', -position + 'px')
+        }
+      }
+
       console.log("wow")
       this.bListOpen = true
 
@@ -625,8 +724,14 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  onCloseList() {
+  onCloseList(bAnimation = true) {
     if (this.bListOpen) {
+
+      // close all sections besides the one with the selected unit
+      this.svWebinar.bsSections.value?.forEach(section => {
+        section.bExpand = section.id === this.svWebinar.bsUnit.value?.kSection
+      })
+
       this.bListOpen = false
 
       // play video
@@ -670,7 +775,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickCheck() {
+    console.log(this.svWebinar.bsUnit.value!.oUnitPlayer!)
     this.svWebinar.bsUnit.value!.oUnitPlayer!.tStatus = this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 1 : 2
+    console.log(this.svWebinar.bsUnit.value!.oUnitPlayer!)
     this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value!.oUnitPlayer!)
   }
 
@@ -686,6 +793,55 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.process = interval(this.INTERVAL_PROCESS_UPDATER).subscribe(val => {
       if (!this.bStopProcessUpdater) {
         this.vProcess.nativeElement.style.width = (this.player.currentTime() / this.player.duration()) * 100 + '%'
+
+        // views
+        // sidebar
+        if (this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus! < 2) {
+          const secOverEnd = this.player.duration() - this.player.currentTime()
+          if (secOverEnd <= this.TIME_SIDEBAR_END) {
+            if (!this.bSidebarShown) {
+              this.bSidebarHidden = false
+              this.bSidebarShown = true
+              console.log("secOverEnd", secOverEnd)
+              console.log("SHHHOW")
+              this.svAnimation.show([this.vSidebar])
+            }
+          } else {
+            if (!this.bSidebarHidden) {
+              this.bSidebarHidden = true
+              this.bSidebarShown = false
+              this.svAnimation.hide([this.vSidebar])
+            }
+          }
+        } else {
+          if (!this.bSidebarShown) {
+            this.bSidebarHidden = false
+            this.bSidebarShown = true
+            console.log("SHHHOWWWWWWWWWW")
+            this.svAnimation.show([this.vSidebar])
+          }
+        }
+
+        // information
+        const secOverStart = this.TIME_INFORMATION_START - this.player.currentTime()
+        if (secOverStart > 0) {
+          if (!this.bInformationShown) {
+            this.bInformationHidden = false
+            this.bInformationShown = true
+            this.svAnimation.show([this.vInformation, this.vTitle])
+          }
+        } else {
+          let secTimeout = 0
+          if (this.bVisibilityChange) {
+            secTimeout = this.TIME_INFORMATION_START
+            this.bVisibilityChange = false
+          }
+          if (!this.bInformationHidden) {
+            this.bInformationHidden = true
+            this.bInformationShown = false
+            this.svAnimation.hide([this.vInformation, this.vTitle], secTimeout)
+          }
+        }
       }
     });
   }
@@ -710,6 +866,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
             this.svWebinar.uploadUnitPlayer(aUnitOld.oUnitPlayer)
           }
 
+          // hide sidebar
+          this.hideSidebar()
+
+          // stop process-updater
+          this.bStopProcessUpdater = true
+
           // set selected unit
           this.svWebinar.setUnit(event.unit)
 
@@ -724,6 +886,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         let unit: Unit = event.unit
         unit.oUnitPlayer!.tStatus = unit.oUnitPlayer?.tStatus! < 2 ? 2 : 0
         unit.oUnitPlayer!.secVideo = 0
+
         this.svWebinar.uploadUnitPlayer(unit.oUnitPlayer)
 
         break
@@ -765,7 +928,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     let options = {
       fluid: false,
       fill: true,
-      autoplay: true,
+      autoplay: false,
       controls: false,
     }
 
@@ -774,10 +937,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
     // TODO add environment variable for dev and prod mode
-    this.player.volume(0)
+    this.player.volume(environment2.VOLUME_VIDEO)
 
     // ended callback
     this.player.on('ended', data => {
+      this.bStopProcessUpdater = true
+
       this.svWebinar.setNextUnit()
     });
 
@@ -793,12 +958,20 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     // pause callback
     this.player.on('pause', data => {
       this.stopProcessUpdater()
+      console.log('pauuse')
+      // views
+      this.svAnimation.show([this.vInformation, this.vTitle])
+      this.svAnimation.show([this.vSidebar])
+      this.bSidebarShown = true
+      this.bSidebarHidden = false
+      this.bInformationShown = true
+      this.bInformationHidden = false
     });
   }
 
 
-  playUnit(unit: Unit | null) {
-    this.updatePlayer(this.connApi.getUrl('webinar/unit/video/' + unit?.id))
+  playUnit(unit: Unit | null, play: boolean = true) {
+    this.updatePlayer(this.connApi.getUrl('webinar/unit/video/' + unit?.id), play)
   }
 
 
@@ -812,10 +985,10 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  updatePlayer(source: string) {
+  updatePlayer(source: string, play: boolean = true) {
     if (this.player !== undefined) {
       this.player.src({src: source, type: 'video/mp4'});
-      this.player.play();
+      if (play) this.player.play();
     }
   }
 
@@ -843,6 +1016,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   onClickVideo() {
+    console.log("onClickVideo()")
+
     if (!this.onCloseList()) {
       // list wasn't closed
 
@@ -884,7 +1059,16 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.bScrollDisabled = false;
   }
 
-  protected readonly event = event;
+  hideSidebar() {
+    console.log('HHIIIDE')
+    this.renderer.setStyle((this.vSidebar.nativeElement), 'transition', '0s')
+    this.renderer.setStyle(this.vSidebar.nativeElement, 'opacity', 0)
+    this.renderer.setStyle((this.vSidebar.nativeElement), 'transition', 'all 200ms ease-in-out')
+    this.bSidebarShown = false
+    this.bSidebarHidden = true
+  }
 
+  showInformation() {
 
+  }
 }

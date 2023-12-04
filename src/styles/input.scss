@@ -1,0 +1,28 @@
+// input
+
+.i {
+  @extend .ts-s;
+  caret-color: $colorLight;
+  width: 100%;
+  background: $colorBackgroundDark;
+  color: $colorLight;
+  border: 1px solid $colorLight;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+input {
+  all: unset;
+}
+
+.i-label {
+  @extend .ts-xs;
+  @extend .tc-light-two;
+  margin-bottom: 0.5rem !important;
+}
+
+// spacer between inputs
+.i-spacer {
+  @extend .spv-1;
+}

@@ -5,6 +5,12 @@ $isStandard: 1.5rem;
 $isItem: 1rem;
 $isItemSub: 0.8rem;
 
+.is-xxs {
+  font-size: 0.7rem;
+  height: 0.7rem;
+  width: 0.7rem;
+}
+
 .is-xs {
   font-size: 1rem;
   height: 1rem;
@@ -62,8 +68,16 @@ $isItemSub: 0.8rem;
   color: $colorLight;
 }
 
+.ic-light-two {
+  color: $colorLightTwo;
+}
+
 .ic-dark {
   color: $colorDark;
+}
+
+.ic-primary {
+  color: $colorPrimary;
 }
 
 // specific

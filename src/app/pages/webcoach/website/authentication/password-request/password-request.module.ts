@@ -7,6 +7,7 @@ import { PasswordRequestPageRoutingModule } from './password-request-routing.mod
 
 import { PasswordRequestPage } from './password-request.page';
 import {FooterModule} from "../../../../../components/footer/footer.module";
+import {TitleModule} from "../../../../../components/title/title.module";
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {FooterModule} from "../../../../../components/footer/footer.module";
         FormsModule,
         PasswordRequestPageRoutingModule,
         FooterModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TitleModule
     ],
   declarations: [PasswordRequestPage]
 })

@@ -62,7 +62,7 @@ export class PasswordResetPage implements OnInit {
       next: (data: any) => {
         this.toast.saved()
         localStorage.removeItem('token');
-        this.router.navigate(['login'])
+        this.router.navigate(['login/0'])
       }, error: error => {
         console.log(error)
       }
@@ -71,5 +71,9 @@ export class PasswordResetPage implements OnInit {
 
   get errorControl() {
     return this.form.controls
+  }
+
+  onBack() {
+    this.router.navigate(['/konto'])
   }
 }

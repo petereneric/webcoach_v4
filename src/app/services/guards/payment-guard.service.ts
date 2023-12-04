@@ -12,6 +12,7 @@ export class PaymentGuard {
   constructor(private connApi: ConnApiService, private router: Router) { }
 
   canActivate(route: any): Promise<boolean> {
+    console.log("joo")
     return new Promise((resolve) => {
       let kWebinar = 0
 
@@ -34,8 +35,13 @@ export class PaymentGuard {
                 if (!webinarPlayer.bAccess) {
                   if (webinarPlayer.urlCheckout === '') {
                     this.createPayment(webinarPlayer.id, webinar.id)
+                    resolve(false)
                   } else {
+                    resolve(false)
                     window.open(webinarPlayer.urlCheckout, "_blank");
+                    //window.open('https://ksta.de', '_blank')
+
+                    console.log("open Checkout page")
                   }
                 } else {
                   console.log("resolve true")
@@ -46,8 +52,6 @@ export class PaymentGuard {
             })
           }
         })
-
-
       }
     })
   }

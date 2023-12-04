@@ -1,11 +1,10 @@
-<div class="container" (click)="routeWebinar()">
-  <img [src]="urlCover">
-  <div class="container-info flex">
-    <img class="img-profile" src="assets/image/eric_schumacher.jpg">
-    <div class="container-text">
-      <p class="title">{{oWebinar?.cName}}</p>
-      <p class="subtitle">{{'Eric Schumacher • 135 Teilnehmer • ' + (oWebinar?.sNet! > 0 ? uNumbers.euro(oWebinar?.sNet!) : 'Kostenlos')}}</p>
-    </div>
+<div [routerLink]="'/webinar-intro/' + aWebinar?.id" class="p-1" style="display: flex; align-items: center">
+  <img [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; object-fit: cover; border-radius: 0.2rem;">
+  <div class="flex-vertical ml-1 mr-1" style="width: 100%">
+    <p class="ts-s tw-bold tc-light">{{aWebinar?.cName}}</p>
+    <p class="ts-xs tc-light-two mt-05">{{aWebinar?.oCoach?.cName}}</p>
+    <p class="ts-xs tc-light-two mt-05">{{aWebinar!.sNet > 0 ? uCurrency.euro(aWebinar!.sNet) : 'Kostenlos'}}</p>
   </div>
 </div>
+
 

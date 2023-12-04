@@ -33,7 +33,7 @@ export class DialogWebinarIntroComponent  implements OnInit {
 
       this.lUnits?.forEach(unit => {
         console.log(unit.id)
-        this.connApi.downloadImage('webinar/unit/samples/thumbnail/' +  unit.id, (imgThumbnail: any) => {
+        this.connApi.getImage('webinar/unit/samples/thumbnail/' +  unit.id, (imgThumbnail: any) => {
 
           unit.imgThumbnail = imgThumbnail
         })

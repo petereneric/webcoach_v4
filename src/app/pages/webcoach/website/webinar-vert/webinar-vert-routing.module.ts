@@ -10,7 +10,7 @@ const routes: Routes = [
     //path: '',
     path: ':kWebinar',
     component: WebinarVertPage,
-    //canActivate: [AuthGuard, PaymentGuard]
+    canActivate: [AuthGuard, PaymentGuard]
   }
 ];
 

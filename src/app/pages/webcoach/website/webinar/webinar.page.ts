@@ -60,6 +60,8 @@ export class WebinarPage implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
 
+    console.log("joooo")
+
     // set desktop
     this.setDesktop()
 

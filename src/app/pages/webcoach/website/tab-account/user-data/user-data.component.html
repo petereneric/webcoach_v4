@@ -1,0 +1,44 @@
+<app-title (outputBack)="onBack()" [bBack]="true" [cTitle]="'Deine Nutzerdaten'"></app-title>
+<main class="window">
+
+  <!-- form -->
+  <form [formGroup]="form">
+
+    <!-- user-name -->
+    <p class="i-label">Benutzername</p>
+    <input class="i" formControlName="cName" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- prename -->
+    <p class="i-label">Vorname</p>
+    <input class="i" formControlName="cPrename" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- surname -->
+    <p class="i-label">Nachname</p>
+    <input class="i" formControlName="cSurname" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- street -->
+    <p class="i-label">Straße</p>
+    <input class="i" formControlName="cStreet" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- street-number -->
+    <p class="i-label">Hausnummer</p>
+    <input class="i" formControlName="cStreetNumber" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- city -->
+    <p class="i-label">Stadt</p>
+    <input class="i" formControlName="cCity" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- zip -->
+    <p class="i-label">PLZ</p>
+    <input class="i" formControlName="cZip" type="text">
+    <div class="i-spacer"></div>
+
+  </form>
+
+</main>

@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
 import {WebsitePage} from './website.page';
+import {UserDataComponent} from "./tab-account/user-data/user-data.component";
 
 const routes: Routes = [
   {
@@ -13,17 +14,43 @@ const routes: Routes = [
     loadChildren: () => import('./webinar-vert/webinar-vert.module').then( m => m.WebinarVertPageModule)
   },
   {
+    path: 'webinar-intro',
+    loadChildren: () => import('./webinar-intro/webinar-intro.module').then( m => m.WebinarIntroPageModule)
+  },
+  {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home'
+    redirectTo: 'buchungen'
   },
   {
     path: '',
     component: WebsitePage,
     children: [
       {
-        path: 'home',
-        loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+        path: 'start',
+        loadChildren: () => import('./tab-home/tab-home.module').then(m => m.TabHomeModule)
+      },
+      {
+        path: 'suchen',
+        //loadChildren: () => import('./tab-search/tab-search.module').then(m => m.TabSearchModule)
+        loadChildren: () => import('./tab-home/tab-home.module').then(m => m.TabHomeModule)
+      },
+      {
+        path: 'buchungen',
+        loadChildren: () => import('./tab-bookings/tab-bookings.module').then(m => m.TabBookingsModule)
+      },
+      {
+        path: 'merkliste',
+        //loadChildren: () => import('./tab-favourites/tab-favourites.module').then(m => m.TabFavouritesModule)
+        loadChildren: () => import('./tab-home/tab-home.module').then(m => m.TabHomeModule)
+      },
+      {
+        path: 'konto',
+        loadChildren: () => import('./tab-account/tab-account.module').then(m => m.TabAccountModule)
+      },
+      {
+        path: 'tab-home',
+        loadChildren: () => import('./tab-home/tab-home.module').then(m => m.TabHomeModule)
       },
       {
         path: 'impressum',
@@ -45,17 +72,14 @@ const routes: Routes = [
         path: 'registrierung',
         loadChildren: () => import('./authentication/registration/registration.module').then( m => m.RegistrationPageModule)
       },
-      {
-        path: 'webinar-intro',
-        loadChildren: () => import('./webinar-intro/webinar-intro.module').then( m => m.WebinarIntroPageModule)
-      },
+
       {
         path: 'passwort-zurücksetzen',
         loadChildren: () => import('./authentication/password-reset/password-reset.module').then( m => m.PasswordResetPageModule)
       },
       {
         path: 'passwort-vergessen',
-        loadChildren: () => import('./authentication/password-request/password-request.module').then( m => m.PasswordRequestPageModule)
+        loadChildren: () => import('./authentication/password-request/password-request.module').then( m => m.PasswordRequestPageModule),
       },
       {
         path: 'meine-kurse',
@@ -63,6 +87,10 @@ const routes: Routes = [
       },
       {
         path: 'kontoeinstellungen',
+        loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+      },
+      {
+        path: 'deine-daten',
         loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
       },
       {
@@ -78,7 +106,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    redirectTo: 'start'
   },
 
 

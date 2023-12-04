@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Unit} from "../../../interfaces/unit";
 
 @Component({
@@ -10,9 +10,16 @@ export class UnitComponent  implements OnInit {
 
   // input
   @Input() oUnit!: Unit
+  @Output() eventUnit: EventEmitter<any> = new EventEmitter<any>()
 
   constructor() { }
 
   ngOnInit() {}
 
+  onUnit() {
+    const event = {
+      aUnit: this.oUnit
+    }
+    this.eventUnit.emit(event)
+  }
 }

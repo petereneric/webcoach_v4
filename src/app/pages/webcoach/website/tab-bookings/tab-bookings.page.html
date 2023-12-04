@@ -1,0 +1,10 @@
+<main class="p-full">
+  <app-title [cTitle]="'Meine Buchungen'"></app-title>
+
+
+  <!-- bookings -->
+  <div *ngFor="let aWebinarPlayer of lWebinarPlayer">
+    <app-item-booking [kWebinarPlayer]="aWebinarPlayer['id']"></app-item-booking>
+  </div>
+</main>
+

@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import { DatePipe } from '@angular/common';
+import {min} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class DateTime {
 
   sqlDateTimeToDefaultDate(dateTime: any) {
     return this.datePipe.transform(dateTime, 'dd.MM.YYYY')
+  }
+
+  sqlDateTimeToMonthYearDate(dateTime: any) {
+    return this.datePipe.transform(dateTime, 'MM.YYYY')
   }
 
   sqlDateTimeToDefaultTime(dateTime: any) {
@@ -58,5 +63,11 @@ export class DateTime {
     let minutes = Math.floor(seconds/60)
     let _seconds = Number((Math.round((seconds%60) * 100) / 100).toFixed(0));
     return _seconds < 30 ? minutes : minutes + 1
+  }
+
+  secondsToHourAndMinute(seconds: number) {
+    const hours = Math.floor(seconds/3600)
+    const minutes = Math.floor((seconds%3600)/60)
+    return hours + "h " + minutes + "min"
   }
 }

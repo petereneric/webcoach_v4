@@ -7,7 +7,7 @@ import {Injectable} from '@angular/core';
 export class Currency {
 
   euro(number: number) {
-    return number.toFixed(2).toString().replace(".", ".") + " €"
+    return number.toFixed(2).toString().replace(".", ",") + " €"
   }
 
 }

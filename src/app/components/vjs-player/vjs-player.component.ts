@@ -48,7 +48,6 @@ export class VjsPlayerComponent implements OnInit, OnDestroy, AfterViewInit {
       this.videoEvent.emit('ended')
     });
 
-    this.player.volume(0);
   }
 
 
@@ -69,11 +68,12 @@ export class VjsPlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   updateSource(source: string) {
     console.log(source)
     if (this.player !== undefined) {
+      console.log("Problem")
       this.player.src({src: source, type: 'video/mp4'});
       this.player.poster('assets/logo/webcoach.webp')
       //this.player.options({"poster": "assets/image/eric_schumacher.jpg"})
       //this.player.load();
-      //this.player.play();
+      this.player.play();
     }
   }
 

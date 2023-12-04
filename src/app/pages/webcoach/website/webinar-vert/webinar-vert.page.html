@@ -1,7 +1,58 @@
 
 <!-- cover shown in the beginning and needed for making user swipe so that nav bar shrinks in safari/ios -->
-<div class="no-marker" autoscroll="true" #vCover style=" position: absolute; top: 0; z-index: 9; width: 100%; height: calc(200dvh); overflow: auto; background-color: green; ">
-  <p class="ts-standard" style="text-align: center">Please swipe up to start video</p>
+<div class="cover-container no-marker" autoscroll="true" #vCover style=" position: absolute; top: 0; z-index: 9; width: 100%; height: calc(400dvh); overflow: auto; ">
+  <div class="page">
+
+    <!-- header -->
+    <div class="flex section">
+      <mat-icon class="is-standard ic-light sh-icon" fontIcon="arrow_back_ios"></mat-icon>
+    </div>
+
+    <div class="section" style="display: flex; justify-content: center">
+      <img class="sh-box-soft" [src]="svWebinar.bsWebinarThumbnail.value" style="width: 12rem; height: 12rem; object-fit: cover; border-radius: 0.5rem;">
+    </div>
+
+    <div class="section flex" style="justify-content: center; margin-top: 2rem;">
+      <p class="tc-light tsl-standard sh-text" style="width: 40%; text-align: center; margin-top: auto; margin-bottom: auto">Zum starten des Videos</p>
+      <div class="flex-vertical" style="width: 20%; align-items: center;">
+        <mat-icon class="ic-primary is-standard a-move-up sh-icon" fontIcon="arrow_upward"></mat-icon>
+        <mat-icon class="ic-light is-standard a-move-up sh-icon" fontIcon="arrow_upward"></mat-icon>
+        <mat-icon class="ic-light is-standard a-move-up sh-icon" fontIcon="arrow_upward"></mat-icon>
+      </div>
+      <p class="tc-primary_ tsl-standard sh-text" style="width: 40%; text-align: center; margin-top: auto; margin-bottom: auto">Nach oben wischen</p>
+    </div>
+
+    <div class="section">
+      <p class="tsl-xl tw-bold tc-light sh-text">{{svWebinar.bsWebinar.value?.cName}}</p>
+    </div>
+
+    <div class="section">
+      <div class="flex bg-dark-two sh-box-soft" style="height: 5rem; width: 100%; border-radius: 0.5rem;">
+        <img [src]="svWebinar.bsUnitThumbnail.value" style="object-fit: cover; width: 3rem; height: 100%; border-radius: 0.5rem">
+
+        <div class="flex-vertical" style="justify-content: center; padding: 0.5rem">
+          <p class="ts-xxxs tc-light-two sh-text">AKTUELLE KURSEINHEIT</p>
+          <p class="ts-standard tc-light tw-bold mt-05 sh-text">{{svWebinar.bsUnit.value?.cName}}</p>
+          <p class="ts-xs tc-light mt-05 sh-text">{{(svWebinar.bsSection.value!.nPosition+1) + '. Abschnitt: ' + svWebinar.bsSection.value?.cName}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    <div class="section">
+      <div class="flex bg-dark-two sh-box-soft" style="height: 3rem; width: 100%; border-radius: 0.5rem;">
+        <img [src]="svWebinar.bsCoachThumbnail.value" style="object-fit: cover; width: 3rem; height: 100%; border-radius: 0.5rem">
+
+        <div class="flex-vertical" style="justify-content: center; padding: 0.5rem">
+          <p class="ts-xxxs tc-light-two">COACH</p>
+          <p class="ts-standard tc-light tw-bold mt-05">{{svWebinar.bsWebinar.value!.oCoach.oPlayer.cName}}</p>
+        </div>
+      </div>
+    </div>
+    -->
+
+  </div>
+
 </div>
 
 
@@ -32,10 +83,10 @@
 
   <!-- content -->
   <!-- needs to be with margin below header -->
-  <div #vListOutside style="height: calc(100% - 4rem); z-index: 6; margin-top: 4rem;">
+  <div #vListOutside style="height: calc(100% - 4rem); z-index: 6; margin-top: 4rem;" (panmove)="null">
     <div #vListInside (tap)="onListInsideTap($event)" (press)="onListInsidePress($event)" (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 6; width: 100%;">
       <div *ngFor="let oSection of svWebinar.bsSections.value">
-        <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
+        <app-item-section (eventUnit)="onEventUnit($event)" [aHeights]="aHeights" [oSection]="oSection"></app-item-section>
       </div>
     </div>
   </div>
@@ -88,7 +139,13 @@
        style="position:relative; top: 0; z-index: 2; width: 100%; height: calc(100dvh - 3.5rem); transform: translateY(calc(-100dvh + 3.5rem)); margin-bottom: 3.5rem;">
 
     <!-- video preview top - no real video preview -->
-    <img #videoTop [src]="svWebinar.bsUnitThumbnailLast.value ?? ''" style="object-fit: cover; position: relative; z-index: 2; height: calc(100dvh - 3.5rem); width: 100%; background-color: #7b1fa2;">
+    <div style="position: relative; z-index: 2; height: calc(100dvh - 3.5rem); width: 100%;">
+      <!-- needed due to ios bug where pixel line of last video is shown in the beginning, herewith blacked out -->
+      <div *ngIf="bShowBlackLineTop" style="position: absolute; z-index: 2; bottom: 0; height: 1px; width: 100%" class="bg-dark"></div>
+
+      <img #videoTop [src]="svWebinar.bsUnitThumbnailLast.value !== null ? svWebinar.bsUnitThumbnailLast.value : svWebinar.bsUnitThumbnailNext.value" style="object-fit: cover; position: relative; z-index: 1; height: calc(100dvh - 3.5rem); width: 100%; background-color: #7b1fa2;">
+    </div>
+
 
     <!-- video center container -->
     <div style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)">
@@ -97,10 +154,10 @@
       <div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
 
         <!-- title -->
-        <p class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem; width: 75%">{{svWebinar.bsWebinar.value?.cName}}</p>
+        <p #vTitle class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem; width: 75%; opacity: 0">{{svWebinar.bsWebinar.value?.cName}}</p>
 
         <!-- information -->
-        <div class="flex-vertical" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem">
+        <div #vInformation class="flex-vertical a-transition" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem; opacity: 0">
 
             <!-- author -->
             <div style="display: flex; align-items: center">
@@ -125,7 +182,7 @@
           </div>
 
           <!-- container for moving content to right bottom -->
-          <div class="flex-vertical" style="position: absolute; bottom: 0; right: 0; align-items: center; margin: 1rem">
+          <div #vSidebar class="flex-vertical a-transition" style="position: absolute; bottom: 0; right: 0; align-items: center; margin: 1rem; opacity: 0">
             <!-- like -->
             <div class="sidebar-container">
               <mat-icon class="sidebar-icon" fontIcon="thumb_up_off_alt"></mat-icon>
@@ -169,7 +226,7 @@
     -->
 
     <!-- video preview bottom - no real video preview -->
-    <img #videoBottom [src]="svWebinar.bsUnitThumbnailNext.value ?? ''" style="object-fit: cover; position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920" >
+    <img #videoBottom [src]="svWebinar.bsUnitThumbnailNext.value !== null ? svWebinar.bsUnitThumbnailNext.value : svWebinar.bsUnitThumbnailLast.value" style="object-fit: cover; position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920" >
   </div>
 
 
@@ -183,13 +240,6 @@
     <mat-icon class="is-xxl ic-light" fontIcon="pause_circle_filled"></mat-icon>
   </div>
 
-
-
-  <!-- needed so that it lays below nav bar and makes it black -->
-  <!--
-  <div class="bg-dark" style="z-index: 6; height: 40rem; width: 100%; position: absolute; bottom: 0; transform: translateY(calc(40rem - 1px))">
-  </div>
-  -->
 
 </div>
 

@@ -5,7 +5,7 @@
 }
 
 .link {
-  @extend .ts-standard;
+  @extend .ts-xs;
   color: $colorWhite;
   margin-bottom: 0.5rem;
   cursor: pointer;
@@ -20,6 +20,6 @@
 }
 
 .copyright {
-  @extend .ts-s;
+  @extend .ts-xs;
   color: $colorWhite;
 }

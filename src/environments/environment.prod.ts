@@ -1,5 +1,5 @@
 // only used in dev mode
 
-export const environment_stag = {
-
+export const environment2 = {
+  VOLUME_VIDEO: 100
 }

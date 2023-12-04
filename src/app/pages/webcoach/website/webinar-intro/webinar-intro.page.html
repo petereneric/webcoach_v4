@@ -1,83 +1,123 @@
+<div style="width: 100dvw; overflow-x: hidden;">
 
 
-
-    <div style="display: flex; position: relative; justify-content: center" (click)="onPreview()">
-      <mat-icon fontIcon="play-arrow" class="icon-play"></mat-icon>
-      <img #vCover [src]="urlCover">
-    </div>
-    <div class="page-horizontal page-vertical">
-      <div class="section-horizontal section-vertical">
-        <p class="title">{{oWebinar?.cName}}</p>
-        <div class="spv-025"></div>
-        <p class="description-short" [innerHTML]="oWebinar?.cDescriptionShort"></p>
-
-        <div class="spv-05"></div>
-
-        <p class="t-standard">{{'Erstellt von ' + oWebinar?.oCoach?.oPlayer?.cName}}</p>
-
-        <div class="spv-1"></div>
-
-        <div class="container-learn">
-          <p class="title">Das wirst Du lernen</p>
-          <div class="spv-025"></div>
-          <p class="t-standard" [innerHTML]="oWebinar?.cStudyContent"></p>
-        </div>
-
-        <div class="spv-1"></div>
-        <div class="container-content">
-          <div *ngFor="let section of lSections">
-            <app-section [oSection]="section"></app-section>
-          </div>
-        </div>
-
-
-        <div class="spv-2"></div>
-
-        <div class="divider"></div>
-
-        <div class="spv-2"></div>
-
-        <p class="title">Anforderungen</p>
-        <p class="t-standard" [innerHTML]="oWebinar?.cRequirements"></p>
-
-        <div class="spv-2"></div>
-
-        <div class="divider"></div>
-
-        <div class="spv-2"></div>
-
-        <p class="title">Beschreibung</p>
-        <p class="t-standard" [innerHTML]="oWebinar?.cDescriptionLong"></p>
-
-        <div class="spv-2"></div>
-
-        <div class="divider"></div>
-
-        <div class="spv-2"></div>
-
-        <p class="title">Coach</p>
-        <div class="flex align-items-center">
-          <img src="assets/image/eric_schumacher.jpg" class="img-coach">
-          <div class="flex-vertical">
-            <p class="subtitle-coach">Eric Schumacher</p>
-            <p class="t-standard">Software Entwickler | Gründer Webcoach</p>
-          </div>
-        </div>
-        <div class="spv-1"></div>
-        <p class="t-standard" [innerHTML]="oWebinar?.oCoach?.htmlDescription"></p>
-      </div>
-    </div>
-    <app-footer></app-footer>
-    <br>
-    <br>
-    <br>
-
-  <div class="container-bottom-background">
-    <div class="container-bottom">
-      <p class="text-bottom">{{oWebinar?.sNet! > 0 ? uNumber.euro(oWebinar?.sNet!) : 'Kostenlos'}}</p>
-      <button (click)="onStart()" class="b-1-primary">{{oWebinar?.sNet! > 0 ? 'Jetzt kaufen' : 'Jetzt starten'}}</button>
-    </div>
+  <div (click)="onCover()" class="window-horizontal flex align-items-center bg-dark" style="width: 100%; z-index: 100; position: fixed; top: 0; height: 3rem">
+    <mat-icon (click)="onBack()" class="ic-light-two is-standard" fontIcon="arrow_back_ios"></mat-icon>
   </div>
 
+  <div style="margin-top: 3rem; height: 15rem; display: flex; position: relative; justify-content: center" (click)="onCover()">
+    <mat-icon fontIcon="play_circle_filled" class="icon-play"></mat-icon>
+    <img #vCover [src]="urlCover">
+    <p class="ts-s tc-light tw-bold" style="position: absolute; bottom: 0; margin-bottom: 0.5rem">Kursvorschau ansehen</p>
+  </div>
+  <main class="page">
+    <section class="section">
+      <p class="tsl-xl tc-light tw-bold">{{oWebinar?.cName}}</p>
+      <div class="spv-05"></div>
+      <p class="tsl-s tc-light" [innerHTML]="oWebinar?.cDescriptionShort"></p>
+
+      <div class="spv-05"></div>
+
+      <p class="tsl-s tc-light tw-bold">Erstellt von <span class="tc-primary_">{{oWebinar?.oCoach?.oPlayer?.cName}}</span></p>
+
+      <div class="spv-05"></div>
+
+      <div class="flex align-items-center">
+        <mat-icon class="ic-light-two is-s" fontIcon="update"></mat-icon>
+        <p class="tsl-xs tc-light-two" style="margin-left: 0.5rem">{{'Zuletzt aktualisiert ' + uDateTime.sqlDateTimeToMonthYearDate(oWebinar?.dtLastUpdate)}}</p>
+      </div>
+
+      <div class="spv-025"></div>
+
+      <div class="flex align-items-center">
+        <mat-icon class="ic-light-two is-s" fontIcon="language"></mat-icon>
+        <p class="tsl-xs tc-light-two" style="margin-left: 0.5rem">Deutsch</p>
+      </div>
+
+
+      <div class="spv-1"></div>
+
+      <p class="ts-xxl tc-light tw-bold">{{oWebinar!.sNet > 0 ? uCurrency.euro(oWebinar!.sNet) : 'Kostenlos'}}</p>
+
+      <div class="spv-1"></div>
+
+      <button (click)="onStart()" class="b-1-primary">{{oWebinar!.sNet > 0 ? 'Jetzt kaufen' : 'Jetzt starten'}}</button>
+
+    </section>
+
+    <div class="divider-section"></div>
+
+    <section class="section">
+
+      <!-- study content -->
+      <p class="title-two">Das wirst Du lernen</p>
+      <p class="tsl-s tc-light list-checkmark" [innerHTML]="oWebinar!.cStudyContent"></p>
+
+    </section>
+
+    <div class="divider-section"></div>
+
+    <!-- units -->
+    <section class="section">
+      <p class="title-two">Kursplan</p>
+      <p
+        class="tsl-s tc-light-two">{{aContent.lSections.length + ' Abschnitte &nbsp;• &nbsp;' + aContent.nUnits + ' Einheiten  &nbsp;• &nbsp;' + uDateTime.secondsToHourAndMinute(aContent.secTotal)}}</p>
+
+      <div class="spv-1"></div>
+      <div class="container-content">
+        <div *ngFor="let section of aContent.lSections">
+          <app-section (eventUnit)="onUnit($event)" [oSection]="section"></app-section>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="divider-section"></div>
+
+    <section class="section">
+
+      <p class="title-two">Anforderungen</p>
+      <p class="tsl-s tc-light list-bulletpoint" [innerHTML]="oWebinar?.cRequirements"></p>
+
+    </section>
+
+    <div class="divider-section"></div>
+
+    <section class="section">
+
+      <p class="title-two">Beschreibung</p>
+      <p class="tsl-s tc-light" [innerHTML]="oWebinar?.cDescriptionLong"></p>
+
+    </section>
+
+    <div class="divider-section"></div>
+
+    <section class="section">
+
+      <p class="title-two">Coach</p>
+      <div class="flex align-items-center">
+        <img [src]="svWebinar.bsCoachThumbnail.value" class="img-coach">
+        <div class="flex-vertical">
+          <p class="ts-standard tc-light mb-05">Eric Schumacher</p>
+          <p class="tsl-s tc-light-two">Software Entwickler | Gründer Webcoach</p>
+        </div>
+      </div>
+      <div class="spv-1"></div>
+      <p class="tsl-s tc-light" [innerHTML]="oWebinar?.oCoach?.htmlDescription"></p>
+    </section>
+  </main>
+
+  <div class="divider-section"></div>
+  <app-footer></app-footer>
+
+  <div style="width: 100%; height: 3.5rem" class="bg-dark"></div>
+
+
+  <div *ngIf="bShowActionButton" class="container-bottom">
+    <p class="text-bottom">{{oWebinar?.sNet! > 0 ? uCurrency.euro(oWebinar?.sNet!) : 'Kostenlos'}}</p>
+    <button (click)="onStart()" class="b-1-primary">{{oWebinar?.sNet! > 0 ? 'Jetzt kaufen' : 'Jetzt starten'}}</button>
+  </div>
+
+</div>
 
 

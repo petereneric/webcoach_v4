@@ -3,6 +3,7 @@ import {Webinar} from "../../interfaces/webinar";
 import {ConnApiService} from "../../services/conn-api/conn-api.service";
 import {Numbers} from "../../utils/numbers";
 import {Router} from "@angular/router";
+import {Currency} from "../../utils/currency";
 
 @Component({
   selector: 'app-webinar-preview',
@@ -11,21 +12,21 @@ import {Router} from "@angular/router";
 })
 export class WebinarPreviewComponent  implements OnInit {
 
-  @Input() oWebinar: Webinar | null = null
+  @Input() aWebinar: Webinar | null = null
 
   // data
-  urlCover: any | null= null
+  urlThumbnail: any | null= null
 
-  constructor(private router: Router, public uNumbers: Numbers, private connApi: ConnApiService) { }
+  constructor(public uCurrency: Currency, private router: Router, private connApi: ConnApiService) { }
 
   ngOnInit() {
-    this.connApi.downloadImage('webinar/cover/' +  this.oWebinar?.id, (urlCover: any) => {
-      this.urlCover = urlCover
+    this.connApi.getImage('webinar/cover/' +  this.aWebinar?.id, (urlCover: any) => {
+      this.urlThumbnail = urlCover
     })
   }
 
   routeWebinar() {
-    this.router.navigate([(this.oWebinar?.bVertical ? 'webinar-intro/' : 'webinar-intro/') + this.oWebinar?.id])
+    this.router.navigate([(this.aWebinar?.bVertical ? 'webinar-intro/' : 'webinar-intro/') + this.aWebinar?.id])
   }
 
 }

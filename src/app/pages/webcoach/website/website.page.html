@@ -1,16 +1,12 @@
-<!--
-<ion-menu menuId="menu" contentId="main-content">
-  <div class="menu">
-    <div class="section-horizontal section-vertical">
-      <p class="menu-text-highlight" [routerLink]="'/login/0'" >Anmelden</p>
-      <p class="menu-text-highlight" [routerLink]="'/registrierung/0'"">Registrieren</p>
+<div style="display: flex; flex-direction: column; position: relative; height: 100dvh; width: 100dvw">
+  <router-outlet style="height: calc(100dvh - 3.5rem); position: absolute; top: 0"></router-outlet>
+  <div class="tabs-container" style="position: fixed; bottom: 0">
+    <div  #vMenuTabs *ngFor="let aMenuTab of lMenu">
+      <div (click)="onMenu(aMenuTab)" class="tab-container">
+        <mat-icon #vIcon class="tab-icon" [fontIcon]="aMenuTab.cIcon"></mat-icon>
+        <p #vTitle class="tab-title">{{aMenuTab.cTitle}}</p>
+      </div>
     </div>
-    <div class="divider"></div>
   </div>
-</ion-menu>
--->
-<div id="main-content">
-  <app-toolbar (menuEvent)="menuEvent($event)"></app-toolbar>
-  <router-outlet></router-outlet>
 </div>
 

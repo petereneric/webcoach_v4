@@ -10,6 +10,7 @@ import {SectionModule} from "../../../../components/webinar-intro/section/sectio
 import {FooterModule} from "../../../../components/footer/footer.module";
 import {DialogWebinarIntroModule} from "../../../../dialogs/dialog-webinar-intro/dialog-webinar-intro.module";
 import {MatIconModule} from "@angular/material/icon";
+import {VideoModule} from "../../../../dialogs/video/video.module";
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import {MatIconModule} from "@angular/material/icon";
     SectionModule,
     FooterModule,
     DialogWebinarIntroModule,
-    MatIconModule
+    MatIconModule,
+    VideoModule
   ],
   declarations: [WebinarIntroPage]
 })

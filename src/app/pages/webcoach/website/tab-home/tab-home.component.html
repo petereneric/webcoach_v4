@@ -1,0 +1,9 @@
+<main class="p-full">
+  <app-title [cTitle]="'Alle Kurse'"></app-title>
+
+
+  <!-- bookings -->
+  <div *ngFor="let aWebinar of lWebinar">
+    <app-webinar-preview [aWebinar]="aWebinar"></app-webinar-preview>
+  </div>
+</main>

@@ -7,15 +7,17 @@ import { PasswordResetPageRoutingModule } from './password-reset-routing.module'
 
 import { PasswordResetPage } from './password-reset.page';
 import {FooterModule} from "../../../../../components/footer/footer.module";
+import {TitleModule} from "../../../../../components/title/title.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    PasswordResetPageRoutingModule,
-    ReactiveFormsModule,
-    FooterModule,
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        PasswordResetPageRoutingModule,
+        ReactiveFormsModule,
+        FooterModule,
+        TitleModule,
+    ],
   declarations: [PasswordResetPage]
 })
 export class PasswordResetPageModule {}
