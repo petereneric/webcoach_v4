@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, View
 //import {MenuController} from "@ionic/angular";
 import {AuthApiService} from "../../../services/conn-api/auth-api.service";
 import {Communication} from "../../../services/communication/communication.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MainMenuService} from "../../../services/menu/main-menu.service";
 
 @Component({
@@ -25,7 +25,7 @@ export class WebsitePage implements OnInit, AfterViewInit{
     {index: 4, cTitle: 'Konto', cIcon: 'account_circle', cLink: 'konto'}
   ]
 
-  constructor(private svMenu: MainMenuService, private router: Router, private authApi: AuthApiService, private svCommunication: Communication) {
+  constructor(private activatedRoute: ActivatedRoute, private svMenu: MainMenuService, private router: Router, private authApi: AuthApiService, private svCommunication: Communication) {
   }
 
   ngOnInit() {
@@ -63,8 +63,14 @@ export class WebsitePage implements OnInit, AfterViewInit{
     // menu
     this.svMenu.viewMenu = this.vMenuTabs
     this.svMenu.bsIndexMainMenu.subscribe(indexMainMenu => {
+      console.log(indexMainMenu)
       this.svMenu.style(indexMainMenu)
     })
-    this.svMenu.bsIndexMainMenu.next(2)
+
+    this.lMenu.forEach(aMenu => {
+      console.log(this.router.url)
+      console.log(aMenu.cLink)
+      if (aMenu.cLink === this.router.url.replace('/', '')) this.svMenu.bsIndexMainMenu.next(aMenu.index)
+    })
   }
 }

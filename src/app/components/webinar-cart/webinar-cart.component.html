@@ -1,0 +1,7 @@
+<div style="display: flex; align-items: center">
+  <img [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; object-fit: cover; border-radius: 0.2rem;">
+  <div class="flex-vertical ml-1 mr-1" style="width: 100%">
+    <p class="tsl-s tw-bold tc-light" style="padding-top: 0.5rem;">{{aWebinar?.cName}}</p>
+  </div>
+  <p class="ts-s tw-bold tc-light-two" style="padding-top: 0.5rem;" >{{uCurrency.euro(aWebinar!.sNet)}}</p>
+</div>

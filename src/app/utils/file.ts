@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Alert} from "./alert";
+import {DialogService} from "../services/dialogs/dialog.service";
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +7,7 @@ import {Alert} from "./alert";
 
 export class File {
 
-  constructor(private uAlert: Alert) {
+  constructor(private svDialog: DialogService) {
 
   }
 
@@ -15,7 +15,7 @@ export class File {
     let type = file.type;
 
     if (type !== 'application/pdf') {
-      this.uAlert.info('Achtung', 'Dateiformat wird nicht unterstützt')
+      this.svDialog.invalidFileFormat()
       return false
     }
 
@@ -27,7 +27,7 @@ export class File {
 
     // TODO Add python file check
     if (type !== 'application/pdf' && false) {
-      this.uAlert.info('Achtung', 'Dateiformat wird nicht unterstützt')
+      this.svDialog.invalidFileFormat()
       return false
     }
 
@@ -38,7 +38,7 @@ export class File {
     if (file.length === 0) return false
 
     if (file.size > 1000000) {
-      this.uAlert.info('Achtung', 'Datei zu groß')
+      this.svDialog.invalidFileSize()
       return false
     }
     return true

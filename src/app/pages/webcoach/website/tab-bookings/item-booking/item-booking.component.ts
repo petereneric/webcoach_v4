@@ -21,13 +21,15 @@ export class ItemBookingComponent implements OnInit{
   ngOnInit(): void {
     // webinar-player
     console.log(this.kWebinarPlayer)
+    console.log("hee")
     this.api.safeGet('webinar-player/' + this.kWebinarPlayer, aWebinarPlayer => {
+      console.log("biii-2");
       console.log(aWebinarPlayer)
       this.aWebinarPlayer = aWebinarPlayer
 
       // image webinar
       const kWebinar = this.aWebinarPlayer.kWebinar
-      this.api.getImage('webinar/cover/' + kWebinar, urlThumbnail => {
+      this.api.getImage('webinar/thumbnail/' + kWebinar, urlThumbnail => {
         this.urlThumbnail = urlThumbnail
       })
     })

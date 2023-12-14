@@ -61,8 +61,6 @@ export class UserDataComponent implements OnInit {
 
 
   onBack() {
-    console.log("back")
     this.save()
-    this.location.back();
   }
 }

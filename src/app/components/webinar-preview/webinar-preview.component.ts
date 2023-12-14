@@ -20,7 +20,7 @@ export class WebinarPreviewComponent  implements OnInit {
   constructor(public uCurrency: Currency, private router: Router, private connApi: ConnApiService) { }
 
   ngOnInit() {
-    this.connApi.getImage('webinar/cover/' +  this.aWebinar?.id, (urlCover: any) => {
+    this.connApi.getImage('webinar/thumbnail/' +  this.aWebinar?.id, (urlCover: any) => {
       this.urlThumbnail = urlCover
     })
   }

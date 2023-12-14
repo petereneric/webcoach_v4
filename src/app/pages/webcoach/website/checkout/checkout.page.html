@@ -1,0 +1,24 @@
+<div *ngIf="bUserData; else vUserData">
+  <app-title (outputBack)="onBackCart()" [bBack]=true [bBackDefault]="false" [cTitle]="'Warenkorb'"></app-title>
+  <div class="window">
+    <p class="tsl-l tc-light">Bestell Details</p>
+    <div class="spv-1"></div>
+    <app-webinar-cart [kWebinar]="kWebinar" [aWebinar]="aWebinar"></app-webinar-cart>
+  </div>
+
+  <!-- pay bottom -->
+  <div class="container-bottom">
+    <div class="flex" style="align-items: center">
+      <p class="ts-l tc-light tw-bold" style="width: 100%">Gesamt</p>
+      <p class="ts-l tc-light tw-bold">{{uCurrency.euro(aWebinar!.sNet)}}</p>
+    </div>
+    <div class="spv-1"></div>
+    <p class="t-xxs tc-light-two">Durch einen Klick auf "Jetzt bezahlen" wirst Du zu unserem Zahlungsdienstleister Mollie weitergeleitet. Deine Bankdaten werden nicht gespeichert. Mit Abschluss der Bestellung stimmst Du unseren AGB's zu.</p>
+    <div class="spv-1"></div>
+    <button (click)="onPay()" class="b-1-primary">Jetzt bezahlen</button>
+  </div>
+</div>
+
+<ng-template #vUserData>
+  <app-user-data (outputForward)="onForwardUserData()" [cInfo]="cInfoUserData" [bForwardButton]="true"></app-user-data>
+</ng-template>

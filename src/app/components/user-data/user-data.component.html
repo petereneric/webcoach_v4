@@ -1,0 +1,62 @@
+<app-title (outputBack)="onBack()" [bBack]="true" [cTitle]="'Deine Nutzerdaten'"></app-title>
+<main class="window">
+
+  <!-- form -->
+  <form [formGroup]="form">
+
+    <!-- info text -->
+    <p class="t-xs tc-light" style="font-style: italic">{{cInfo}}</p>
+
+    <div class="spv-1"></div>
+
+    <!-- user-name -->
+    <p class="i-label">Benutzername</p>
+    <input class="i" formControlName="cName" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- prename -->
+    <p class="i-label">Vorname</p>
+    <input class="i" formControlName="cPrename" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- surname -->
+    <p class="i-label">Nachname</p>
+    <input class="i" formControlName="cSurname" type="text">
+    <div class="i-spacer"></div>
+
+    <!-- street -->
+    <!-- street-number -->
+    <div class="flex" style="width: 100%;">
+      <div class="flex-vertical">
+        <p class="i-label">Straße</p>
+        <input class="i" style="width: 60dvw" formControlName="cStreet" type="text">
+      </div>
+      <div class="i-spacer-row"></div>
+      <div class="flex-vertical">
+        <p class="i-label">Hausnummer</p>
+        <input class="i" formControlName="cStreetNumber" type="text">
+      </div>
+    </div>
+    <div class="i-spacer"></div>
+
+
+    <!-- city -->
+    <!-- zip -->
+    <div class="flex" style="width: 100%;">
+      <div class="flex-vertical">
+        <p class="i-label">Stadt</p>
+        <input class="i" style="width: 60dvw" formControlName="cCity" type="text">
+      </div>
+      <div class="i-spacer-row"></div>
+      <div class="flex-vertical">
+        <p class="i-label">PLZ</p>
+        <input class="i" formControlName="cZip" type="text">
+      </div>
+    </div>
+    <div class="i-spacer"></div>
+
+    <div class="spv-1"></div>
+    <button *ngIf="bForwardButton" (click)="onForward()" class="b-1-light">Weiter</button>
+  </form>
+
+</main>

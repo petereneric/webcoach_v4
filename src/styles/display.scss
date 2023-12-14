@@ -19,3 +19,10 @@
 .full-width {
   width: 100%;
 }
+
+.flex-center {
+  @extend .flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

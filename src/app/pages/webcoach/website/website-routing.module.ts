@@ -18,6 +18,14 @@ const routes: Routes = [
     loadChildren: () => import('./webinar-intro/webinar-intro.module').then( m => m.WebinarIntroPageModule)
   },
   {
+    path: 'checkout',
+    loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule)
+  },
+  {
+    path: 'mollie-checkout',
+    loadChildren: () => import('./mollie-checkout/mollie-checkout.module').then(m => m.MollieCheckoutModule)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'buchungen'
@@ -97,6 +105,7 @@ const routes: Routes = [
         path: 'test-scroll',
         loadChildren: () => import('../../../pages/test-scroll/test-scroll.module').then( m => m.TestScrollPageModule)
       },
+
     ]
   },
 

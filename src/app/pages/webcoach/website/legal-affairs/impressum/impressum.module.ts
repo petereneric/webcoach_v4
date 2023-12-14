@@ -6,14 +6,16 @@ import { ImpressumPageRoutingModule } from './impressum-routing.module';
 
 import { ImpressumPage } from './impressum.page';
 import {FooterModule} from "../../../../../components/footer/footer.module";
+import {TitleModule} from "../../../../../components/title/title.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ImpressumPageRoutingModule,
-    FooterModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ImpressumPageRoutingModule,
+        FooterModule,
+        TitleModule
+    ],
   declarations: [ImpressumPage]
 })
 export class ImpressumPageModule {}

@@ -11,11 +11,13 @@ import {environment} from "../../../../../environments/environment";
 import * as Hammer from 'hammerjs';
 import {CoachService} from "../../../../services/data/coach.service";
 import {environment2} from "../../../../../environments/environment.dev";
+import {MainMenuService} from "../../../../services/menu/main-menu.service";
 
 @Component({
   selector: 'app-webinar-vert',
   templateUrl: './webinar-vert.page.html',
   styleUrls: ['./webinar-vert.page.scss'],
+  providers: [MainMenuService]
 })
 export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
@@ -45,11 +47,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // constants
   readonly THRESHOLD_COVER_SCROLL = 3
   readonly THRESHOLD_VIDEO_VELOCITY = 0.25 // px/ms
-  readonly THRESHOLD_LIST_VELOCITY = 0.25 // px/ms
+  readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
+  readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
   readonly THRESHOLD_LIST_INSIDE_VELOCITY = 0.30 // px/ms
   readonly TRANSITION_VIDEO_SWIPE = 0.35 // s
   readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
-  readonly TRANSITION_LIST_CLOSE = 0.1 // s
+  readonly TRANSITION_LIST_CLOSE = 1 // s
   readonly INTERVAL_PROCESS_UPDATER = 100 // ms
   readonly DIRECTION_LIST_START_UP = 1
   readonly DIRECTION_LIST_START_DOWN = 2
@@ -110,7 +113,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // and updates the ui process bar
   process!: Subscription;
 
-  constructor(private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
+  constructor(private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -176,6 +179,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     })
 
+    // play icon
+    this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 1)
+
 
     // initial size calls
     this.setHeight()
@@ -225,10 +231,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // giving only then the click for play free
 
 
-
       setTimeout(() => {
 
-        window.scroll({ top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto" });
+        window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
 
       }, 10);
 
@@ -241,9 +246,6 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // for visibility is necessary
 
       //if (this.player.paused()) this.player.play()
-
-
-
 
 
       if (this.bDocumentInteraction && this.documentVisible()) this.player.play()
@@ -437,7 +439,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
       if (topListInsideNew >= 0) {
         // animation closing of list
-        console.log("animation list closing")
+        console.log("animation list closinggg")
 
         this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + topListInsideNew + 'px')
       }
@@ -454,7 +456,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
       if (topListInsideNew > 0) {
         // animation closing of list
-        console.log("animation list closing")
+        console.log("animation list closingg")
 
         this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + topListInsideNew + 'px')
       }
@@ -484,12 +486,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     const hListInside = this.vListInside.nativeElement.offsetHeight
     const hListOutside = this.vListOutside.nativeElement.offsetHeight
     const gapListInsideOutside = this.hListOutside - hListInside
+    const offsetTopList = this.vList.nativeElement.offsetTop
+    const movementList = offsetTopList - this.offsetTopListStart
 
     // console outputs
     console.log('VELOCITY: ' + event.velocityY)
     console.log('topListInsideOld: ' + topListInside)
     console.log('DELTA: ' + event.deltaY)
-
 
     if (hListInside > hListOutside && topListInside >= gapListInsideOutside && ((deltaY < 0 && velocityY < this.THRESHOLD_LIST_INSIDE_VELOCITY) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_INSIDE_VELOCITY) && topListInside < 0) && velocityY !== 0) {
       // fadeout scrolling
@@ -550,6 +553,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         if (topListInsideEnd > 0) {
           // topListInsideEnd is out of boundary and therefore cut
           topListInsideEnd = Math.pow(Math.abs(topListInsideEnd), 0.625)
+          if (movementList > 0) topListInsideEnd = 0
           overScroll = topListInsideEnd - topListInside
         }
 
@@ -566,7 +570,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
             this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
 
-            if (topListInsideEnd > 0 && this.bScrollListInsideEnabled) {
+            if (movementList <= 0 && topListInsideEnd > 0 && this.bScrollListInsideEnabled) {
               // bScrollListInsideEnabled checks if scroll was interrupted by another press/touch on the list
               // topListInsideEnd overstretched the boundary therefore bouncing back
               console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
@@ -586,23 +590,34 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
     // list movement > 0
-    const offsetTopList = this.vList.nativeElement.offsetTop
+
     const middleList = this.heightList / 2
-    const movementList = offsetTopList - this.offsetTopListStart
+
 
     if (movementList >= middleList || (movementList > 0 && (event.velocityY >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0))) {
       // list is moved more than half or less but fast enough
       // closing list
       console.log("closing list")
 
-      this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_CLOSE + 's')
+      const offsetTopList = this.vList.nativeElement.offsetTop
+      const restList = this.hWindow - offsetTopList
+
+      // close list
+      console.log("close list")
+      console.log(event.velocityY)
+      console.log(restList)
+      const secTransitionListClose = restList / event.velocityY / 1000
+      console.log("secClose: ", secTransitionListClose)
+
+
+      this.renderer.setStyle(this.vList.nativeElement, 'transition', secTransitionListClose + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
       this.bListOpen = false
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
 
         },
-        this.TRANSITION_LIST_CLOSE * 1000);
+        secTransitionListClose * 1000);
     }
 
     if (movementList < middleList && (movementList > 0 && event.velocityY < this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
@@ -656,7 +671,23 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // header closing
       console.log("header closing")
 
-      this.renderer.setStyle(this.vList.nativeElement, 'top', this.offsetTopListStart + event.deltaY + 'px')
+      let topListInsideNew = this.offsetTopListStart + event.deltaY
+
+      /*
+      // Depending on the start direction of the list movement threshold needs to added or removed during this whole period of scrolling
+      if (this.tDirectionListStart === this.DIRECTION_LIST_START_DOWN) {
+        topListInsideNew = topListInsideNew + environment.THRESHOLD_PAN
+      }
+
+      if (this.tDirectionListStart === this.DIRECTION_LIST_START_UP) {
+        topListInsideNew = topListInsideNew - environment.THRESHOLD_PAN
+      }
+
+       */
+
+      topListInsideNew = topListInsideNew - environment.THRESHOLD_PAN
+
+      this.renderer.setStyle(this.vList.nativeElement, 'top', topListInsideNew + 'px')
     }
   }
 
@@ -665,19 +696,24 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     const offsetTopList = this.vList.nativeElement.offsetTop
     const middleList = this.heightList / 2
     const movementList = offsetTopList - this.offsetTopListStart
+    const restList = this.hWindow - offsetTopList
 
-    if (movementList >= middleList || (event.velocityY >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
+    if (movementList >= middleList || (event.velocityY >= this.THRESHOLD_LIST_HEADER_VELOCITY && event.deltaY > 0)) {
       // close list
       console.log("close list")
+      console.log(event.velocityY)
+      console.log(restList)
+      const secTransitionListClose = restList / event.velocityY / 1000
+      console.log("secClose: ", secTransitionListClose)
 
-      this.renderer.setStyle(this.vList.nativeElement, 'transition', this.TRANSITION_LIST_CLOSE + 's')
+      this.renderer.setStyle(this.vList.nativeElement, 'transition', secTransitionListClose + 's')
       this.renderer.setStyle(this.vList.nativeElement, 'top', this.hWindow + 'px')
       setTimeout(() => {
           this.renderer.setStyle(this.vList.nativeElement, 'transition', '0s')
+          this.onCloseList(false)
 
         },
-        this.TRANSITION_LIST_CLOSE * 1000);
-      this.onCloseList(false)
+        secTransitionListClose * 1000);
 
 
     } else {
@@ -738,7 +774,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       this.playVideo()
 
       // animation
-      this.svAnimation.slideOut(this.vList)
+      if (bAnimation) this.svAnimation.slideOut(this.vList)
 
       // list closed and video played
       return true
@@ -750,7 +786,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   onTabHome() {
-    this.router.navigate(['home'])
+    this.router.navigate(['start'])
+    //this.svMenu.bsIndexMainMenu.next(0)
   }
 
 
@@ -949,7 +986,10 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     // play callback
     this.player.on('play', data => {
       // set so that the video starts when coming back after swipe gesture on cover
-      if (!this.bDocumentInteraction) this.bDocumentInteraction = true
+      if (!this.bDocumentInteraction) {
+        this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 0)
+        this.bDocumentInteraction = true
+      }
 
       // start process update for updating process bar
       this.startProcessUpdater()
@@ -1022,11 +1062,16 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // list wasn't closed
 
       if (this.player.paused()) {
+        // animation of play icon
+        if (this.bDocumentInteraction) {
+          this.svAnimation.popup(this.vPlay)
+        }
+
         // play
         this.player.play()
 
-        // animation of play icon
-        this.svAnimation.popup(this.vPlay)
+
+
 
       } else {
         // pause

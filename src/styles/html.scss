@@ -9,24 +9,15 @@ li {
   margin-top: 0.5rem;
 }
 
-ion-grid {
-  --margin: 0rem !important;
-  margin: 0rem !important;
-  padding: 0rem !important;
-  --padding: 0rem !important;
+header {
+  all: unset;
 }
 
-ion-row {
-  --margin: 0rem !important;
-  margin: 0rem !important;
-  padding: 0rem !important;
-  --padding: 0rem !important;
+section {
+  all: unset;
 }
 
-ion-col {
-  --margin: 0rem !important;
-  margin: 0rem !important;
-  padding: 0rem !important;
-  --padding: 0rem !important;
+footer {
+  all: unset;
 }
 

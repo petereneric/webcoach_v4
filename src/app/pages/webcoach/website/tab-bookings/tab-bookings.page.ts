@@ -19,9 +19,11 @@ export class TabBookingsPage implements OnInit {
     console.log("jo")
 
     // list webinar-player
+
     this.api.safeGet('webinar-player', lWebinarPlayer => {
       this.lWebinarPlayer = lWebinarPlayer
-      console.log(lWebinarPlayer)
+      console.log("hiiiiiiiiiiiiiiii2")
+      console.log(this.lWebinarPlayer)
     })
   }
 

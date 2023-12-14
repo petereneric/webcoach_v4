@@ -58,11 +58,13 @@
 
 <!-- list showing sections and units of webinar -->
 <!-- for testing z-index becomes 10 / normal is 7 -->
-<div #vList  class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1rem 1rem 0rem 0rem">
+<div #vList  class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
 
+  <!-- needed for avoiding 1px of underlying vListInside while closing -->
+  <div style="width: 100%; height: 3rem; position: absolute; margin-top: -30px; z-index: 7; border-radius: 1.3rem 1.3rem 0rem 0rem;" class="bg-dark"></div>
   <!-- header -->
   <div #vListHeader (panstart)="onListHeaderStart($event)" (panmove)="onListHeaderMove($event)" (panend)="onListHeaderEnd($event)"
-       class="bg-dark" style="position: fixed; z-index: 7; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center; border-radius: 1rem 1rem 0rem 0rem">
+       class="bg-dark" style="position: fixed; z-index: 7; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center; border-radius: 1.3rem 1.3rem 0rem 0rem; ">
     <!-- slide-bar -->
     <div class="slide-bar">
       <p style="opacity: 0">dummy text so that div gets shown as bar</p>
@@ -84,7 +86,7 @@
   <!-- content -->
   <!-- needs to be with margin below header -->
   <div #vListOutside style="height: calc(100% - 4rem); z-index: 6; margin-top: 4rem;" (panmove)="null">
-    <div #vListInside (tap)="onListInsideTap($event)" (press)="onListInsidePress($event)" (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 6; width: 100%;">
+    <div #vListInside (tap)="onListInsideTap($event)" (press)="onListInsidePress($event)" (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 5; width: 100%;">
       <div *ngFor="let oSection of svWebinar.bsSections.value">
         <app-item-section (eventUnit)="onEventUnit($event)" [aHeights]="aHeights" [oSection]="oSection"></app-item-section>
       </div>
@@ -143,7 +145,7 @@
       <!-- needed due to ios bug where pixel line of last video is shown in the beginning, herewith blacked out -->
       <div *ngIf="bShowBlackLineTop" style="position: absolute; z-index: 2; bottom: 0; height: 1px; width: 100%" class="bg-dark"></div>
 
-      <img #videoTop [src]="svWebinar.bsUnitThumbnailLast.value !== null ? svWebinar.bsUnitThumbnailLast.value : svWebinar.bsUnitThumbnailNext.value" style="object-fit: cover; position: relative; z-index: 1; height: calc(100dvh - 3.5rem); width: 100%; background-color: #7b1fa2;">
+      <img #videoTop [src]="svWebinar.bsUnitThumbnailLast.value !== null ? svWebinar.bsUnitThumbnailLast.value : svWebinar.bsUnitThumbnailNext.value" class="bg-dark" style="object-fit: cover; position: relative; z-index: 1; height: calc(100dvh - 3.5rem); width: 100%;">
     </div>
 
 

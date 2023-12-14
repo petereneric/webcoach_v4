@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {Alert} from "../../../../../utils/alert";
 import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Communication} from "../../../../../services/communication/communication.service";
+import {DialogService} from "../../../../../services/dialogs/dialog.service";
 
 @Component({
   selector: 'app-login',
@@ -24,10 +24,12 @@ export class LoginPage implements OnInit {
     cPassword: ['', [Validators.required]],
   })
 
-  constructor(private svCommunication: Communication, private activatedRoute: ActivatedRoute, private router: Router, private connApi: ConnApiService, private alert: Alert, public formBuilder: FormBuilder) {
+  constructor(private svDialog: DialogService, private svCommunication: Communication, private activatedRoute: ActivatedRoute, private router: Router, private connApi: ConnApiService, public formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
+
+
     this.activatedRoute.params.subscribe(params => {
       this.kWebinar = params['kWebinar']
     })
@@ -39,7 +41,7 @@ export class LoginPage implements OnInit {
 
     // check
     if (!this.form.valid) {
-      this.alert.invalid()
+      this.svDialog.invalidInput()
       return
     }
 
@@ -66,10 +68,10 @@ export class LoginPage implements OnInit {
       }, error: error => {
         console.log(error)
         if (error.status == 401) {
-          this.alert.invalidInput('E-Mail unbekannt');
+          this.svDialog.unknownEmail()
         }
         if (error.status == 403) {
-          this.alert.invalidInput('Passwort falsch');
+          this.svDialog.wrongPassword()
         }
       }
     })

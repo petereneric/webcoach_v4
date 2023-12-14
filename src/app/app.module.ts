@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule, Renderer2} from '@angular/core';
 import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule  } from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 

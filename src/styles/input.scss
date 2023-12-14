@@ -22,7 +22,11 @@ input {
   margin-bottom: 0.5rem !important;
 }
 
-// spacer between inputs
+// vertical spacer between inputs
 .i-spacer {
   @extend .spv-1;
+}
+
+.i-spacer-row {
+  @extend .sph-1;
 }

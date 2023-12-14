@@ -1,12 +1,9 @@
 // colors
 
-//$colorPrimary: #ff00ea;
-//$colorPrimary: #ff00ea;
-//$colorPrimary: #e80de3;
-//$colorPrimary: #ea0ac5;
 $colorPrimary: #ea0bdf;
-//$colorPrimary: #ff00fb;
-$colorPrimaryDark: #512DA8;
+$colorLight: #e76ce1;
+$colorPrimaryDark: #47088a;
+$colorAccent: #59D21C;
 
 $colorTextPrimary: #313131;
 $colorTextSecondary: #585858;
@@ -15,26 +12,20 @@ $colorTextTertiary: #8d8d8d;
 $colorDivider: #cccccc;
 $colorDividerDark: #656565;
 
-$colorHighlight: #dbdade;
-
-$colorError: #c34a4a;
-
-
-$colorWhite: #ffffff;
-
 $colorLight: #f4f2f5;
 $colorLightTwo: #b0acb0;
 $colorLightThree: #696669;
 
-//$colorDark: #262626;
-//$colorDark: #090a10;
 $colorDark: #0c0c17;
-//$colorDark: #0e0e17;
 $colorDarkTwo: #201c21;
 
-$colorBackgroundLight: #f6f6f6;
+$colorBackgroundLight: $colorLight;
 $colorBackgroundDark: $colorDark;
 $colorBackgroundDarkTwo: $colorDarkTwo;
+
+$colorHighlight: #dbdade;
+$colorError: #c34a4a;
+$colorWhite: #ffffff;
 
 // page
 $pageWidth: 100rem;

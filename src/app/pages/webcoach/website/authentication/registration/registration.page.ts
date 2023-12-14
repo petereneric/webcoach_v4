@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {Alert} from "../../../../../utils/alert";
 import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Communication} from "../../../../../services/communication/communication.service";
+import {DialogService} from "../../../../../services/dialogs/dialog.service";
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.page.html',
   styleUrls: ['./registration.page.scss'],
-  providers: [Alert]
 })
 export class RegistrationPage implements OnInit {
 
@@ -27,7 +26,7 @@ export class RegistrationPage implements OnInit {
     cPassword: ['', [Validators.required]],
   })
 
-  constructor(private svCommunication: Communication, private activatedRoute: ActivatedRoute, private router: Router, private connApi: ConnApiService, private alert: Alert, private formBuilder: FormBuilder) {
+  constructor(private svCommunication: Communication, private activatedRoute: ActivatedRoute, private router: Router, private connApi: ConnApiService, private svDialog: DialogService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
@@ -42,7 +41,7 @@ export class RegistrationPage implements OnInit {
 
     // check
     if (!this.form.valid) {
-      this.alert.invalid()
+      this.svDialog.invalidInput()
       return
     }
 
@@ -73,7 +72,7 @@ export class RegistrationPage implements OnInit {
         console.log(error)
 
         if (error.status == 406) {
-          this.alert.invalidInput('Es existiert bereits ein Nutzerkonto mit dieser E-Mail Adresse');
+          this.svDialog.invalidEmail()
         }
       }
     })

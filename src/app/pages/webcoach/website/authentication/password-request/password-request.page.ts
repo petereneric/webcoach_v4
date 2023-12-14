@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
-import {Alert} from "../../../../../utils/alert";
 import {Router} from "@angular/router";
+import {DialogService} from "../../../../../services/dialogs/dialog.service";
 
 @Component({
   selector: 'app-password-request',
   templateUrl: './password-request.page.html',
   styleUrls: ['./password-request.page.scss'],
-  providers: [Alert]
 })
 export class PasswordRequestPage implements OnInit {
 
@@ -20,7 +19,7 @@ export class PasswordRequestPage implements OnInit {
     cEmail: ['', Validators.required]
   })
 
-  constructor(private router: Router, private alert: Alert, private connApi: ConnApiService, private formBuilder: FormBuilder) {
+  constructor(private svDialog: DialogService, private router: Router, private connApi: ConnApiService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
@@ -40,11 +39,11 @@ export class PasswordRequestPage implements OnInit {
     // api
     this.connApi.longPost('password-request', data).subscribe({
       next: (data: any) => {
-        this.alert.checkEmail()
+        this.svDialog.checkEmail()
       }, error: error => {
         console.log(error);
         if (error.status == 400) {
-          this.alert.unknownEmail()
+          this.svDialog.unknownEmail()
         }
       }
     })

@@ -89,7 +89,7 @@
 
 .tsl-xxs {
   @extend .ts-xxs;
-  line-height: 1.2rem;
+  line-height: 0.85rem;
 }
 
 .ts-xxxs {
@@ -153,15 +153,33 @@
   -webkit-hyphens: auto;
   hyphens: auto;
 }
+
+.t-l {
+  @extend .tsl-l;
+  @extend .tc-primary;
+  @extend .t;
+}
+
 .t-standard {
   @extend .tsl-standard;
   @extend .tc-primary;
   @extend .t;
-
 }
 
 .t-s {
   @extend .tsl-s;
+  @extend .tc-primary;
+  @extend .t;
+}
+
+.t-xs {
+  @extend .tsl-xs;
+  @extend .tc-primary;
+  @extend .t;
+}
+
+.t-xxs {
+  @extend .tsl-xxs;
   @extend .tc-primary;
   @extend .t;
 }

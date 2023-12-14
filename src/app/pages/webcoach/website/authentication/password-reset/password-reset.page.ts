@@ -2,15 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, Validators} from "@angular/forms";
 import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
-import {Alert} from "../../../../../utils/alert";
 import {jwtDecode } from 'jwt-decode';
 import {Toast} from "../../../../../utils/toast";
+import {DialogService} from "../../../../../services/dialogs/dialog.service";
 
 @Component({
   selector: 'app-password-reset',
   templateUrl: './password-reset.page.html',
   styleUrls: ['./password-reset.page.scss'],
-  providers: [Alert, Toast]
+  providers: [Toast]
 })
 export class PasswordResetPage implements OnInit {
 
@@ -25,7 +25,7 @@ export class PasswordResetPage implements OnInit {
     cPassword: ['', Validators.required]
   })
 
-  constructor(private toast: Toast, private alert: Alert, private router: Router, private connApi: ConnApiService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+  constructor(private svDialog: DialogService, private toast: Toast, private router: Router, private connApi: ConnApiService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class PasswordResetPage implements OnInit {
         let exp = tokenInfo['exp'];
         // Check if token has expired
         if ((Date.now()/1000) > exp) {
-          this.alert.invalidPasswordToken()
+          this.svDialog.invalidToken()
         }
       } else {
         this.router.navigate(['app-root']);

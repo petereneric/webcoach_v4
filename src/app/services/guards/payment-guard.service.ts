@@ -21,34 +21,33 @@ export class PaymentGuard {
 
         this.connApi.get('webinar/' + kWebinar, (webinar: Webinar) => {
           if (webinar.sNet === 0) {
+            // webinar is free
             resolve(true)
           } else {
+            // webinar is not free
+
+            // get webinar-player
             this.connApi.safeGet('webinar/auth/webinar-player/' + kWebinar, (response: any) => {
               let webinarPlayer = response
 
               if (webinarPlayer === null) {
+                // create webinar-player
                 this.connApi.safePut('webinar/auth/webinar-player/' + kWebinar, null,(response: any) => {
                   webinarPlayer = response
-                  this.createPayment(webinarPlayer.id, webinar.id)
+                  // add webinar-player to cart
+                  this.addToCart(webinar.id)
+                  resolve(false)
                 })
               } else {
                 if (!webinarPlayer.bAccess) {
-                  if (webinarPlayer.urlCheckout === '') {
-                    this.createPayment(webinarPlayer.id, webinar.id)
-                    resolve(false)
-                  } else {
-                    resolve(false)
-                    window.open(webinarPlayer.urlCheckout, "_blank");
-                    //window.open('https://ksta.de', '_blank')
-
-                    console.log("open Checkout page")
-                  }
+                  // no access --> add to cart
+                  this.addToCart(webinar.id)
+                  resolve(false)
                 } else {
-                  console.log("resolve true")
+                  // access --> player can be handled to webinar-vert
                   resolve(true)
                 }
               }
-
             })
           }
         })
@@ -56,14 +55,12 @@ export class PaymentGuard {
     })
   }
 
-  createPayment(kWebinarPlayer: number, kWebinar: number) {
-    let data = {
-      kWebinar: kWebinar,
-      kWebinarPlayer: kWebinarPlayer,
-      tMode: 'test',
-    }
-    this.connApi.safePut('purchase/webinar', data, (response: any) => {
-      window.open(response.urlCheckout, "_blank");
+  addToCart(kWebinar: number) {
+    this.router.navigate(['checkout/' + kWebinar])
+    /*
+    this.connApi.safePut('cart/' + kWebinar, null, (response: any) => {
+
     })
+     */
   }
 }
