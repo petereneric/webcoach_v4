@@ -79,8 +79,10 @@ export class WebinarService {
   }
 
   loadCoachThumbnail(kCoach: number) {
+
     this.api.safeDownloadImage('webinar/coach/thumbnail/' + kCoach, (urlThumbnail: any) => {
       this.bsCoachThumbnail.next(urlThumbnail)
+      console.log("HELLLLO")
       console.log(urlThumbnail)
     })
   }

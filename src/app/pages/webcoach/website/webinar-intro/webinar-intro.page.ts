@@ -48,7 +48,7 @@ export class WebinarIntroPage implements OnInit {
 
       // get webinar
       this.connApi.get('webinar/' + this.kWebinar, (webinar: Webinar) => {
-        console.log(webinar)
+        console.log("webinar", webinar)
         this.oWebinar = webinar
 
         this.svWebinar.loadCoachThumbnail(this.oWebinar.oCoach.id)

@@ -28,22 +28,72 @@
 
 
 .section
+  //margin-left: 3rem
+
+
+@media screen and (max-width: $screenMobile)
+  .page-horizontal
+    padding-left: 0.5rem !important
+    padding-right: 0.5rem !important
+
+  .page-vertical
+    padding-top: 1rem
+    padding-bottom: 1rem
+
+
+  .page
+    padding-left: 0.5rem !important
+    padding-right: 0.5rem !important
+    padding-top: 1rem
+    padding-bottom: 1rem
+
+
+  .section-horizontal
+    padding-left: 1rem !important
+    padding-right: 1rem !important
+
+
+  .section-vertical
+    padding-top: 1rem
+    padding-bottom: 1rem
+
+
+  .section
+    padding-left: 1rem !important
+    padding-right: 1rem !important
+    padding-top: 1rem
+    padding-bottom: 1rem
+
+
+  .window-horizontal
+    padding-left: 1.5rem
+    padding-right: 1.5rem
+
+
+  .window-vertical
+    padding-top: 2rem
+    padding-bottom: 2rem
+
+
+  .window
+    padding-left: 1.5rem
+    padding-right: 1.5rem
+    padding-top: 2rem
+    padding-bottom: 2rem
+
+
+  .divider
+    width: 100%
+    margin: 0rem
+
+
+  .divider-section
+    width: calc(100% - 2rem)
+    margin: 1rem !important
 
 
 
-.window-horizontal
-  padding-left: 1.5rem
-  padding-right: 1.5rem
 
-
-.window-vertical
-  padding-top: 2rem
-  padding-bottom: 2rem
-
-
-.window
-  @extend .window-horizontal
-  @extend .window-vertical
 
 // scroll horizontal
 .scroll-horizontal
@@ -53,4 +103,25 @@
 
 .scroll-vertical
   overflow-y: auto
+
+
+.divider
+  height: 1px
+  //max-width: $pageWidth;
+  //margin-left: 5rem;
+  //margin-right: 5rem;
+  background-color: $colorDivider
+
+
+.divider-section
+  @extend .divider
+
+.divider
+  width: 100%
+  margin: 0rem
+
+
+.divider-section
+  width: calc(100% - 2rem)
+  margin: 1rem !important
 

@@ -1,8 +1,0 @@
-<div [class.page-horizontal]="bPadding" [class.page-vertical]="bPadding">
-  <div [class.section-horizontal]="bPadding" [class.section-vertical]="bPadding">
-    <div class="divider"></div>
-    <div *ngFor="let oSection of lSections">
-      <app-item-section (eventUnit)="onEventUnit($event)" [oSection]="oSection"></app-item-section>
-    </div>
-  </div>
-</div>

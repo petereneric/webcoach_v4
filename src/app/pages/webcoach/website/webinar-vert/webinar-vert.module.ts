@@ -9,6 +9,7 @@ import {WebinarVertPage} from './webinar-vert.page';
 import {VjsPlayerModule} from "../../../../components/vjs-player/vjs-player.module";
 import {MatIconModule} from "@angular/material/icon";
 import {ItemSectionModule} from "../../../../components/webinar/item-section/item-section.module";
+import {ListSliderModule} from "../../../../components/list-slider/list-slider.module";
 
 @NgModule({
     imports: [
@@ -19,6 +20,7 @@ import {ItemSectionModule} from "../../../../components/webinar/item-section/ite
         MatIconModule,
         ItemSectionModule,
         NgOptimizedImage,
+        ListSliderModule,
     ],
   declarations: [WebinarVertPage]
 })

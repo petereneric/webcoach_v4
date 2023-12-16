@@ -1,4 +1,7 @@
-@import "../../../../../global";
+@import "../../../../../styles/icon";
+@import "../../../../../styles/text";
+@import "../../../../../styles/template";
+@import "../../../../../styles/background";
 
 ion-content {
 
@@ -33,7 +36,7 @@ ion-content {
   @extend .tsl-xl;
   @extend .tc-light;
   @extend .tw-bold;
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .description-short {

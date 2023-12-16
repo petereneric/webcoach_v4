@@ -15,12 +15,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {VjsPlayerModule} from "./components/vjs-player/vjs-player.module";
 import {HttpClientModule} from "@angular/common/http";
 import {DatePipe} from "@angular/common";
-import {ListDirective} from "./directives/list.directive";
 import {environment} from "../environments/environment";
-import { TitleComponent } from './components/title/title.component';
-import { VideoDialog } from './dialogs/video/video.dialog';
 import {MatIconModule} from "@angular/material/icon";
-import {MainMenuService} from "./services/menu/main-menu.service";
 import { MenuDirective } from './directives/menu.directive';
 
 

@@ -114,7 +114,7 @@
 
 
   <div *ngIf="bShowActionButton" class="container-bottom">
-    <p class="text-bottom">{{oWebinar?.sNet! > 0 ? uCurrency.euro(oWebinar?.sNet!) : 'Kostenlos'}}</p>
+    <p class="text-bottom" style="margin-right: 1rem !important;">{{oWebinar?.sNet! > 0 ? uCurrency.euro(oWebinar?.sNet!) : 'Kostenlos'}}</p>
     <button (click)="onStart()" class="b-1-primary">{{oWebinar?.sNet! > 0 ? 'Jetzt kaufen' : 'Jetzt starten'}}</button>
   </div>
 

@@ -18,8 +18,6 @@
 @import "styles/input"
 @import "styles/dialog"
 @import "styles/template"
-
-
 @import "theme/variables"
 @import "video.js/dist/video-js.css"
 
@@ -29,9 +27,11 @@ body
   padding: 0
   background-color: $colorDark
 
+// margin need to be set to 0, however padding doesn't
+//  and is therefore preferred for setting dimen in html styling
+// since there is no !important needed as it is for margin
 p
-  margin-bottom: 0rem !important
-  margin-bottom: 0rem !important
+  margin: 0rem !important
 
 div
   //background-color: $colorDark
@@ -62,34 +62,14 @@ ul
   @extend .bg-dark
 
 
-
-
-// global
+/* Multi-line comments can be written anywhere
+  * whitespace is allowed. */
+// token from global
 .mat-form-field
   background: black
 
 
 
-
-
-
-
-
-
-.content-below-menu
-  height: calc(100dvh - 4rem)
-
-
-.divider
-  height: 1px
-  //max-width: $pageWidth;
-  //margin-left: 5rem;
-  //margin-right: 5rem;
-  background-color: $colorDivider
-
-
-.divider-section
-  @extend .divider
 
 
 @media screen and (max-width: $screenMobile)

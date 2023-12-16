@@ -1,8 +1,8 @@
-@import "../../../../global";
+@import "../../../../styles/icon";
+@import "../../../../styles/text";
+@import "../../../../styles/background";
 
-ion-menu {
-  --max-width: 12rem !important;
-}
+
 
 .menu {
   display: flex !important;

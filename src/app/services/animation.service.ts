@@ -25,25 +25,34 @@ export class AnimationService {
       50);
   }
 
-  slideIn(element) {
+  moveVertical(vElement, pxPosition, secTransition = 0, callback: any = null) {
+    this.renderer.setStyle(vElement.nativeElement, 'transition', secTransition + 's')
+    this.renderer.setStyle(vElement.nativeElement, 'top', pxPosition + 'px')
+    setTimeout(() => {
+        this.renderer.setStyle(vElement.nativeElement, 'transition', '0s')
+        if (callback) callback()
+      },
+      secTransition * 1000);
+  }
+
+  slideIn(element, secTransition = environment.TRANSITION_LIST_SWIPE, callback: any = null) {
+    this.moveVertical(element, window.innerHeight - element.nativeElement.offsetHeight, secTransition, callback)
+
+    /*
     this.renderer.setStyle(element.nativeElement, 'transition', environment.TRANSITION_LIST_SWIPE + 's')
-    this.renderer.setStyle(element.nativeElement, 'top', window.innerHeight-element.nativeElement.offsetHeight + 'px')
+    this.renderer.setStyle(element.nativeElement, 'top', window.innerHeight - element.nativeElement.offsetHeight + 'px')
     setTimeout(() => {
         this.renderer.setStyle(element.nativeElement, 'transition', '0s')
       },
       environment.TRANSITION_LIST_SWIPE * 1000);
+     */
   }
 
-  slideOut(element) {
-    this.renderer.setStyle(element.nativeElement, 'transition', environment.TRANSITION_LIST_SWIPE + 's')
-    this.renderer.setStyle(element.nativeElement, 'top', window.innerHeight + 'px')
-    setTimeout(() => {
-        this.renderer.setStyle(element.nativeElement, 'transition', '0s')
-      },
-      environment.TRANSITION_LIST_SWIPE * 1000);
+  slideOut(element, secTransition = environment.TRANSITION_LIST_SWIPE, callback: any = null) {
+    this.moveVertical(element, window.innerHeight, secTransition, callback)
   }
 
-  show(elements: ElementRef[], secTimeout=0) {
+  show(elements: ElementRef[], secTimeout = 0) {
     elements.forEach(element => {
       setTimeout(() => {
         this.renderer.setStyle(element.nativeElement, 'opacity', 1)
@@ -51,7 +60,7 @@ export class AnimationService {
     })
   }
 
-  hide(elements: ElementRef[], secTimeout=0) {
+  hide(elements: ElementRef[], secTimeout = 0) {
     elements.forEach(element => {
       setTimeout(() => {
         console.log("heee")

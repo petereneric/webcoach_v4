@@ -12,12 +12,13 @@ import * as Hammer from 'hammerjs';
 import {CoachService} from "../../../../services/data/coach.service";
 import {environment2} from "../../../../../environments/environment.dev";
 import {MainMenuService} from "../../../../services/menu/main-menu.service";
+import {ListSliderComponent} from "../../../../components/list-slider/list-slider.component";
 
 @Component({
   selector: 'app-webinar-vert',
   templateUrl: './webinar-vert.page.html',
   styleUrls: ['./webinar-vert.page.scss'],
-  providers: [MainMenuService]
+  providers: [MainMenuService],
 })
 export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
@@ -38,6 +39,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vTitle') vTitle!: ElementRef
   @ViewChild('vInformation') vInformation!: ElementRef
   @ViewChild('vSidebar') vSidebar!: ElementRef
+  @ViewChild('vListInsideNotes') vListInsideNotes!: ElementRef
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
 
   // output
@@ -75,7 +77,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // TODO description
   private offsetTopListInsideStart = 0
   private heightList = 0
-  private hWindow = 0
+  public hWindow = 0
   private hListOutside = 0
   private bClickListInsideDisabled = true
   private bScrollListInsideEnabled = false
@@ -194,6 +196,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
 
     }, this.TIME_INFORMATION_START * 1000)
+
+
   }
 
 
@@ -1113,7 +1117,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.bSidebarHidden = true
   }
 
-  showInformation() {
 
-  }
+
+
 }

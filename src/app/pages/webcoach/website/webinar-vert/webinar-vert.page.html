@@ -95,6 +95,50 @@
 
 </div>
 
+<app-list-slider #cpListNotes [vListInside]="vListInsideNotes">
+  <ng-template #tpListInside>
+    <div #vListInsideNotes (press)="cpListNotes.onListInsidePress($event)" (panstart)="cpListNotes.onListInsideStart($event)" (panmove)="cpListNotes.onListInsideMove($event)" (panend)="cpListNotes.onListInsideEnd($event)" class="bg-light tc-dark ts-l" style="width: 100%; position: relative">
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+      <p>Values</p>
+    </div>
+
+  </ng-template>
+</app-list-slider>
+
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
 <div class="bg-dark no-marker" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
@@ -107,21 +151,21 @@
   <mat-icon style=" opacity: 0; position: absolute; z-index: 6; width: 100%; height: 100%;" class="is-standard ic-light" fontIcon="home"></mat-icon>
 
   <!-- home -->
-  <div class="tab-container">
-    <mat-icon (click)="onTabHome()" class="is-standard ic-light" fontIcon="home"></mat-icon>
+  <div class="tab-container" (click)="onTabHome()">
+    <mat-icon  class="is-standard ic-light" fontIcon="home"></mat-icon>
     <p class="tab-title">Start</p>
   </div>
 
   <!-- notes -->
-  <div class="tab-container">
-    <mat-icon (click)="onOpenList()" class="is-standard ic-light" fontIcon="edit_note"></mat-icon>
+  <div class="tab-container" (click)="cpListNotes.onOpenList()">
+    <mat-icon  class="is-standard ic-light" fontIcon="edit_note"></mat-icon>
     <p class="tab-title">Notizen</p>
   </div>
 
 
   <!-- list -->
-  <div class="tab-container">
-    <mat-icon (click)="onOpenList()" class="is-standard ic-light" fontIcon="list"></mat-icon>
+  <div class="tab-container" (click)="onOpenList()">
+    <mat-icon  class="is-standard ic-light" fontIcon="list"></mat-icon>
     <p class="tab-title">Übersicht</p>
   </div>
 </div>
@@ -156,7 +200,7 @@
       <div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
 
         <!-- title -->
-        <p #vTitle class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem; width: 75%; opacity: 0">{{svWebinar.bsWebinar.value?.cName}}</p>
+        <p #vTitle class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem !important; width: 75%; opacity: 0">{{svWebinar.bsWebinar.value?.cName}}</p>
 
         <!-- information -->
         <div #vInformation class="flex-vertical a-transition" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem; opacity: 0">
@@ -164,14 +208,14 @@
             <!-- author -->
             <div style="display: flex; align-items: center">
               <img style="width: 2rem; height: 2rem; border-radius: 100%" width="50" height="50" class="sh-box-soft" [src]="svWebinar.bsCoachThumbnail.value ?? ''">
-              <p class="ts-xs tc-light tw-bold sh-text-soft" style="margin-left: 0.5rem">{{'@' + svWebinar.bsWebinar.value?.oCoach?.oPlayer?.cName}}</p>
+              <p class="ts-xs tc-light tw-bold sh-text-soft" style="margin-left: 0.5rem !important;">{{'@' + svWebinar.bsWebinar.value?.oCoach?.oPlayer?.cName}}</p>
             </div>
 
             <!-- unit name -->
-            <p class="ts-standard tc-light sh-text-soft" style="margin-top: 0.75rem">{{svWebinar.bsUnit.value?.cName}}</p>
+            <p class="ts-standard tc-light sh-text-soft" style="margin-top: 0.75rem !important;">{{svWebinar.bsUnit.value?.cName}}</p>
 
             <!-- section name -->
-            <p class="ts-xxs tc-light sh-text-soft" style="margin-top: 0.375rem">{{svWebinar.bsSection.value?.cName}}</p>
+            <p class="ts-xxs tc-light sh-text-soft" style="margin-top: 0.375rem !important;">{{svWebinar.bsSection.value?.cName}}</p>
 
         </div>
 
