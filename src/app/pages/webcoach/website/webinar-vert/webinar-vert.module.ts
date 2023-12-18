@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
 import {WebinarVertPageRoutingModule} from './webinar-vert-routing.module';
@@ -10,6 +10,9 @@ import {VjsPlayerModule} from "../../../../components/vjs-player/vjs-player.modu
 import {MatIconModule} from "@angular/material/icon";
 import {ItemSectionModule} from "../../../../components/webinar/item-section/item-section.module";
 import {ListSliderModule} from "../../../../components/list-slider/list-slider.module";
+import {NoteUnitModule} from "../../../../components/items/note/note-unit/note-unit.module";
+import {ListActionModule} from "../../../../components/list-action/list-action.module";
+import {ListActionItemModule} from "../../../../components/items/list-action-item/list-action-item.module";
 
 @NgModule({
     imports: [
@@ -21,6 +24,10 @@ import {ListSliderModule} from "../../../../components/list-slider/list-slider.m
         ItemSectionModule,
         NgOptimizedImage,
         ListSliderModule,
+        NoteUnitModule,
+        ListActionModule,
+        ListActionItemModule,
+        ReactiveFormsModule,
     ],
   declarations: [WebinarVertPage]
 })

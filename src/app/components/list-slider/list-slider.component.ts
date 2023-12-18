@@ -7,14 +7,19 @@ import {AnimationService} from "../../services/animation.service";
   templateUrl: './list-slider.component.html',
   styleUrls: ['./list-slider.component.sass']
 })
-export class ListSliderComponent implements OnInit, AfterViewInit{
+export class ListSliderComponent implements OnInit, AfterViewInit {
 
   @ViewChild('vList') vList!: ElementRef
   @ViewChild('vListOutside') vListOutside!: ElementRef
+  @ViewChild('vListInsideOrigin') vListInsideOrigin!: ElementRef
   @ViewChild('vListHeader') vListHeader!: ElementRef
+  @ViewChild('vInput') vInput!: ElementRef
   @ContentChild('tpListInside') tpListInside!: TemplateRef<any>
+  @ContentChild('tpInput') tpInput!: TemplateRef<any>
 
   @Input('vListInside') vListInside!: ElementRef
+  @Input('cHeader') cHeader: string = ""
+  @Input('cHeaderTwo') cHeaderTwo: string = ""
 
   readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
   readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
@@ -30,6 +35,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit{
   private bClickListInsideDisabled = true
   private bScrollListInsideEnabled = false
   private hWindow = 0
+
+  public hInput = 0
+
 
   // data object for heights of section and unit
   public aHeights = {pxHeightSection: 0, pxHeightUnit: 0}
@@ -86,7 +94,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit{
       // close list
       const secTransitionListClose = restList / event.velocityY / 1000
 
-      this.svAnimation.slideOut(this.vList, secTransitionListClose, () => {this.onCloseList(false)})
+      this.svAnimation.slideOut(this.vList, secTransitionListClose, () => {
+        this.onCloseList(false)
+      })
     } else {
       // bounce back
       console.log("bounce back")
@@ -333,7 +343,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit{
       console.log(restList)
       const secTransitionListClose = restList / event.velocityY / 1000
 
-      this.svAnimation.moveVertical(this.vList, this.hWindow, secTransitionListClose, () => {this.bListOpen = false})
+      this.svAnimation.moveVertical(this.vList, this.hWindow, secTransitionListClose, () => {
+        this.bListOpen = false
+      })
     }
 
     if (movementList < middleList && (movementList > 0 && event.velocityY < this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0)) {
@@ -389,6 +401,13 @@ export class ListSliderComponent implements OnInit, AfterViewInit{
     this.heightList = this.vList.nativeElement.offsetHeight
     this.hListOutside = this.vListOutside.nativeElement.offsetHeight
     this.hWindow = window.innerHeight
+    this.hInput = this.vInput.nativeElement.offsetHeight
+    console.log(this.vListOutside.nativeElement.offsetHeight)
+    this.renderer.setStyle(this.vListOutside.nativeElement, 'height', 'calc(100% - 4rem - ' + this.hInput + 'px)')
+    console.log(this.vListOutside.nativeElement.offsetHeight)
+    this.hListOutside = this.vListOutside.nativeElement.offsetHeight
+    this.renderer.setStyle(this.vListOutside.nativeElement, 'margin-bottom', this.hInput + 'px)')
+    console.log("height vInput: " + this.hInput)
   }
 
 

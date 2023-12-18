@@ -25,8 +25,8 @@ export class AnimationService {
       50);
   }
 
-  moveVertical(vElement, pxPosition, secTransition = 0, callback: any = null) {
-    this.renderer.setStyle(vElement.nativeElement, 'transition', secTransition + 's')
+  moveVertical(vElement, pxPosition, secTransition = 0, callback: any = null, speedCurve: string = '') {
+    this.renderer.setStyle(vElement.nativeElement, 'transition', secTransition + 's' + ' ' + speedCurve)
     this.renderer.setStyle(vElement.nativeElement, 'top', pxPosition + 'px')
     setTimeout(() => {
         this.renderer.setStyle(vElement.nativeElement, 'transition', '0s')
@@ -78,5 +78,24 @@ export class AnimationService {
         this.renderer.addClass(element.nativeElement, 'a-pump');
       },
       2);
+  }
+
+  backgroundOpacityIn(element) {
+    this.renderer.removeClass(element.nativeElement, 'a-bg-opacity-out');
+    this.renderer.removeClass(element.nativeElement, 'a-bg-opacity-in');
+    setTimeout(() => {
+      this.renderer.addClass(element.nativeElement, 'a-bg-opacity-in');
+    }, 2)
+  }
+
+  backgroundOpacityOut(element, callback: any = null) {
+    //this.renderer.removeClass(element.nativeElement, 'a-bg-opacity-in');
+    setTimeout(() => {
+      this.renderer.addClass(element.nativeElement, 'a-bg-opacity-out');
+      setTimeout(() => {
+        if (callback) callback()
+      }, 0.25*1000 + 2)
+    }, 2)
+
   }
 }

@@ -1,4 +1,4 @@
-<div #vList  class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
+<div #vList class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
 
   <!-- needed for avoiding 1px of underlying vListInside while closing -->
   <div style="width: 100%; height: 3rem; position: absolute; margin-top: -30px; z-index: 7; border-radius: 1.3rem 1.3rem 0rem 0rem;" class="bg-dark"></div>
@@ -12,27 +12,38 @@
     <!-- text and icons -->
     <div style="position:static; display: flex; align-items: center; box-sizing:border-box; width: 100%; padding: 0.75rem; margin-top: auto; margin-bottom: auto">
       <!-- title -->
-      <p class="ts-standard tc-light tw-bold">Kurseinheiten</p>
+      <p class="ts-standard tc-light tw-bold">{{cHeader}}</p>
       <!-- title two -->
-      <p class="ts-s tc-light-two ml-05">34</p>
+      <p class="ts-s tc-light-two ml-05">{{cHeaderTwo}}</p>
       <!-- icons -->
       <div style="margin-left: auto; display: none">
         <!-- close -->
         <mat-icon class="is-standard ic-light" fontIcon="close"></mat-icon>
       </div>
     </div>
+    <div class="divider"></div>
   </div>
 
   <!-- content -->
   <!-- needs to be with margin below header -->
-  <div #vListOutside style="height: calc(100% - 4rem); z-index: 6; margin-top: 4rem;" (panmove)="null">
+  <div #vListOutside style="z-index: 6; margin-top: 4rem;"  (panmove)="null">
     <ng-container *ngTemplateOutlet="tpListInside || vListInsideDefault" (tap)="onListInsideTap($event)" (press)="onListInsidePress($event)" (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 5; width: 100%;">
 
     </ng-container>
   </div>
 
+  <div #vInput style="z-index: 7; position: absolute; width: 100%; bottom: 0;">
+    <ng-container *ngTemplateOutlet="tpInput || vInputDefault"></ng-container>
+  </div>
 </div>
+
+<!-- Default input with dummy values -->
+<ng-template #vInputDefault>
+  <div style="position: absolute; width: 100%; bottom: 0; height: 0px"></div>
+</ng-template>
 
 <ng-template #vListInsideDefault>
   <p>Nothing to show</p>
 </ng-template>
+
+

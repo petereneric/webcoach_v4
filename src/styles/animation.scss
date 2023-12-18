@@ -59,4 +59,32 @@
   }
 }
 
+// opacity
+.a-bg-opacity-in {
+  animation: a-bg-opacity-in-keyframes 0.25s forwards;
+}
+
+@keyframes a-bg-opacity-in-keyframes {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+// opacity
+.a-bg-opacity-out {
+  animation: a-bg-opacity-out-keyframes 0.25s forwards;
+}
+
+@keyframes a-bg-opacity-out-keyframes {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 

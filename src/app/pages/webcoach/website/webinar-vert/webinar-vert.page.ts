@@ -13,12 +13,15 @@ import {CoachService} from "../../../../services/data/coach.service";
 import {environment2} from "../../../../../environments/environment.dev";
 import {MainMenuService} from "../../../../services/menu/main-menu.service";
 import {ListSliderComponent} from "../../../../components/list-slider/list-slider.component";
+import {Note} from "../../../../interfaces/note";
+import {ListActionComponent} from "../../../../components/list-action/list-action.component";
+import {DateTime} from "../../../../utils/date-time";
 
 @Component({
   selector: 'app-webinar-vert',
   templateUrl: './webinar-vert.page.html',
   styleUrls: ['./webinar-vert.page.scss'],
-  providers: [MainMenuService],
+  providers: [MainMenuService, DateTime],
 })
 export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
@@ -41,6 +44,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vSidebar') vSidebar!: ElementRef
   @ViewChild('vListInsideNotes') vListInsideNotes!: ElementRef
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
+  @ViewChild('cpListActionNotes') cpListActionNotes!: ListActionComponent
+  @ViewChild('vInputNote') vInputNote!: ElementRef
+  @ViewChild('vInputNoteContainer') vInputNoteContainer!: ElementRef
 
   // output
   @Output('long-press') onPress: EventEmitter<any> = new EventEmitter()
@@ -87,6 +93,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   private bInformationHidden = false
   private bVisibilityChange = false
 
+  aContent: any | null = null
+
   // data object for heights of section and unit
   public aHeights = {pxHeightSection: 0, pxHeightUnit: 0}
 
@@ -115,7 +123,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // and updates the ui process bar
   process!: Subscription;
 
-  constructor(private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
+  constructor(public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -125,7 +133,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       const kWebinar = params['kWebinar'];
       this.svWebinar.load(kWebinar);
       this.svWebinar.loadWebinarThumbnail(kWebinar)
+
+      // get sections
+      this.connApi.get('webinar/sections-content/' + kWebinar, (aContent) => {
+        this.aContent = aContent
+      })
     })
+
 
     // initiate player
     this.setPlayer()
@@ -181,6 +195,37 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     })
 
+    // input note
+    this.vInputNote.nativeElement.addEventListener("focusout", () => {
+      //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'none')
+    })
+
+
+    window?.visualViewport?.addEventListener('resize', () => {
+      let position = window!.visualViewport!.height - this.vInputNoteContainer.nativeElement.offsetHeight
+      //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, 'top', position + 'px')
+      this.svAnimation.moveVertical(this.vInputNoteContainer, position, 0.26, null, 'ease-out')
+      setTimeout(() => {
+      }, 5)
+    })
+
+    this.vInputNote.nativeElement.addEventListener("focus", () => {
+
+      // setting the opacity to 0 and afterward to 1 is a trick needed for avoiding the keyboard pushing the input and messing up the screen therefore since
+      // other elements are also pushed up by the keyboard
+      this.renderer.setStyle(this.vInputNote.nativeElement, 'opacity', 0)
+      setTimeout(() => {
+        this.renderer.setStyle(this.vInputNote.nativeElement, 'opacity', 1)
+
+        //let position = window!.visualViewport!.height - this.vInputNoteContainer.nativeElement.offsetHeight
+        //this.cTitle = "yeah2: " + window!.visualViewport!.offsetTop + "_" + window!.visualViewport!.height + "_" + position
+        //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, 'top', position + 'px')
+
+      }, 2)
+
+
+    })
+
     // play icon
     this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 1)
 
@@ -232,12 +277,14 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // It was either solved by setting nScroll === Threshold or by timeout for scroll to bottom or by the order
       // where zIndex is set in the end. In the result user can swipe now and immediately click to play without waiting till scroll bar finished
       // giving only then the click for play free
-      // giving only then the click for play free
-
 
       setTimeout(() => {
 
         window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
+        setTimeout(() => {
+          //window.scroll({top: 0, left: 0, behavior: "auto"});
+        }, 30)
+
 
       }, 10);
 
@@ -1075,8 +1122,6 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         this.player.play()
 
 
-
-
       } else {
         // pause
         this.player.pause()
@@ -1118,6 +1163,86 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+  onNote() {
+    console.log("onNote")
+
+  }
+
+  onNoteSettings(aNote: Note) {
+    this.svWebinar.bsNote.next(aNote)
+    this.cpListActionNotes.onOpenList()
+    //this.onEditNote()
+  }
+
+  onEditNote() {
+    console.log("onEditNote");
+    // show input and keyboard
+    this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'flex')
+    this.vInputNote.nativeElement.focus()
+
+    //let heightCover = this.vCover.nativeElement.offsetHeight
+    //let scrollPosition = document.documentElement.scrollTop
+    //let positionNote = this.vInputNoteContainer.nativeElement.offsetTop
+
+    //this.vInputNote.nativeElement.placeholder = "Cov: " + heightCover + "_Sp: " + scrollPosition + "_Note Pos: " + positionNote
+    //let position = this.vInputNoteContainer.nativeElement.offsetHeight
+    //window.scroll({top: 0, left: 0, behavior: "auto"});
+    //window.scrollTo(0,0)
+
+  }
+
+  onDeleteNote() {
+    console.log("onDeleteNote")
 
 
+  }
+
+  onNoteSend() {
+    // take focus away
+    this.vInputNote.nativeElement.blur()
+    this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'none')
+
+
+    if (this.svWebinar.bsNote.value === null) {
+      // add note
+      console.log(this.vInputNote.nativeElement.value)
+
+      const data = {
+        kWebinar: this.svWebinar.bsWebinar.value?.id,
+        kUnitPlayer: this.svWebinar.bsUnit.value?.oUnitPlayer?.id,
+        kUnit: this.svWebinar.bsUnit.value?.id,
+        secTime: this.player.currentTime(),
+        cNote: this.vInputNote.nativeElement.value,
+      }
+      this.connApi.safePut('note', data, (aNote: Note) => {
+        console.log(aNote)
+        this.vInputNote.nativeElement.value = ''
+        this.svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.push(aNote)
+        this.svWebinar.sortNotes()
+        console.log('note added: toast')
+      })
+    } else {
+      // edit note
+      this.svWebinar.bsNote.value.cNote = this.vInputNote.nativeElement.value
+
+      const data = {
+        kNote: this.svWebinar.bsNote.value.id,
+        cNote: this.vInputNote.nativeElement.value,
+      }
+      this.connApi.safePost('note', data, (aNote: Note) => {
+        console.log(aNote)
+        this.vInputNote.nativeElement.value = ''
+        console.log('note edited: toast')
+      })
+    }
+  }
+
+
+  onAddNote() {
+    console.log("onAddNote");
+    // show input and keyboard
+    this.svWebinar.bsNote.next(null)
+    this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'flex')
+    this.vInputNote.nativeElement.focus()
+  }
 }

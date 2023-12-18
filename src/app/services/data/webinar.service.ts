@@ -6,6 +6,7 @@ import {ConnApiService} from "../conn-api/conn-api.service";
 import {Section} from "../../interfaces/section";
 import {Unit} from "../../interfaces/unit";
 import {UnitPlayer} from "../../interfaces/unit-player";
+import {Note} from "../../interfaces/note";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,9 @@ export class WebinarService {
   bsUnitThumbnailNext: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsUnitThumbnailLast: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
+  // move out later
+  bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+
   constructor(private api: ConnApiService) {
     this.bsWebinar.subscribe((aWebinar) => {
 
@@ -30,6 +34,18 @@ export class WebinarService {
     this.bsUnit.subscribe((aUnit) => {
       this.setSection(aUnit)
       this.setUnitThumbnails()
+
+      console.log("Strange: " + aUnit?.oUnitPlayer?.lNotes)
+      if (aUnit?.oUnitPlayer?.lNotes === undefined || aUnit?.oUnitPlayer?.lNotes === null) {
+        console.log("heeShow")
+        // load Notes
+        this.api.safeGet('notes/unit-player/' + aUnit!.oUnitPlayer!.id, (lNotes: Note[]) => {
+          console.log("hee")
+          console.log(lNotes)
+          aUnit!.oUnitPlayer!.lNotes = lNotes
+        })
+      }
+
     })
   }
 
@@ -218,5 +234,9 @@ export class WebinarService {
     } else {
       this.bsUnitThumbnailNext.next(null)
     }
+  }
+
+  sortNotes() {
+    this.bsUnit.value!.oUnitPlayer!.lNotes = this.bsUnit.value!.oUnitPlayer!.lNotes!.sort((a, b) => a.secTime-b.secTime)
   }
 }
