@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ContentChild, ElementRef, HostListener, Input, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {AnimationService} from "../../services/animation.service";
 
@@ -20,6 +20,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   @Input('vListInside') vListInside!: ElementRef
   @Input('cHeader') cHeader: string = ""
   @Input('cHeaderTwo') cHeaderTwo: string = ""
+
+  @Output() outputListOpened: EventEmitter<any> = new EventEmitter<any>()
+  @Output() outputListClosed: EventEmitter<any> = new EventEmitter<any>()
 
   readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
   readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
@@ -375,6 +378,8 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
 
       this.bListOpen = false
 
+      // output
+      this.outputListClosed.emit()
 
       // animation
       if (bAnimation) this.svAnimation.slideOut(this.vList)
@@ -391,6 +396,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     if (!this.bListOpen) {
 
       this.bListOpen = true
+
+      // output
+      this.outputListOpened.emit()
 
       // animation
       this.svAnimation.slideIn(this.vList)

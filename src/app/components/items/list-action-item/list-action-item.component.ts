@@ -8,5 +8,6 @@ import {Component, Input} from '@angular/core';
 export class ListActionItemComponent {
 
   @Input('cName') cName: string = ""
+  @Input('cIcon') cIcon: string = ""
 
 }

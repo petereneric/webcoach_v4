@@ -1,0 +1,17 @@
+<!-- HEIGHT NEEDED SO THAT INPUT IS ABOVE KEYBOARD AND NOT UNCONTROLLED SOMEWHERE ELSE -->
+<div #vInputContainer class="bg-dark flex align-items-center" style="display: none; height: 4rem; width: 100%; z-index: 20; position: fixed; bottom: 0; box-sizing: border-box; padding-right: 0rem !important;">
+  <!--
+ <div class="divider" style="position: absolute; top: 0"></div>
+ <div class="divider" style="position: absolute; bottom: 0"></div>
+ -->
+  <input #vInput class="i" type="text" [placeholder]="cHint" style="margin-left: 1rem !important;">
+  <mat-icon (click)="onSubmit()" [ngClass]="vInput.value === '' ? 'ic-light-two' : 'ic-light'" class="is-s" style="padding: 1rem" fontIcon="send"></mat-icon>
+
+</div>
+
+<ng-template>
+
+</ng-template>
+
+<div #vClickScreen (click)="close()" class="bg-dark" style="opacity: 0; position: fixed; width: 100dvw; height: 100dvh; z-index: 15">
+</div>

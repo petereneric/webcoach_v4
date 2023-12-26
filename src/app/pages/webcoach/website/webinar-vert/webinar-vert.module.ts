@@ -13,6 +13,7 @@ import {ListSliderModule} from "../../../../components/list-slider/list-slider.m
 import {NoteUnitModule} from "../../../../components/items/note/note-unit/note-unit.module";
 import {ListActionModule} from "../../../../components/list-action/list-action.module";
 import {ListActionItemModule} from "../../../../components/items/list-action-item/list-action-item.module";
+import {ListInputModule} from "../../../../components/list-input/list-input.module";
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import {ListActionItemModule} from "../../../../components/items/list-action-ite
         ListActionModule,
         ListActionItemModule,
         ReactiveFormsModule,
+        ListInputModule,
     ],
   declarations: [WebinarVertPage]
 })

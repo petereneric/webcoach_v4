@@ -30,10 +30,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 4rem;
+  width: 100%;
   margin-right: auto;
   margin-left: auto;
   z-index: 6;
+  height: 100%;
+  justify-content: center;
 }
 
 .tab-title {

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ContentChild, ElementRef, HostListener, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ContentChild, ElementRef, HostListener, Input, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {AnimationService} from "../../services/animation.service";
 import {environment} from "../../../environments/environment";
 
@@ -12,6 +12,8 @@ export class ListActionComponent implements OnInit, AfterViewInit{
   @ContentChild('tpListInside') tpListInside!: TemplateRef<any>
   @ViewChild('vList') vList!: ElementRef
   @ViewChild('vClickScreen') vClickScreen!: ElementRef
+
+  @Input('cHeader') cHeader: string = ''
 
   // variables
   hWindow: number = 0

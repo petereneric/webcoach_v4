@@ -16,6 +16,7 @@ import {ListSliderComponent} from "../../../../components/list-slider/list-slide
 import {Note} from "../../../../interfaces/note";
 import {ListActionComponent} from "../../../../components/list-action/list-action.component";
 import {DateTime} from "../../../../utils/date-time";
+import {ListInputComponent} from "../../../../components/list-input/list-input.component";
 
 @Component({
   selector: 'app-webinar-vert',
@@ -45,6 +46,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vListInsideNotes') vListInsideNotes!: ElementRef
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
   @ViewChild('cpListActionNotes') cpListActionNotes!: ListActionComponent
+  @ViewChild('cpListInputAddNote') cpListInputAddNote!: ListInputComponent
+  @ViewChild('cpListInputEditNote') cpListInputEditNote!: ListInputComponent
   @ViewChild('vInputNote') vInputNote!: ElementRef
   @ViewChild('vInputNoteContainer') vInputNoteContainer!: ElementRef
 
@@ -196,9 +199,6 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     })
 
     // input note
-    this.vInputNote.nativeElement.addEventListener("focusout", () => {
-      //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'none')
-    })
 
 
     window?.visualViewport?.addEventListener('resize', () => {
@@ -209,24 +209,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       }, 5)
     })
 
-    this.vInputNote.nativeElement.addEventListener("focus", () => {
-
-      // setting the opacity to 0 and afterward to 1 is a trick needed for avoiding the keyboard pushing the input and messing up the screen therefore since
-      // other elements are also pushed up by the keyboard
-      this.renderer.setStyle(this.vInputNote.nativeElement, 'opacity', 0)
-      setTimeout(() => {
-        this.renderer.setStyle(this.vInputNote.nativeElement, 'opacity', 1)
-
-        //let position = window!.visualViewport!.height - this.vInputNoteContainer.nativeElement.offsetHeight
-        //this.cTitle = "yeah2: " + window!.visualViewport!.offsetTop + "_" + window!.visualViewport!.height + "_" + position
-        //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, 'top', position + 'px')
-
-      }, 2)
-
-
-    })
-
     // play icon
+    console.log("joooo")
     this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 1)
 
 
@@ -379,6 +363,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   onProcessMove(ev) {
+    console.log("onProcessMove()")
     // only called on real movement with delta values bigger than zero
 
     // making sure that due a delay the process bar is not set back to current video time while this code has run
@@ -396,6 +381,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   onProcessEnd(ev) {
+    console.log("onProcessEnd()")
     // only called after real movement with delta values bigger than zero
 
     // update current video time according to process end move
@@ -1100,6 +1086,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.hVideoWrapper = this.videoWrapper.nativeElement.offsetHeight
     this.heightList = this.vList.nativeElement.offsetHeight
     this.hWindow = window.innerHeight
+    this.wWindow = window.innerWidth;
 
     // height of list-outside (container of the list-inside with constant height)
     this.hListOutside = this.vListOutside.nativeElement.offsetHeight
@@ -1174,11 +1161,28 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     //this.onEditNote()
   }
 
-  onEditNote() {
+  onEditNote($event) {
     console.log("onEditNote");
+
+    // edit note
+    this.svWebinar.bsNote.value.cNote = $event
+
+    const data = {
+      kNote: this.svWebinar.bsNote.value.id,
+      cNote: $event,
+    }
+    this.connApi.safePost('note', data, (aNote: Note) => {
+      console.log(aNote)
+      this.svWebinar.bsNote.next(null)
+      console.log('note edited: toast')
+    })
+
+    /*
     // show input and keyboard
     this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'flex')
     this.vInputNote.nativeElement.focus()
+
+     */
 
     //let heightCover = this.vCover.nativeElement.offsetHeight
     //let scrollPosition = document.documentElement.scrollTop
@@ -1193,8 +1197,37 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   onDeleteNote() {
     console.log("onDeleteNote")
+    this.connApi.safeDelete('note/' + this.svWebinar.bsNote.value.id, () => {
+      this.cpListActionNotes.onCloseList()
+      this.svWebinar.bsUnit.value?.oUnitPlayer?.lNotes!.forEach( (item, index) => {
+        if(item === this.svWebinar.bsNote.value) this.svWebinar.bsUnit.value?.oUnitPlayer?.lNotes!.splice(index,1);
+      });
+      this.svWebinar.bsNote.next(null)
+      console.log('note deleted')
 
+    })
 
+  }
+
+  onNoteAdd($event) {
+    // actual adding
+    console.log($event)
+    console.log("note addd")
+    // add note
+
+    const data = {
+      kWebinar: this.svWebinar.bsWebinar.value?.id,
+      kUnitPlayer: this.svWebinar.bsUnit.value?.oUnitPlayer?.id,
+      kUnit: this.svWebinar.bsUnit.value?.id,
+      secTime: this.player.currentTime(),
+      cNote: $event,
+    }
+    this.connApi.safePut('note', data, (aNote: Note) => {
+      console.log(aNote)
+      this.svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.push(aNote)
+      this.svWebinar.sortNotes()
+      console.log('note added: toast')
+    })
   }
 
   onNoteSend() {
@@ -1204,36 +1237,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
 
     if (this.svWebinar.bsNote.value === null) {
-      // add note
-      console.log(this.vInputNote.nativeElement.value)
 
-      const data = {
-        kWebinar: this.svWebinar.bsWebinar.value?.id,
-        kUnitPlayer: this.svWebinar.bsUnit.value?.oUnitPlayer?.id,
-        kUnit: this.svWebinar.bsUnit.value?.id,
-        secTime: this.player.currentTime(),
-        cNote: this.vInputNote.nativeElement.value,
-      }
-      this.connApi.safePut('note', data, (aNote: Note) => {
-        console.log(aNote)
-        this.vInputNote.nativeElement.value = ''
-        this.svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.push(aNote)
-        this.svWebinar.sortNotes()
-        console.log('note added: toast')
-      })
     } else {
-      // edit note
-      this.svWebinar.bsNote.value.cNote = this.vInputNote.nativeElement.value
 
-      const data = {
-        kNote: this.svWebinar.bsNote.value.id,
-        cNote: this.vInputNote.nativeElement.value,
-      }
-      this.connApi.safePost('note', data, (aNote: Note) => {
-        console.log(aNote)
-        this.vInputNote.nativeElement.value = ''
-        console.log('note edited: toast')
-      })
     }
   }
 
@@ -1242,7 +1248,26 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     console.log("onAddNote");
     // show input and keyboard
     this.svWebinar.bsNote.next(null)
-    this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'flex')
-    this.vInputNote.nativeElement.focus()
+
+    this.cpListInputAddNote.show()
+
+    //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, "display", 'flex')
+    //this.vInputNote.nativeElement.focus()
   }
+
+  onShowEditNote() {
+    this.cpListActionNotes.onCloseList()
+    this.cpListInputEditNote.show(this.svWebinar.bsNote.value.cNote)
+  }
+
+  protected readonly console = console;
+
+  outputListOpened() {
+    this.pauseVideo()
+  }
+
+  outputListClosed() {
+    this.playVideo()
+  }
+
 }
