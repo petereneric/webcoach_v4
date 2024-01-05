@@ -98,8 +98,8 @@
 </div>
 
 <!-- list-slider note -->
-<app-list-slider #cpListNotes (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [vListInside]="vListInsideNotes" [cHeader]="'Notizen'"
-                 [cHeaderTwo]="svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.length! + ''">
+<app-list-slider #cpListNotes (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [vListInside]="vListInsideNotes" [cHeaderOneTitle]="'Notizen'"
+                 [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.length! + ''">
   <ng-template #tpListInside>
     <div #vListInsideNotes (press)="cpListNotes.onListInsidePress($event)" (panstart)="cpListNotes.onListInsideStart($event)" (panmove)="cpListNotes.onListInsideMove($event)"
          (panend)="cpListNotes.onListInsideEnd($event)" class="bg-dark" style="width: 100%; position: relative">
@@ -139,6 +139,95 @@
 <!-- list inputs -->
 <app-list-input #cpListInputAddNote [cHint]="'Notiz hinzufügen...'" (outputSubmit)="onNoteAdd($event)"></app-list-input>
 <app-list-input #cpListInputEditNote [cHint]="'Notiz bearbeiten...'" (outputSubmit)="onEditNote($event)"></app-list-input>
+
+
+<!-- list-slider comment -->
+<app-list-slider #cpListComments (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="'Kommentare'" [cHeaderTwoTitle]="'Antworten'"
+                 [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length! + ''" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length! + ''" >
+
+  <!-- comments -->
+  <ng-template #tpListInside>
+    <div #vListInsideComments (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
+         (panend)="cpListComments.onListInsideEnd($event)" class="bg-dark" style="width: 100%; position: relative">
+      <div *ngFor="let aComment of svWebinar.bsUnit.value?.lComments">
+        <app-comment (outputAnswer)="onCommentAnswerFromComment(aComment)" (outputLike)="onCommentLike(aComment)" (outputClick)="onComment(aComment)" (outputSettings)="onCommentSettings(aComment)" [aComment]="aComment" [bIconAnswer]="true" [bShowAnswers]="true"></app-comment>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <!-- comment-answers -->
+  <ng-template #tpListInsideTwo>
+    <div #vListInsideCommentAnswers (press)="cpListComments.onListInsidePressTwo($event)" (panstart)="cpListComments.onListInsideStartTwo($event)" (panmove)="cpListComments.onListInsideMoveTwo($event)"
+         (panend)="cpListComments.onListInsideEndTwo($event)" class="bg-dark" style="width: 100%; position: relative">
+      <app-comment (outputClick)="onCommentAnswer()" (outputLike)="onCommentLike(svWebinar.bsComment.value!)" (outputSettings)="onCommentSettings(svWebinar.bsComment.value!)" [aComment]="svWebinar.bsComment.value!" [bIconAnswer]="true" [bHighlight]="true"></app-comment>
+      <div *ngFor="let aCommentAnswer of svWebinar.bsComment.value?.lCommentAnswers" style="margin-left: 2.75rem">
+        <app-comment (outputClick)="onCommentAnswer()" (outputLike)="onCommentAnswerLike(aCommentAnswer)" (outputSettings)="onCommentAnswerSettings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <!-- input comment -->
+  <ng-template #tpInput>
+    <div (click)="onAddComment()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
+      <!-- structure needed to avoid overflow-x -->
+      <div class="divider" style="position: absolute; top: 0"></div>
+      <div class="flex section align-items-center" style="box-sizing: border-box;">
+        <div class="bg-light" style="border-radius: 100%; min-width: 1.75rem; min-height: 1.75rem; display: flex; align-items: center; justify-content: center;">
+          <p class="ts-xs tc-dark tw-bold" style="">{{svPlayer.bsUserData!.value!.cName!.substring(0,1)}}</p>
+        </div>
+        <div class="sph-1"></div>
+        <input class="i" type="text" placeholder="Kommentar hinzufügen...">
+      </div>
+
+    </div>
+
+  </ng-template>
+
+  <!-- input comment-answer -->
+  <ng-template #tpInputTwo>
+    <div (click)="onAddCommentAnswer()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
+      <!-- structure needed to avoid overflow-x -->
+      <div class="divider" style="position: absolute; top: 0"></div>
+      <div class="flex section align-items-center" style="box-sizing: border-box;">
+        <div class="bg-light" style="border-radius: 100%; min-width: 1.75rem; min-height: 1.75rem; display: flex; align-items: center; justify-content: center;">
+          <p class="ts-xs tc-dark tw-bold" style="">{{svPlayer.bsUserData!.value!.cName!.substring(0,1)}}</p>
+        </div>
+        <div class="sph-1"></div>
+        <input class="i" type="text" placeholder="Antwort hinzufügen...">
+      </div>
+
+    </div>
+
+  </ng-template>
+
+</app-list-slider>
+
+<!-- list-action comment -->
+<app-list-action #cpListActionComments [cHeader]="'Kommentar'">
+  <ng-template #tpListInside>
+    <app-list-action-item (click)="onShowEditComment()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
+    <app-list-action-item (click)="onDeleteComment()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
+  </ng-template>
+</app-list-action>
+
+<!-- list-action comment-answers -->
+<app-list-action #cpListActionCommentAnswers [cHeader]="'Antwort'">
+  <ng-template #tpListInside>
+    <app-list-action-item (click)="onShowEditCommentAnswer()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
+    <app-list-action-item (click)="onDeleteCommentAnswer()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
+  </ng-template>
+</app-list-action>
+
+<!-- list inputs comment -->
+<app-list-input #cpListInputAddComment [cHint]="'Kommentar hinzufügen...'" (outputSubmit)="onCommentAdd($event)"></app-list-input>
+<app-list-input #cpListInputEditComment [cHint]="'Kommentar bearbeiten...'" (outputSubmit)="onEditComment($event)"></app-list-input>
+
+<!-- list inputs comment-answer -->
+<app-list-input #cpListInputAddCommentAnswer [cHint]="'Antwort hinzufügen...'" (outputSubmit)="onCommentAnswerAdd($event)"></app-list-input>
+<app-list-input #cpListInputEditCommentAnswer [cHint]="'Antwort bearbeiten...'" (outputSubmit)="onEditCommentAnswer($event)"></app-list-input>
+
 
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
@@ -244,7 +333,7 @@
 
             <!-- comment -->
             <div class="sidebar-container">
-              <mat-icon class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
+              <mat-icon (click)="cpListComments.onOpenList()" class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
               <p class="sidebar-subtext">293</p>
             </div>
 

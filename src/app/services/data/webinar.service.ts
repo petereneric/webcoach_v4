@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Webinar} from "../../interfaces/webinar";
-import {B} from "@angular/cdk/keycodes";
 import {ConnApiService} from "../conn-api/conn-api.service";
 import {Section} from "../../interfaces/section";
 import {Unit} from "../../interfaces/unit";
 import {UnitPlayer} from "../../interfaces/unit-player";
 import {Note} from "../../interfaces/note";
+import {Comment} from "../../interfaces/comment"
+import {CommentAnswer} from "../../interfaces/comment-answer";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,9 @@ export class WebinarService {
 
   // move out later
   bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsComment: BehaviorSubject<Comment | null> = new BehaviorSubject<Comment | null>(null)
+  bsCommentAnswer: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
+
 
   constructor(private api: ConnApiService) {
     this.bsWebinar.subscribe((aWebinar) => {
@@ -35,14 +39,18 @@ export class WebinarService {
       this.setSection(aUnit)
       this.setUnitThumbnails()
 
-      console.log("Strange: " + aUnit?.oUnitPlayer?.lNotes)
       if (aUnit?.oUnitPlayer?.lNotes === undefined || aUnit?.oUnitPlayer?.lNotes === null) {
-        console.log("heeShow")
         // load Notes
         this.api.safeGet('notes/unit-player/' + aUnit!.oUnitPlayer!.id, (lNotes: Note[]) => {
-          console.log("hee")
-          console.log(lNotes)
           aUnit!.oUnitPlayer!.lNotes = lNotes
+        })
+      }
+
+      if (aUnit?.lComments === undefined || aUnit?.lComments === null) {
+        // load comments
+        this.api.safeGet('comments/unit/' + aUnit!.id, (lComments: Comment[]) => {
+          console.log(lComments)
+          aUnit!.lComments = lComments
         })
       }
 
@@ -101,6 +109,15 @@ export class WebinarService {
       console.log("HELLLLO")
       console.log(urlThumbnail)
     })
+  }
+
+  loadCommentAnswers(aComment: Comment) {
+    if (aComment.lCommentAnswers === undefined || aComment.lCommentAnswers === null || aComment.lCommentAnswers.length === 0) {
+      this.api.safeGet('comment-answers/comment/' + aComment.id, (lCommentAnswers: CommentAnswer[]) => {
+        aComment.lCommentAnswers = lCommentAnswers
+        console.log(lCommentAnswers)
+      })
+    }
   }
 
   setUnit(aUnit: Unit | null, secVideo = 0) {
@@ -239,4 +256,9 @@ export class WebinarService {
   sortNotes() {
     this.bsUnit.value!.oUnitPlayer!.lNotes = this.bsUnit.value!.oUnitPlayer!.lNotes!.sort((a, b) => a.secTime-b.secTime)
   }
+
+  sortComments() {
+    this.bsUnit.value!.lComments = this.bsUnit.value!.lComments!.sort((a, b) => (a.dtCreation as any)-(b.dtCreation as any))
+  }
+
 }

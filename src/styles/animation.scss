@@ -87,4 +87,32 @@
   }
 }
 
+// opacity
+.a-swing-in-opacity {
+  animation: a-swing-in-opacity-keyframes 0.25s forwards;
+}
+
+@keyframes a-swing-in-opacity-keyframes {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// opacity
+.a-swing-out-opacity {
+  animation: a-swing-out-opacity-keyframes 0.25s forwards;
+}
+
+@keyframes a-swing-out-opacity-keyframes {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 

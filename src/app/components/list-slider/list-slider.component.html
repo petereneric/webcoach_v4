@@ -1,26 +1,46 @@
-<div #vList class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
+<!-- default z-index: 7 -->
+<div #vList class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 20; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
 
   <!-- needed for avoiding 1px of underlying vListInside while closing -->
-  <div style="width: 100%; height: 3rem; position: absolute; margin-top: -30px; z-index: 7; border-radius: 1.3rem 1.3rem 0rem 0rem;" class="bg-dark"></div>
+  <div style="width: 100%; height: 3rem; position: absolute; margin-top: -30px; z-index: 10; border-radius: 1.3rem 1.3rem 0rem 0rem;" class="bg-dark"></div>
   <!-- header -->
   <div #vListHeader (panstart)="onListHeaderStart($event)" (panmove)="onListHeaderMove($event)" (panend)="onListHeaderEnd($event)"
-       class="bg-dark" style="position: fixed; z-index: 7; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center; border-radius: 1.3rem 1.3rem 0rem 0rem; ">
+       class="bg-dark" style="position: fixed; z-index: 9; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center; border-radius: 1.3rem 1.3rem 0rem 0rem; ">
     <!-- slide-bar -->
     <div class="slide-bar">
       <p style="opacity: 0">dummy text so that div gets shown as bar</p>
     </div>
     <!-- text and icons -->
-    <div style="position:static; display: flex; align-items: center; box-sizing:border-box; width: 100%; padding: 0.75rem; margin-top: auto; margin-bottom: auto">
-      <!-- title -->
-      <p class="ts-standard tc-light tw-bold">{{cHeader}}</p>
-      <!-- title two -->
-      <p class="ts-s tc-light-two ml-05">{{cHeaderTwo}}</p>
-      <!-- icons -->
-      <div style="margin-left: auto; display: none">
-        <!-- close -->
-        <mat-icon class="is-standard ic-light" fontIcon="close"></mat-icon>
+    <div style="position: relative; width: 100%; height: 100%">
+      <!-- one -->
+      <div class="bg-dark" style="z-index: 7; position:absolute; top: 0; display: flex; align-items: center; box-sizing:border-box; width: 100%; height: 100%; padding: 0.75rem; margin-top: auto; margin-bottom: auto">
+        <!-- title -->
+        <p class="ts-standard tc-light tw-bold">{{cHeaderOneTitle}}</p>
+        <!-- title two -->
+        <p class="ts-s tc-light-two ml-05">{{cHeaderOneSubtitle}}</p>
+        <!-- icons -->
+        <div style="margin-left: auto; display: none">
+          <!-- close -->
+          <mat-icon class="is-standard ic-light" fontIcon="close"></mat-icon>
+        </div>
+      </div>
+
+      <!-- two -->
+      <div #vHeaderTwo class="bg-dark" [ngStyle]="{'left': wWindow + 'px'}" style="z-index: 8; position: absolute; top: 0; display: flex; align-items: center; box-sizing:border-box; width: 100%; height: 100%; padding: 0rem 0.75rem 0rem 0.75rem; margin-top: auto; margin-bottom: auto">
+        <mat-icon (click)="hideListTwo()" class="is-s ic-light" fontIcon="arrow_back_ios" style="padding-left: 0.5rem"></mat-icon>
+        <div class="sph-1"></div>
+        <!-- title -->
+        <p class="ts-standard tc-light tw-bold">{{cHeaderTwoTitle}}</p>
+        <!-- title two -->
+        <p class="ts-s tc-light-two ml-05">{{cHeaderTwoSubtitle}}</p>
+        <!-- icons -->
+        <div style="margin-left: auto; display: none">
+          <!-- close -->
+          <mat-icon class="is-standard ic-light" fontIcon="close"></mat-icon>
+        </div>
       </div>
     </div>
+
     <div class="divider"></div>
   </div>
 
@@ -35,6 +55,21 @@
   <div #vInput style="z-index: 7; position: absolute; width: 100%; bottom: 0;">
     <ng-container *ngTemplateOutlet="tpInput || vInputDefault"></ng-container>
   </div>
+
+
+  <!-- content two-->
+
+  <div #vListOutsideTwo class="bg-dark" [ngStyle]="{'left': wWindow + 'px', 'width': wWindow + 'px'}" style="z-index: 7; padding-top: 4rem; position: absolute; top: 0; height: 100%"  (panmove)="null">
+    <ng-container *ngTemplateOutlet="tpListInsideTwo || vListInsideDefault" (tap)="onListInsideTap($event)" (press)="onListInsidePressTwo($event)" (panstart)="onListInsideStartTwo($event)" (panmove)="onListInsideMoveTwo($event)" (panend)="onListInsideEndTwo($event)" style="position: absolute;  z-index: 6; width: 100%;">
+
+    </ng-container>
+  </div>
+
+  <div #vInputTwo [ngStyle]="{'left': wWindow + 'px', 'width': wWindow + 'px'}" style="z-index: 8; position: absolute; width: 100%; bottom: 0;">
+    <ng-container *ngTemplateOutlet="tpInputTwo || vInputDefault"></ng-container>
+  </div>
+
+
 </div>
 
 <!-- Default input with dummy values -->
@@ -45,5 +80,8 @@
 <ng-template #vListInsideDefault>
   <p>Nothing to show</p>
 </ng-template>
+
+
+
 
 

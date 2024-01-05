@@ -11,15 +11,23 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
 
   @ViewChild('vList') vList!: ElementRef
   @ViewChild('vListOutside') vListOutside!: ElementRef
+  @ViewChild('vListOutsideTwo') vListOutsideTwo!: ElementRef
   @ViewChild('vListInsideOrigin') vListInsideOrigin!: ElementRef
   @ViewChild('vListHeader') vListHeader!: ElementRef
   @ViewChild('vInput') vInput!: ElementRef
+  @ViewChild('vInputTwo') vInputTwo!: ElementRef
+  @ViewChild('vHeaderTwo') vHeaderTwo!: ElementRef
   @ContentChild('tpListInside') tpListInside!: TemplateRef<any>
+  @ContentChild('tpListInsideTwo') tpListInsideTwo!: TemplateRef<any>
   @ContentChild('tpInput') tpInput!: TemplateRef<any>
+  @ContentChild('tpInputTwo') tpInputTwo!: TemplateRef<any>
 
   @Input('vListInside') vListInside!: ElementRef
-  @Input('cHeader') cHeader: string = ""
-  @Input('cHeaderTwo') cHeaderTwo: string = ""
+  @Input('vListInsideTwo') vListInsideTwo!: ElementRef
+  @Input('cHeaderOneTitle') cHeaderOneTitle: string = ""
+  @Input('cHeaderOneSubtitle') cHeaderOneSubtitle: string = ""
+  @Input('cHeaderTwoTitle') cHeaderTwoTitle: string = ""
+  @Input('cHeaderTwoSubtitle') cHeaderTwoSubtitle: string = ""
 
   @Output() outputListOpened: EventEmitter<any> = new EventEmitter<any>()
   @Output() outputListClosed: EventEmitter<any> = new EventEmitter<any>()
@@ -38,6 +46,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   private bClickListInsideDisabled = true
   private bScrollListInsideEnabled = false
   private hWindow = 0
+  public wWindow = 0
 
   public hInput = 0
 
@@ -113,32 +122,41 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     this.bClickListInsideDisabled = false
   }
 
+  onListInsidePressTwo(event) {
+    this.onListInsidePress(event, this.vListInsideTwo)
+  }
 
-  onListInsidePress(event) {
+  onListInsidePress(event, vListInside: ElementRef= this.vListInside) {
     // needed when list fades already in one direction but needs to be interrupted due to new touch and possibly different scroll direction
     console.log("onListInsidePress")
     this.bScrollListInsideEnabled = false
     if (event.deltaY == 0 && event.deltaX == 0) {
       // disable scrolling so that there is no bouncing which otherwise is applied after a timeout of fading
       this.bScrollListInsideEnabled = false
-      this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
-      this.renderer.setStyle(this.vListInside.nativeElement, 'top', this.vListInside.nativeElement.offsetTop - this.vListHeader.nativeElement.offsetHeight + 'px')
+      this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
+      console.log('vListInsideOffsetTop: ', vListInside.nativeElement.offsetTop)
+      console.log('vListHeaderOffsetHeight: ', this.vListHeader.nativeElement.offsetHeight)
+      this.renderer.setStyle(vListInside.nativeElement, 'top', vListInside.nativeElement.offsetTop - this.vListHeader.nativeElement.offsetHeight + 'px')
     }
   }
 
 
-  onListInsideStart(event: any) {
+  onListInsideStartTwo(event) {
+    this.onListInsideStart(event, this.vListInsideTwo)
+  }
+
+  onListInsideStart(event: any, vListInside: ElementRef = this.vListInside) {
     // enable scrolling
     //this.bScrollListInsideEnabled = true
 
     // reset transition so that action takes place immediately
-    this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+    this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
 
     // offsetTop of list
     this.offsetTopListStart = this.vList.nativeElement.offsetTop
 
     // offsetTop of list-inside (start would be the height of the list-header)
-    this.offsetTopListInsideStart = this.vListInside.nativeElement.offsetTop
+    this.offsetTopListInsideStart = vListInside.nativeElement.offsetTop
 
     // disables effect of click on item so that only tap can enable it which is not so sensitive
     this.bClickListInsideDisabled = true
@@ -147,10 +165,14 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     this.tDirectionListStart = event.deltaY > 0 ? this.DIRECTION_LIST_START_UP : this.DIRECTION_LIST_START_DOWN
   }
 
+  onListInsideMoveTwo(event) {
+    console.log("move TWOOOOOOOOO")
+    this.onListInsideMove(event, this.vListInsideTwo)
+  }
 
-  onListInsideMove(event: any) {
+  onListInsideMove(event: any, vListInside: ElementRef = this.vListInside) {
 
-    const hListInside = this.vListInside.nativeElement.offsetHeight
+    const hListInside = vListInside.nativeElement.offsetHeight
     const hListHeader = this.vListHeader.nativeElement.offsetHeight
 
     // since offsetTopListInside is in the beginning the height of list-header this height needs to be subtracted because top-list
@@ -198,7 +220,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
       if (topListInsideNew >= gapListInsideOutside && topListInsideNew <= 0) {
         console.log("actual scrolling")
 
-        this.svAnimation.moveVertical(this.vListInside, topListInsideNew)
+        console.log(vListInside)
+        //this.renderer.setStyle(this.vListInsideTwo.nativeElement, 'top', topListInsideNew + 'px')
+        this.svAnimation.moveVertical(vListInside, topListInsideNew)
       }
 
       if (topListInsideNew > 0) {
@@ -210,13 +234,16 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
       if (topListInsideNew < gapListInsideOutside) {
         console.log("animation overstretching with decreasing impact due to square algorithm")
 
-        this.svAnimation.moveVertical(this.vListInside, gapListInsideOutside - Math.pow(Math.abs(topListInsideNew - gapListInsideOutside), 0.75))
+        this.svAnimation.moveVertical(vListInside, gapListInsideOutside - Math.pow(Math.abs(topListInsideNew - gapListInsideOutside), 0.75))
       }
     }
   }
 
+  onListInsideEndTwo(event) {
+    this.onListInsideEnd(event, this.vListInsideTwo)
+  }
 
-  onListInsideEnd(event: any) {
+  onListInsideEnd(event: any, vListInside: ElementRef = this.vListInside) {
     console.log("ON LIST INSIDE END")
     console.log("------------------")
     // overstretching only possible when user released press/touch not while holding
@@ -225,10 +252,10 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     // values
     const velocityY = event.velocityY;
     const deltaY = event.deltaY;
-    const offsetTopListInside = this.vListInside.nativeElement.offsetTop
+    const offsetTopListInside = vListInside.nativeElement.offsetTop
     const hListHeader = this.vListHeader.nativeElement.offsetHeight
     const topListInside = offsetTopListInside - hListHeader
-    const hListInside = this.vListInside.nativeElement.offsetHeight
+    const hListInside = vListInside.nativeElement.offsetHeight
     const hListOutside = this.vListOutside.nativeElement.offsetHeight
     const gapListInsideOutside = this.hListOutside - hListInside
     const offsetTopList = this.vList.nativeElement.offsetTop
@@ -267,19 +294,19 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
         console.log("secScroll: ", secScroll)
 
         // ease out for smooth transition
-        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', secScroll + 's ease-out')
-        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideEnd + 'px')
+        this.renderer.setStyle(vListInside.nativeElement, 'transition', secScroll + 's ease-out')
+        this.renderer.setStyle(vListInside.nativeElement, 'top', topListInsideEnd + 'px')
 
         // code is executed after fadeout
         setTimeout(() => {
-            this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+            this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
 
             if (topListInsideEnd < gapListInsideOutside && this.bScrollListInsideEnabled) {
               // bScrollListInsideEnabled checks if scroll was interrupted by another press/touch on the list
               // topListInsideEnd overstretched the boundary therefore bouncing back
               console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
 
-              this.svAnimation.moveVertical(this.vListInside, gapListInsideOutside, this.TRANSITION_LIST_SWIPE)
+              this.svAnimation.moveVertical(vListInside, gapListInsideOutside, this.TRANSITION_LIST_SWIPE)
             }
           },
 
@@ -305,22 +332,22 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
         console.log("secScroll: ", secScroll)
 
         // ease out for smooth transition
-        this.renderer.setStyle(this.vListInside.nativeElement, 'transition', secScroll + 's ease-out')
-        this.renderer.setStyle(this.vListInside.nativeElement, 'top', topListInsideEnd + 'px')
+        this.renderer.setStyle(vListInside.nativeElement, 'transition', secScroll + 's ease-out')
+        this.renderer.setStyle(vListInside.nativeElement, 'top', topListInsideEnd + 'px')
 
 
         // code is executed after fadeout
         setTimeout(() => {
-            this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+            this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
 
             if (movementList <= 0 && topListInsideEnd > 0 && this.bScrollListInsideEnabled) {
               // bScrollListInsideEnabled checks if scroll was interrupted by another press/touch on the list
               // topListInsideEnd overstretched the boundary therefore bouncing back
               console.log("topListInsideEnd overstretched the boundary therefore bouncing back")
 
-              this.svAnimation.moveVertical(this.vListInside, 0, this.TRANSITION_LIST_SWIPE)
+              this.svAnimation.moveVertical(vListInside, 0, this.TRANSITION_LIST_SWIPE)
               setTimeout(() => {
-                  this.renderer.setStyle(this.vListInside.nativeElement, 'transition', '0s')
+                  this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
                 },
                 this.TRANSITION_LIST_SWIPE * 1000);
             }
@@ -361,13 +388,13 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
 
     // list inside
     if (gapListInsideOutside > 0) {
-      this.svAnimation.moveVertical(this.vListInside, 0, this.TRANSITION_LIST_SWIPE)
+      this.svAnimation.moveVertical(vListInside, 0, this.TRANSITION_LIST_SWIPE)
     } else {
       if (topListInside < gapListInsideOutside) {
         // bounce back list-inside on bottom when user overstretched the list already while holding it
         console.log("bounce back list-inside on bottom when user overstretched the list already while holding it")
 
-        this.svAnimation.moveVertical(this.vListInside, hListOutside - hListInside, this.TRANSITION_LIST_SWIPE)
+        this.svAnimation.moveVertical(vListInside, hListOutside - hListInside, this.TRANSITION_LIST_SWIPE)
       }
     }
 
@@ -409,6 +436,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     this.heightList = this.vList.nativeElement.offsetHeight
     this.hListOutside = this.vListOutside.nativeElement.offsetHeight
     this.hWindow = window.innerHeight
+    this.wWindow = window.innerWidth
     this.hInput = this.vInput.nativeElement.offsetHeight
     console.log(this.vListOutside.nativeElement.offsetHeight)
     this.renderer.setStyle(this.vListOutside.nativeElement, 'height', 'calc(100% - 4rem - ' + this.hInput + 'px)')
@@ -419,6 +447,17 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   }
 
 
-  protected readonly console = console;
+  showListTwo() {
+    console.log("showListTwo()")
+    this.svAnimation.swingIn(this.vListOutsideTwo)
+    this.svAnimation.swingIn(this.vInputTwo)
+    this.svAnimation.swingIn(this.vHeaderTwo, 0.3)
+  }
+
+  hideListTwo() {
+    this.svAnimation.swingOut(this.vListOutsideTwo, 0.3)
+    this.svAnimation.swingOut(this.vInputTwo)
+    this.svAnimation.swingOut(this.vHeaderTwo)
+  }
 }
 

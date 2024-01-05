@@ -14,6 +14,8 @@ import {NoteUnitModule} from "../../../../components/items/note/note-unit/note-u
 import {ListActionModule} from "../../../../components/list-action/list-action.module";
 import {ListActionItemModule} from "../../../../components/items/list-action-item/list-action-item.module";
 import {ListInputModule} from "../../../../components/list-input/list-input.module";
+import {CommentModule} from "../../../../components/items/comment/comment.module";
+import {CommentPipe} from "../../../../pipes/comment.pipe";
 
 @NgModule({
     imports: [
@@ -30,6 +32,8 @@ import {ListInputModule} from "../../../../components/list-input/list-input.modu
         ListActionItemModule,
         ReactiveFormsModule,
         ListInputModule,
+        CommentModule,
+        CommentPipe,
     ],
   declarations: [WebinarVertPage]
 })

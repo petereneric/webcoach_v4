@@ -35,6 +35,7 @@ export class AnimationService {
       secTransition * 1000);
   }
 
+  // vertical
   slideIn(element, secTransition = environment.TRANSITION_LIST_SWIPE, callback: any = null) {
     this.moveVertical(element, window.innerHeight - element.nativeElement.offsetHeight, secTransition, callback)
 
@@ -48,8 +49,42 @@ export class AnimationService {
      */
   }
 
+  // vertical
   slideOut(element, secTransition = environment.TRANSITION_LIST_SWIPE, callback: any = null) {
     this.moveVertical(element, window.innerHeight, secTransition, callback)
+  }
+
+  moveHorizontal(vElement, pxPosition, secTransition = 0, callback: any = null, speedCurve: string = '', fadingIn: boolean = false, fadingOut: boolean = false) {
+    this.renderer.setStyle(vElement.nativeElement, 'transition', secTransition + 's' + ' ' + speedCurve)
+    this.renderer.setStyle(vElement.nativeElement, 'left', pxPosition + 'px')
+    setTimeout(() => {
+        this.renderer.setStyle(vElement.nativeElement, 'transition', '0s')
+        if (callback) callback()
+      },
+      secTransition * 1000);
+    if (fadingIn) {
+      this.renderer.removeClass(vElement.nativeElement, 'a-swing-out-opacity');
+      this.renderer.removeClass(vElement.nativeElement, 'a-swing-in-opacity');
+      setTimeout(() => {
+        this.renderer.addClass(vElement.nativeElement, 'a-swing-in-opacity');
+      }, 2)
+    }
+    if (fadingOut) {
+      this.renderer.removeClass(vElement.nativeElement, 'a-swing-out-opacity');
+      this.renderer.removeClass(vElement.nativeElement, 'a-swing-in-opacity');
+      setTimeout(() => {
+        this.renderer.addClass(vElement.nativeElement, 'a-swing-out-opacity');
+      }, 2)
+    }
+  }
+
+  // horizontal
+  swingIn(element, secTransition = 0.5, callback: any = null) {
+    this.moveHorizontal(element, 0, secTransition, callback, '', true)
+  }
+
+  swingOut(element, secTransition = 0.5, callback: any = null) {
+    this.moveHorizontal(element, window.innerWidth, secTransition, callback, '', false, true)
   }
 
   show(elements: ElementRef[], secTimeout = 0) {

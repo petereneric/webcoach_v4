@@ -18,7 +18,6 @@ import {DatePipe} from "@angular/common";
 import {environment} from "../environments/environment";
 import {MatIconModule} from "@angular/material/icon";
 import { MenuDirective } from './directives/menu.directive';
-import { ListInputComponent } from './components/list-input/list-input.component';
 
 
 export class MyHammerConfig extends HammerGestureConfig {

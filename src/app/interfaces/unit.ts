@@ -1,4 +1,5 @@
 import {UnitPlayer} from "./unit-player";
+import {Comment} from "./comment";
 
 export interface Unit {
   id: number
@@ -12,4 +13,5 @@ export interface Unit {
   bVideo: boolean
   nPosition: number
   bSample: number
+  lComments: Comment[]
 }

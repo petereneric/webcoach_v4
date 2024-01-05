@@ -17,6 +17,9 @@ import {Note} from "../../../../interfaces/note";
 import {ListActionComponent} from "../../../../components/list-action/list-action.component";
 import {DateTime} from "../../../../utils/date-time";
 import {ListInputComponent} from "../../../../components/list-input/list-input.component";
+import {Comment} from "../../../../interfaces/comment";
+import {PlayerService} from "../../../../services/data/player.service";
+import {CommentAnswer} from "../../../../interfaces/comment-answer";
 
 @Component({
   selector: 'app-webinar-vert',
@@ -44,10 +47,19 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vInformation') vInformation!: ElementRef
   @ViewChild('vSidebar') vSidebar!: ElementRef
   @ViewChild('vListInsideNotes') vListInsideNotes!: ElementRef
+  @ViewChild('vListInsideComments') vListInsideComments!: ElementRef
+  @ViewChild('vListInsideCommentAnswers') vListInsideCommentAnswers!: ElementRef
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
   @ViewChild('cpListActionNotes') cpListActionNotes!: ListActionComponent
+  @ViewChild('cpListComments') cpListComments!: ListSliderComponent
+  @ViewChild('cpListActionComments') cpListActionComments!: ListActionComponent
+  @ViewChild('cpListActionCommentAnswers') cpListActionCommentAnswers!: ListActionComponent
   @ViewChild('cpListInputAddNote') cpListInputAddNote!: ListInputComponent
+  @ViewChild('cpListInputAddComment') cpListInputAddComment!: ListInputComponent
+  @ViewChild('cpListInputAddCommentAnswer') cpListInputAddCommentAnswer!: ListInputComponent
   @ViewChild('cpListInputEditNote') cpListInputEditNote!: ListInputComponent
+  @ViewChild('cpListInputEditComment') cpListInputEditComment!: ListInputComponent
+  @ViewChild('cpListInputEditCommentAnswer') cpListInputEditCommentAnswer!: ListInputComponent
   @ViewChild('vInputNote') vInputNote!: ElementRef
   @ViewChild('vInputNoteContainer') vInputNoteContainer!: ElementRef
 
@@ -126,7 +138,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   // and updates the ui process bar
   process!: Subscription;
 
-  constructor(public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
+  constructor(public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -178,6 +190,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
           break;
       }
     });
+
+    this.svPlayer.downloadUserData()
   }
 
 
@@ -222,9 +236,11 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // for testing of list
     //this.onOpenList()
+    this.cpListComments.onOpenList()
     setTimeout(() => {
 
     }, this.TIME_INFORMATION_START * 1000)
+
 
 
   }
@@ -1260,7 +1276,108 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.cpListInputEditNote.show(this.svWebinar.bsNote.value.cNote)
   }
 
-  protected readonly console = console;
+  onCommentSettings(aComment: Comment) {
+    console.log("onCommentSettings()")
+    if (aComment.kPlayer === this.svPlayer.bsUserData.value?.id) {
+      // edit or delete
+      this.svWebinar.bsComment.next(aComment)
+      this.cpListActionComments.onOpenList()
+    } else {
+      // report
+    }
+  }
+
+  onCommentAdd($event) {
+    // actual adding
+    console.log($event)
+    console.log("comment addd")
+    // add note
+
+    const data = {
+      kWebinar: this.svWebinar.bsWebinar.value?.id,
+      kUnit: this.svWebinar.bsUnit.value?.id,
+      cText: $event,
+    }
+    this.connApi.safePut('comment', data, (aComment: Comment) => {
+      console.log(aComment)
+      this.svWebinar.bsUnit.value?.lComments?.push(aComment)
+      this.svWebinar.sortComments()
+      console.log(this.svWebinar.bsUnit.value!.lComments)
+      console.log('comment added: toast')
+    })
+  }
+
+  onEditComment($event) {
+    console.log("onEditComment");
+
+    // edit note
+    this.svWebinar.bsComment.value!.cText = $event
+
+    const data = {
+      kComment: this.svWebinar.bsComment.value?.id,
+      cText: $event,
+    }
+    this.connApi.safePost('comment', data, (aComment: Comment) => {
+      console.log(aComment)
+      this.svWebinar.bsComment.next(null)
+      console.log('comment edited: toast')
+    })
+
+  }
+
+  onAddComment() {
+    console.log("onAddComment");
+    // show input and keyboard
+    this.svWebinar.bsComment.next(null)
+
+    this.cpListInputAddComment.show()
+  }
+
+  onDeleteComment() {
+    console.log("onDeleteComment")
+    this.connApi.safeDelete('comment/' + this.svWebinar.bsComment.value?.id, () => {
+      this.cpListActionComments.onCloseList()
+      this.svWebinar.bsUnit.value?.lComments!.forEach( (item, index) => {
+        if(item === this.svWebinar.bsComment.value) this.svWebinar.bsUnit.value?.lComments!.splice(index,1);
+      });
+      this.svWebinar.bsComment.next(null)
+    })
+
+  }
+
+
+  onShowEditComment() {
+    this.cpListActionComments.onCloseList()
+    this.cpListInputEditComment.show(this.svWebinar.bsComment.value?.cText)
+  }
+
+  onComment(aComment: Comment) {
+    this.svWebinar.bsComment.next(aComment)
+    console.log("onComment")
+    if (aComment.nAnswers > 0) {
+      this.svWebinar.loadCommentAnswers(aComment)
+    }
+    this.cpListComments.showListTwo()
+  }
+
+  onCommentAnswer() {
+  }
+
+  onCommentLike(aComment: Comment) {
+    let data = {
+      kComment: aComment.id,
+      bLike: aComment.bLike ? 0 : 1
+    }
+    console.log(data)
+    this.connApi.safePost('comment/like', data, (response: any) => {
+      aComment.bLike = !aComment.bLike
+      if (aComment.bLike) {
+        aComment.nLikes++
+      } else {
+        aComment.nLikes--
+      }
+    })
+  }
 
   outputListOpened() {
     this.pauseVideo()
@@ -1270,4 +1387,108 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.playVideo()
   }
 
+  onAddCommentAnswer() {
+    console.log("onAddCommentAnswer");
+    // show input and keyboard
+    this.svWebinar.bsCommentAnswer.next(null)
+
+    this.cpListInputAddCommentAnswer.show()
+  }
+
+  onCommentAnswerFromComment(aComment: Comment) {
+    this.onComment(aComment)
+    this.onShowAddCommentAnswer(aComment)
+  }
+
+  onShowAddCommentAnswer(aComment: Comment) {
+    // show input and keyboard
+    console.log("onShowAddCommentAnswer()")
+    console.log(aComment)
+    this.svWebinar.bsComment.next(aComment)
+    this.svWebinar.bsCommentAnswer.next(null)
+    this.cpListInputAddCommentAnswer.show()
+  }
+
+  onShowEditCommentAnswer() {
+    this.cpListActionCommentAnswers.onCloseList()
+    this.cpListInputEditCommentAnswer.show(this.svWebinar.bsCommentAnswer.value?.cText)
+  }
+
+  onDeleteCommentAnswer() {
+    console.log("onDeleteCommentAnswer")
+    this.connApi.safeDelete('comment-answer/' + this.svWebinar.bsCommentAnswer.value?.id, () => {
+      this.cpListActionCommentAnswers.onCloseList()
+      this.svWebinar.bsComment.value?.lCommentAnswers!.forEach( (item, index) => {
+        if(item === this.svWebinar.bsCommentAnswer.value) {
+          this.svWebinar.bsComment.value?.lCommentAnswers!.splice(index,1);
+          this.svWebinar.bsComment.value!.nAnswers--
+        }
+      });
+      this.svWebinar.bsCommentAnswer.next(null)
+    })
+  }
+
+  onCommentAnswerAdd($event: any) {
+    // actual adding
+    console.log($event)
+    console.log("comment-answer addd")
+    // add note
+
+    const data = {
+      kComment: this.svWebinar.bsComment.value?.id,
+      cText: $event,
+    }
+    this.connApi.safePut('comment-answer', data, (aCommentAnswer: CommentAnswer) => {
+      console.log(aCommentAnswer)
+      this.svWebinar.bsComment.value?.lCommentAnswers?.push(aCommentAnswer)
+      this.svWebinar.bsComment.value!.nAnswers++
+      console.log(this.svWebinar.bsComment.value?.lCommentAnswers)
+      console.log('comment-answer added: toast')
+    })
+  }
+
+  onEditCommentAnswer($event: any) {
+    console.log("onEditCommentAnswer");
+
+    // edit note
+    this.svWebinar.bsCommentAnswer.value!.cText = $event
+
+    const data = {
+      kCommentAnswer: this.svWebinar.bsCommentAnswer.value?.id,
+      cText: $event,
+    }
+    this.connApi.safePost('comment-answer', data, (response: any) => {
+      this.svWebinar.bsCommentAnswer.next(null)
+      console.log('comment-answer edited: toast')
+    })
+  }
+
+  onCommentAnswerSettings(aCommentAnswer: CommentAnswer) {
+    console.log("onCommentSettings()")
+    if (aCommentAnswer.kPlayer === this.svPlayer.bsUserData.value?.id) {
+      // edit or delete
+      this.svWebinar.bsCommentAnswer.next(aCommentAnswer)
+      this.cpListActionCommentAnswers.onOpenList()
+    } else {
+      // report
+    }
+  }
+
+  onCommentAnswerLike(aCommentAnswer: CommentAnswer) {
+    let data = {
+      kCommentAnswer: aCommentAnswer.id,
+      bLike: aCommentAnswer.bLike ? 0 : 1
+    }
+    console.log(data)
+    this.connApi.safePost('comment-answer/like', data, (response: any) => {
+      aCommentAnswer.bLike = !aCommentAnswer.bLike
+      if (aCommentAnswer.bLike) {
+        aCommentAnswer.nLikes++
+      } else {
+        aCommentAnswer.nLikes--
+      }
+    })
+  }
+
+  protected readonly ElementRef = ElementRef;
 }

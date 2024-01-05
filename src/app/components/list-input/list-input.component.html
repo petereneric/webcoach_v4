@@ -1,5 +1,5 @@
 <!-- HEIGHT NEEDED SO THAT INPUT IS ABOVE KEYBOARD AND NOT UNCONTROLLED SOMEWHERE ELSE -->
-<div #vInputContainer class="bg-dark flex align-items-center" style="display: none; height: 4rem; width: 100%; z-index: 20; position: fixed; bottom: 0; box-sizing: border-box; padding-right: 0rem !important;">
+<div #vInputContainer class="bg-dark flex align-items-center" style="display: none; height: 4rem; width: 100%; z-index: 21; position: fixed; bottom: 0; box-sizing: border-box; padding-right: 0rem !important;">
   <!--
  <div class="divider" style="position: absolute; top: 0"></div>
  <div class="divider" style="position: absolute; bottom: 0"></div>
@@ -13,5 +13,5 @@
 
 </ng-template>
 
-<div #vClickScreen (click)="close()" class="bg-dark" style="opacity: 0; position: fixed; width: 100dvw; height: 100dvh; z-index: 15">
+<div #vClickScreen (click)="close()" class="bg-dark" style="opacity: 0; position: fixed; width: 100dvw; height: 100dvh; z-index: 20">
 </div>
