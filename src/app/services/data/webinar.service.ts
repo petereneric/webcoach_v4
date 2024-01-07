@@ -28,6 +28,7 @@ export class WebinarService {
   bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsComment: BehaviorSubject<Comment | null> = new BehaviorSubject<Comment | null>(null)
   bsCommentAnswer: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
+  bsCommentAnswerRegard: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
 
 
   constructor(private api: ConnApiService) {

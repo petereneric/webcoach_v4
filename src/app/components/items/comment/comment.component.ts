@@ -4,6 +4,7 @@ import {DateTime} from "../../../utils/date-time";
 import {Comment} from "../../../interfaces/comment";
 import {CommentAnswer} from "../../../interfaces/comment-answer";
 import {AnimationService} from "../../../services/animation.service";
+import {WebinarService} from "../../../services/data/webinar.service";
 
 @Component({
   selector: 'app-comment',
@@ -19,6 +20,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   @Input('bIconAnswer') bIconAnswer: boolean = false
   @Input('bHighlight') bHighlight: boolean = false
   @Input('bShowAnswers') bShowAnswers: boolean = false
+  @Input('bListen') bListen: boolean = false
 
 
   @Output() outputSettings: EventEmitter<any> = new EventEmitter<any>()
@@ -29,18 +31,25 @@ export class CommentComponent implements OnInit, AfterViewInit {
   // variables
   cTimeAgo: any = ''
 
-  constructor(private svAnimation: AnimationService, public uDateTime: DateTime) {
+  constructor(private svWebinar: WebinarService, private svAnimation: AnimationService, public uDateTime: DateTime) {
   }
 
   ngOnInit(): void {
-
+    if (this.bListen) {
+      this.svWebinar.bsComment.subscribe((aComment) => {
+        this.cTimeAgo = this.uDateTime.timeAgo(aComment?.dtCreation!)
+      })
+    }
   }
 
   ngAfterViewInit(): void {
+    console.log("time", this.aComment?.dtCreation!)
     this.cTimeAgo = this.uDateTime.timeAgo(this.aComment?.dtCreation!)
+    console.log(this.cTimeAgo)
   }
 
-  onSettings() {
+  onSettings(event) {
+    event.stopPropagation();
     this.outputSettings.emit()
   }
 
@@ -49,17 +58,20 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
 
-  onAnswers() {
-    this.outputClick.emit()
+  onAnswers(event) {
+    //event.stopPropagation();
+    //this.outputClick.emit()
   }
 
-  onLike() {
+  onLike(event) {
+    event.stopPropagation();
     console.log(this.vLike)
     this.svAnimation.pump(this.vLike)
     this.outputLike.emit()
   }
 
-  onAnswer() {
+  onAnswer(event) {
+    event.stopPropagation();
     this.outputAnswer.emit()
   }
 }

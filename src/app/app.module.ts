@@ -24,7 +24,7 @@ export class MyHammerConfig extends HammerGestureConfig {
   override overrides = <any>{
     swipe: {direction: Hammer.DIRECTION_ALL},
     pan: {direction: Hammer.DIRECTION_ALL, threshold: environment.THRESHOLD_PAN},
-    press: {time: 1},
+    press: {time: 100},
   };
 }
 

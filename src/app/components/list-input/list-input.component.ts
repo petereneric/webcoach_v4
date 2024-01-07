@@ -16,6 +16,8 @@ export class ListInputComponent implements OnInit, AfterViewInit {
 
   @Input('cHint') cHint: string = ''
 
+  cRegard: string | null = null
+
   constructor(private renderer: Renderer2, private svAnimation: AnimationService) {
   }
 
@@ -67,8 +69,13 @@ export class ListInputComponent implements OnInit, AfterViewInit {
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'none')
   }
 
-  show(cInput = '') {
+  show(cInput = '', cRegard: string | null = null, cHint: string | null = null) {
+    console.log("hello")
+    console.log(cRegard)
+    this.cRegard = cRegard
+    if (cRegard !== null) this.cHint = ''
     // show input and keyboard
+    if (cHint !== null) this.cHint = cHint
 
 
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'block')

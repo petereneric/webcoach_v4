@@ -108,6 +108,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   private bInformationHidden = false
   private bVisibilityChange = false
 
+  public cHeaderTitleComments = "Kommentare"
+
   aContent: any | null = null
 
   // data object for heights of section and unit
@@ -1352,31 +1354,45 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onComment(aComment: Comment) {
-    this.svWebinar.bsComment.next(aComment)
-    console.log("onComment")
-    if (aComment.nAnswers > 0) {
-      this.svWebinar.loadCommentAnswers(aComment)
+    console.log("onClick()")
+    console.log("scrolling: ", this.cpListComments.isScrolling())
+    this.cHeaderTitleComments = this.cpListComments.isScrolling() ? 'trueH' : 'falseH'
+    if (!this.cpListComments.isScrolling()) {
+      this.svWebinar.bsComment.next(aComment)
+      console.log(aComment)
+      console.log("onComment")
+      if (aComment.nAnswers > 0) {
+        this.svWebinar.loadCommentAnswers(aComment)
+      }
+      this.cpListComments.showListTwo()
+    } else {
+      this.cpListComments.stopScrolling(this.vListInsideComments)
     }
-    this.cpListComments.showListTwo()
   }
 
   onCommentAnswer() {
+    this.onAddCommentAnswer()
   }
 
   onCommentLike(aComment: Comment) {
-    let data = {
-      kComment: aComment.id,
-      bLike: aComment.bLike ? 0 : 1
-    }
-    console.log(data)
-    this.connApi.safePost('comment/like', data, (response: any) => {
-      aComment.bLike = !aComment.bLike
-      if (aComment.bLike) {
-        aComment.nLikes++
-      } else {
-        aComment.nLikes--
+    if (!this.cpListComments.isScrolling()) {
+      let data = {
+        kComment: aComment.id,
+        bLike: aComment.bLike ? 0 : 1
       }
-    })
+      console.log(data)
+      this.connApi.safePost('comment/like', data, (response: any) => {
+        aComment.bLike = !aComment.bLike
+        if (aComment.bLike) {
+          aComment.nLikes++
+        } else {
+          aComment.nLikes--
+        }
+      })
+    } else {
+      this.cpListComments.stopScrolling(this.vListInsideComments)
+    }
+
   }
 
   outputListOpened() {
@@ -1387,17 +1403,24 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.playVideo()
   }
 
-  onAddCommentAnswer() {
+  onAddCommentAnswer(aCommentAnswerRegard: CommentAnswer | null = null) {
     console.log("onAddCommentAnswer");
     // show input and keyboard
     this.svWebinar.bsCommentAnswer.next(null)
+    this.svWebinar.bsCommentAnswerRegard.next(aCommentAnswerRegard)
 
-    this.cpListInputAddCommentAnswer.show()
+    this.cpListInputAddCommentAnswer.show('', aCommentAnswerRegard?.cPlayer)
   }
 
   onCommentAnswerFromComment(aComment: Comment) {
-    this.onComment(aComment)
-    this.onShowAddCommentAnswer(aComment)
+    this.cHeaderTitleComments = this.cpListComments.isScrolling() ? 'true' : 'false'
+    if (!this.cpListComments.isScrolling()) {
+      this.onComment(aComment)
+      this.onShowAddCommentAnswer(aComment)
+    } else {
+      this.cpListComments.stopScrolling(this.vListInsideComments)
+    }
+
   }
 
   onShowAddCommentAnswer(aComment: Comment) {
@@ -1406,12 +1429,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     console.log(aComment)
     this.svWebinar.bsComment.next(aComment)
     this.svWebinar.bsCommentAnswer.next(null)
-    this.cpListInputAddCommentAnswer.show()
+    this.cpListInputAddCommentAnswer.show('', null, 'Antwort hinzufügen...')
   }
 
   onShowEditCommentAnswer() {
     this.cpListActionCommentAnswers.onCloseList()
-    this.cpListInputEditCommentAnswer.show(this.svWebinar.bsCommentAnswer.value?.cText)
+    this.cpListInputEditCommentAnswer.show(this.svWebinar.bsCommentAnswer.value?.cText, this.svWebinar.bsCommentAnswerRegard.value?.cPlayer)
   }
 
   onDeleteCommentAnswer() {
@@ -1433,10 +1456,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     console.log($event)
     console.log("comment-answer addd")
     // add note
+    let aCommentAnswerRegard: CommentAnswer | null = this.svWebinar.bsCommentAnswerRegard.value
 
     const data = {
       kComment: this.svWebinar.bsComment.value?.id,
       cText: $event,
+      kPlayerRegard: aCommentAnswerRegard !== null ? aCommentAnswerRegard.kPlayer : null
     }
     this.connApi.safePut('comment-answer', data, (aCommentAnswer: CommentAnswer) => {
       console.log(aCommentAnswer)
@@ -1491,4 +1516,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   protected readonly ElementRef = ElementRef;
+
+  onCommentAnswerRegard(aCommentAnswer: CommentAnswer) {
+    this.onAddCommentAnswer(aCommentAnswer)
+  }
+
 }

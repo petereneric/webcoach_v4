@@ -142,12 +142,12 @@
 
 
 <!-- list-slider comment -->
-<app-list-slider #cpListComments (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="'Kommentare'" [cHeaderTwoTitle]="'Antworten'"
+<app-list-slider #cpListComments (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [bHandleClick]="false" [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="cHeaderTitleComments" [cHeaderTwoTitle]="'Antworten'"
                  [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length! + ''" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length! + ''" >
 
   <!-- comments -->
   <ng-template #tpListInside>
-    <div #vListInsideComments (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
+    <div #vListInsideComments (pressup)="cpListComments.onListInsidePressUp()" (tap)="cpListComments.onTap()" (click)="cpListComments.onListInsideClick($event)" (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
          (panend)="cpListComments.onListInsideEnd($event)" class="bg-dark" style="width: 100%; position: relative">
       <div *ngFor="let aComment of svWebinar.bsUnit.value?.lComments">
         <app-comment (outputAnswer)="onCommentAnswerFromComment(aComment)" (outputLike)="onCommentLike(aComment)" (outputClick)="onComment(aComment)" (outputSettings)="onCommentSettings(aComment)" [aComment]="aComment" [bIconAnswer]="true" [bShowAnswers]="true"></app-comment>
@@ -160,9 +160,9 @@
   <ng-template #tpListInsideTwo>
     <div #vListInsideCommentAnswers (press)="cpListComments.onListInsidePressTwo($event)" (panstart)="cpListComments.onListInsideStartTwo($event)" (panmove)="cpListComments.onListInsideMoveTwo($event)"
          (panend)="cpListComments.onListInsideEndTwo($event)" class="bg-dark" style="width: 100%; position: relative">
-      <app-comment (outputClick)="onCommentAnswer()" (outputLike)="onCommentLike(svWebinar.bsComment.value!)" (outputSettings)="onCommentSettings(svWebinar.bsComment.value!)" [aComment]="svWebinar.bsComment.value!" [bIconAnswer]="true" [bHighlight]="true"></app-comment>
+      <app-comment (outputClick)="onCommentAnswer()" (outputLike)="onCommentLike(svWebinar.bsComment.value!)" (outputSettings)="onCommentSettings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bIconAnswer]="true" [bHighlight]="true"></app-comment>
       <div *ngFor="let aCommentAnswer of svWebinar.bsComment.value?.lCommentAnswers" style="margin-left: 2.75rem">
-        <app-comment (outputClick)="onCommentAnswer()" (outputLike)="onCommentAnswerLike(aCommentAnswer)" (outputSettings)="onCommentAnswerSettings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
+        <app-comment (outputClick)="onCommentAnswerRegard(aCommentAnswer)" (outputLike)="onCommentAnswerLike(aCommentAnswer)" (outputSettings)="onCommentAnswerSettings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
       </div>
 
     </div>

@@ -13,5 +13,6 @@ export interface Comment {
   kPlayer: number
   bLike: boolean // like made by player
   lCommentAnswers: CommentAnswer[]
+  cPlayerRegard: string
 
 }

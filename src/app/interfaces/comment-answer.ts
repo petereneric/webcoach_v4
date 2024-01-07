@@ -5,4 +5,6 @@ export interface CommentAnswer extends Comment {
   cText: string
   bLike: boolean
   nLikes: number
+  cPlayerRegard: string
+  cPlayer: string
 }

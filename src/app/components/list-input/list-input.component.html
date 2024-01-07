@@ -4,7 +4,15 @@
  <div class="divider" style="position: absolute; top: 0"></div>
  <div class="divider" style="position: absolute; bottom: 0"></div>
  -->
-  <input #vInput class="i" type="text" [placeholder]="cHint" style="margin-left: 1rem !important;">
+  <div class="i" style="margin-left: 1rem !important;">
+      <span *ngIf="cRegard !== null" class="ts-xs tc-primary_"
+            style="">{{'@ ' + cRegard}}</span>
+    <input #vInput  type="text" [placeholder]="cHint" style="margin-left: 0.25rem !important;">
+  </div>
+
+
+
+
   <mat-icon (click)="onSubmit()" [ngClass]="vInput.value === '' ? 'ic-light-two' : 'ic-light'" class="is-s" style="padding: 1rem" fontIcon="send"></mat-icon>
 
 </div>
