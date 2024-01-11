@@ -1,6 +1,20 @@
-import {AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, TemplateRef, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ContentChild,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {AnimationService} from "../../services/animation.service";
+import {ActionMenuComponent} from "../action-menu/action-menu.component";
 
 @Component({
   selector: 'app-list-slider',
@@ -17,6 +31,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   @ViewChild('vInput') vInput!: ElementRef
   @ViewChild('vInputTwo') vInputTwo!: ElementRef
   @ViewChild('vHeaderTwo') vHeaderTwo!: ElementRef
+  @ViewChild('vFilterOne', {read: ElementRef}) vFilterOne!: ElementRef
+  @ViewChild('vFilterOneMenu', {read: ElementRef}) vFilterOneMenu!: ElementRef
+  @ViewChild('cpFilterMenuOne') cpFilterMenuOne!: ActionMenuComponent
   @ContentChild('tpListInside') tpListInside!: TemplateRef<any>
   @ContentChild('tpListInsideTwo') tpListInsideTwo!: TemplateRef<any>
   @ContentChild('tpInput') tpInput!: TemplateRef<any>
@@ -29,9 +46,12 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   @Input('cHeaderTwoTitle') cHeaderTwoTitle: string = ""
   @Input('cHeaderTwoSubtitle') cHeaderTwoSubtitle: string = ""
   @Input('bHandleClick') bHandleClick: boolean = true
+  @Input('bFilterOne') bFilterOne: boolean = false
+  @Input('lFilterOne') lFilterOne: any[] = []
 
   @Output() outputListOpened: EventEmitter<any> = new EventEmitter<any>()
   @Output() outputListClosed: EventEmitter<any> = new EventEmitter<any>()
+  @Output() outputFilterOneSelect: EventEmitter<number> = new EventEmitter<number>()
 
   readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
   readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
@@ -48,11 +68,13 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   private bScrollListInsideEnabled = false
   private hWindow = 0
   public wWindow = 0
-
   public hInput = 0
+
+  public bShowFilterOne = false
 
   private bPress = false
 
+  public posFilterOne = {x: 0, y: 0}
 
   // data object for heights of section and unit
   public aHeights = {pxHeightSection: 0, pxHeightUnit: 0}
@@ -70,6 +92,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.setPositionFilterOne()
     this.setHeight()
   }
 
@@ -119,12 +142,13 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+  /*
   onListInsideTap($event) {
     // tap enables click on item, normal build in click would be to sensitive since too much movement is allowed
     this.bClickListInsideDisabled = false
     console.log("onListInsideTap()")
   }
+   */
 
   onListInsidePressTwo(event) {
     this.onListInsidePress(event, this.vListInsideTwo)
@@ -144,13 +168,10 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
 
         // for testing if this prevents the onClick in webinar-vert to be fired
 
-
-
         this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
         console.log('vListInsideOffsetTop: ', vListInside.nativeElement.offsetTop)
         console.log('vListHeaderOffsetHeight: ', this.vListHeader.nativeElement.offsetHeight)
         this.renderer.setStyle(vListInside.nativeElement, 'top', vListInside.nativeElement.offsetTop - this.vListHeader.nativeElement.offsetHeight + 'px')
-
       }
     }
   }
@@ -174,8 +195,6 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     1. pressUp (start timeout for setting scrolling and bPress to true)
     2. click (no action) since scrolling and bPress is true
     3. set scrolling and bPress to false
-
-
      */
 
     console.log("stopScrolling")
@@ -184,12 +203,8 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     }, 200)
 
     this.renderer.setStyle(vListInside.nativeElement, 'transition', '0s')
-    //console.log('vListInsideOffsetTop: ', vListInside.nativeElement.offsetTop)
-    //console.log('vListHeaderOffsetHeight: ', this.vListHeader.nativeElement.offsetHeight)
     this.renderer.setStyle(vListInside.nativeElement, 'top', vListInside.nativeElement.offsetTop - this.vListHeader.nativeElement.offsetHeight + 'px')
-
     this.bounce(vListInside)
-
   }
 
 
@@ -376,7 +391,6 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
             } else {
               console.log("set scrolling false on ListInsideEnd 3")
               if (!this.bPress) this.bScrollListInsideEnabled = false
-              this.cHeaderOneTitle = (topListInsideEnd < gapListInsideOutside) + " " + this.bScrollListInsideEnabled + " " + this.bPress
               this.bounce()
             }
           },
@@ -435,8 +449,6 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     }
 
     // list movement > 0
-
-
     if (movementList >= middleList || (movementList > 0 && (event.velocityY >= this.THRESHOLD_LIST_VELOCITY && event.deltaY > 0))) {
       // list is moved more than half or less but fast enough
       // closing list
@@ -472,7 +484,6 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
       })
     }
 
-
     // list inside
     if (gapListInsideOutside > 0) {
       this.bScrollListInsideEnabled = true
@@ -492,14 +503,13 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
         })
       }
     }
-
   }
 
   onCloseList(bAnimation = true) {
     if (this.bListOpen) {
 
       this.bListOpen = false
-      this.bScrollListInsideEnabled = true
+      //this.bScrollListInsideEnabled = true
 
       // output
       this.outputListClosed.emit()
@@ -537,12 +547,9 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     this.hWindow = window.innerHeight
     this.wWindow = window.innerWidth
     this.hInput = this.vInput.nativeElement.offsetHeight
-    console.log(this.vListOutside.nativeElement.offsetHeight)
     this.renderer.setStyle(this.vListOutside.nativeElement, 'height', 'calc(100% - 4rem - ' + this.hInput + 'px)')
-    console.log(this.vListOutside.nativeElement.offsetHeight)
     this.hListOutside = this.vListOutside.nativeElement.offsetHeight
     this.renderer.setStyle(this.vListOutside.nativeElement, 'margin-bottom', this.hInput + 'px)')
-    console.log("height vInput: " + this.hInput)
   }
 
 
@@ -572,13 +579,11 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     console.log("onTap()")
     if (this.bScrollListInsideEnabled) this.stopScrolling()
     this.bounce()
-
   }
 
   bounce(vListInside: ElementRef = this.vListInside) {
     if (this.checkForBouncingBackFromBottom(vListInside)) this.bounceBackBottom(vListInside)
     if (this.checkForBouncingBackFromTop(vListInside)) this.bounceBackTop(vListInside)
-
   }
 
   checkForBouncingBackFromTop(vListInside: ElementRef = this.vListInside) {
@@ -600,7 +605,6 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
 
     console.log("checkForBouncingBackFromBottom", topListInside < gapListInsideOutside)
 
-    this.cHeaderOneTitle = topListInside + " " + gapListInsideOutside
     return topListInside < gapListInsideOutside
   }
 
@@ -615,10 +619,25 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     const gapListInsideOutside = this.hListOutside - hListInside
     this.svAnimation.moveVertical(vListInside, gapListInsideOutside, this.TRANSITION_LIST_SWIPE, () => {
       console.log("set scrolling false on ListInsideEnd 12")
-      this.cHeaderOneTitle = this.cHeaderOneTitle + " " + gapListInsideOutside
       //if (!this.bPress) this.bScrollListInsideEnabled = false
     })
   }
 
+  setPositionFilterOne() {
+    let dimenFilterOne = this.vFilterOne.nativeElement.getBoundingClientRect()
+    let dimenList = this.vList.nativeElement.getBoundingClientRect()
+    this.posFilterOne.x = dimenFilterOne.x + dimenFilterOne.width / 2
+    this.posFilterOne.y = dimenFilterOne.y - dimenList.y + dimenFilterOne.height
+  }
+
+  showFilterMenuOne() {
+    this.bShowFilterOne = true
+    this.setPositionFilterOne()
+    this.cpFilterMenuOne.show()
+  }
+
+  onFilterMenuOneSelect($event: number) {
+    this.outputFilterOneSelect.emit($event)
+  }
 }
 

@@ -26,7 +26,7 @@
             <mat-icon (click)="onLike($event)" inline=true class="is-xs ic-light" style="" [fontIcon]="aComment?.bLike ? 'thumb_up': 'thumb_up_off_alt'"></mat-icon>
           </div>
           <p class="ts-xxs tc-light" style="padding-left: 0.5rem;">{{aComment?.nLikes! > 0 ? aComment?.nLikes! : ''}}</p>
-          <mat-icon *ngIf="bIconAnswer" (click)="onAnswer($event)" inline=true class="is-xs ic-light" style="position: absolute; margin-left: 4rem" fontIcon="add_comment"></mat-icon>
+          <mat-icon *ngIf="bButtonAnswer" (click)="onAnswer($event)" inline=true class="is-xs ic-light" style="position: absolute; margin-left: 4rem" fontIcon="add_comment"></mat-icon>
         </div>
 
         <div *ngIf="bShowAnswers && aComment?.nAnswers! > 0">

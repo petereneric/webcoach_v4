@@ -1,0 +1,23 @@
+@import "../../../styles"
+@import "../../../theme/variables"
+
+
+
+.arrow-up
+  width: 0
+  height: 0
+  border-left: 0.5rem solid transparent
+  border-right: 0.5rem solid transparent
+  border-bottom: 0.5rem solid $colorDarkTwo
+
+.item-first
+  @extend .bg-dark-two
+  border-radius: 0.5rem 0.5rem 0rem 0rem
+
+.item-last
+  @extend .bg-dark-two
+  border-radius: 0rem 0rem 0.5rem 0.5rem
+
+.item-selected
+  @extend .bg-light-two
+

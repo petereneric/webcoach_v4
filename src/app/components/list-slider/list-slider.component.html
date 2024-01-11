@@ -1,15 +1,21 @@
 <!-- default z-index: 7 -->
 <div #vList class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 20; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
 
+  <div #vFilterOneMenu style="position: relative; z-index: 19">
+    <app-action-menu  #cpFilterMenuOne (outputSelect)="onFilterMenuOneSelect($event)" [lMenu]="lFilterOne" [posPointer]="posFilterOne"></app-action-menu>
+  </div>
+
+
   <!-- needed for avoiding 1px of underlying vListInside while closing -->
-  <div style="width: 100%; height: 3rem; position: absolute; margin-top: -30px; z-index: 10; border-radius: 1.3rem 1.3rem 0rem 0rem;" class="bg-dark"></div>
+  <div style="width: 100%; height: 3rem; position: absolute; margin-top: -30px; z-index: 8; border-radius: 1.3rem 1.3rem 0rem 0rem;" class="bg-dark"></div>
   <!-- header -->
   <div #vListHeader (panstart)="onListHeaderStart($event)" (panmove)="onListHeaderMove($event)" (panend)="onListHeaderEnd($event)"
        class="bg-dark" style="position: fixed; z-index: 9; width: 100%; height: 4rem; display: flex; flex-direction: column; align-items: center; border-radius: 1.3rem 1.3rem 0rem 0rem; ">
     <!-- slide-bar -->
-    <div class="slide-bar">
+    <div class="slide-bar" style="z-index: 9 !important;">
       <p style="opacity: 0">dummy text so that div gets shown as bar</p>
     </div>
+
     <!-- text and icons -->
     <div style="position: relative; width: 100%; height: 100%">
       <!-- one -->
@@ -19,9 +25,12 @@
         <!-- title two -->
         <p class="ts-s tc-light-two ml-05">{{cHeaderOneSubtitle}}</p>
         <!-- icons -->
-        <div style="margin-left: auto; display: none">
+        <div style="margin-left: auto;">
+          <!-- filter -->
+          <mat-icon #vFilterOne *ngIf="bFilterOne" (click)="showFilterMenuOne()" class="is-standard ic-light" style="padding: 0.25rem" fontIcon="filter_list"></mat-icon>
+
           <!-- close -->
-          <mat-icon class="is-standard ic-light" fontIcon="close"></mat-icon>
+          <mat-icon class="is-standard ic-light" style=" display: none" fontIcon="close"></mat-icon>
         </div>
       </div>
 
@@ -47,7 +56,7 @@
   <!-- content -->
   <!-- needs to be with margin below header -->
   <div #vListOutside style="z-index: 6; margin-top: 4rem;"  (panmove)="null">
-    <ng-container *ngTemplateOutlet="tpListInside || vListInsideDefault" (tap)="onListInsideTap($event)" (press)="onListInsidePress($event)" (panstart)="onListInsideStart($event)" (panmove)="onListInsideMove($event)" (panend)="onListInsideEnd($event)" style="position: relative;  z-index: 5; width: 100%;">
+    <ng-container *ngTemplateOutlet="tpListInside || vListInsideDefault">
 
     </ng-container>
   </div>
@@ -60,7 +69,7 @@
   <!-- content two-->
 
   <div #vListOutsideTwo class="bg-dark" [ngStyle]="{'left': wWindow + 'px', 'width': wWindow + 'px'}" style="z-index: 7; padding-top: 4rem; position: absolute; top: 0; height: 100%"  (panmove)="null">
-    <ng-container *ngTemplateOutlet="tpListInsideTwo || vListInsideDefault" (tap)="onListInsideTap($event)" (press)="onListInsidePressTwo($event)" (panstart)="onListInsideStartTwo($event)" (panmove)="onListInsideMoveTwo($event)" (panend)="onListInsideEndTwo($event)" style="position: absolute;  z-index: 6; width: 100%;">
+    <ng-container *ngTemplateOutlet="tpListInsideTwo || vListInsideDefault">
 
     </ng-container>
   </div>

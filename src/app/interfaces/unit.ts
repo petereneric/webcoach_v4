@@ -1,5 +1,6 @@
 import {UnitPlayer} from "./unit-player";
 import {Comment} from "./comment";
+import {Interval} from "./interval";
 
 export interface Unit {
   id: number
@@ -14,4 +15,5 @@ export interface Unit {
   nPosition: number
   bSample: number
   lComments: Comment[]
+  lIntervals: Interval[]
 }

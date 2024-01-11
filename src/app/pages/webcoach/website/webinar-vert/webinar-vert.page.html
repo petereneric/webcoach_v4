@@ -38,26 +38,12 @@
       </div>
     </div>
 
-    <!--
-    <div class="section">
-      <div class="flex bg-dark-two sh-box-soft" style="height: 3rem; width: 100%; border-radius: 0.5rem;">
-        <img [src]="svWebinar.bsCoachThumbnail.value" style="object-fit: cover; width: 3rem; height: 100%; border-radius: 0.5rem">
-
-        <div class="flex-vertical" style="justify-content: center; padding: 0.5rem">
-          <p class="ts-xxxs tc-light-two">COACH</p>
-          <p class="ts-standard tc-light tw-bold mt-05">{{svWebinar.bsWebinar.value!.oCoach.oPlayer.cName}}</p>
-        </div>
-      </div>
-    </div>
-    -->
-
   </div>
 
 </div>
 
 
 <!-- list showing sections and units of webinar -->
-<!-- for testing z-index becomes 10 / normal is 7 -->
 <div #vList class="bg-dark no-marker" style="position: fixed; top: 844px; z-index: 7; width: 100%; height: 75%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
 
   <!-- needed for avoiding 1px of underlying vListInside while closing -->
@@ -97,8 +83,8 @@
 
 </div>
 
-<!-- list-slider note -->
-<app-list-slider #cpListNotes (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [vListInside]="vListInsideNotes" [cHeaderOneTitle]="'Notizen'"
+<!-- list-slider notes -->
+<app-list-slider #cpListNotes (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [vListInside]="vListInsideNotes" [cHeaderOneTitle]="'Notizen'"
                  [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.length! + ''">
   <ng-template #tpListInside>
     <div #vListInsideNotes (press)="cpListNotes.onListInsidePress($event)" (panstart)="cpListNotes.onListInsideStart($event)" (panmove)="cpListNotes.onListInsideMove($event)"
@@ -128,7 +114,7 @@
 
 </app-list-slider>
 
-<!-- list-action note -->
+<!-- list-action notes-->
 <app-list-action #cpListActionNotes [cHeader]="'Notiz'">
   <ng-template #tpListInside>
     <app-list-action-item (click)="onShowEditNote()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
@@ -136,35 +122,34 @@
   </ng-template>
 </app-list-action>
 
-<!-- list inputs -->
+<!-- list-inputs notes-->
 <app-list-input #cpListInputAddNote [cHint]="'Notiz hinzufügen...'" (outputSubmit)="onNoteAdd($event)"></app-list-input>
 <app-list-input #cpListInputEditNote [cHint]="'Notiz bearbeiten...'" (outputSubmit)="onEditNote($event)"></app-list-input>
 
 
-<!-- list-slider comment -->
-<app-list-slider #cpListComments (outputListClosed)="outputListClosed()" (outputListOpened)="outputListOpened()" [bHandleClick]="false" [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="cHeaderTitleComments" [cHeaderTwoTitle]="'Antworten'"
-                 [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length! + ''" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length! + ''" >
 
-  <!-- comments -->
+<!-- list-slider comments -->
+<app-list-slider #cpListComments (outputFilterOneSelect)="setFilterComments($event)" (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [bHandleClick]="false" [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="'Kommentare'" [cHeaderTwoTitle]="'Antworten'"
+                 [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length!.toString()" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length!.toString()" [bFilterOne]="true" [lFilterOne]="lFilterOne" >
+
+  <!-- list-inside comments -->
   <ng-template #tpListInside>
     <div #vListInsideComments (pressup)="cpListComments.onListInsidePressUp()" (tap)="cpListComments.onTap()" (click)="cpListComments.onListInsideClick($event)" (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
-         (panend)="cpListComments.onListInsideEnd($event)" class="bg-dark" style="width: 100%; position: relative">
+         (panend)="cpListComments.onListInsideEnd($event)" style="width: 100%; position: relative">
       <div *ngFor="let aComment of svWebinar.bsUnit.value?.lComments">
-        <app-comment (outputAnswer)="onCommentAnswerFromComment(aComment)" (outputLike)="onCommentLike(aComment)" (outputClick)="onComment(aComment)" (outputSettings)="onCommentSettings(aComment)" [aComment]="aComment" [bIconAnswer]="true" [bShowAnswers]="true"></app-comment>
+        <app-comment (outputClick)="showListCommentAnswers(aComment)" (outputClickAnswer)="onClickComment_Answer(aComment)" (outputLike)="onClickComment_Like(aComment)" (outputSettings)="onClickComment_Settings(aComment)" [aComment]="aComment" [bButtonAnswer]="true" [bShowAnswers]="true"></app-comment>
       </div>
-
     </div>
   </ng-template>
 
-  <!-- comment-answers -->
+  <!-- list-inside comment-answers -->
   <ng-template #tpListInsideTwo>
     <div #vListInsideCommentAnswers (press)="cpListComments.onListInsidePressTwo($event)" (panstart)="cpListComments.onListInsideStartTwo($event)" (panmove)="cpListComments.onListInsideMoveTwo($event)"
-         (panend)="cpListComments.onListInsideEndTwo($event)" class="bg-dark" style="width: 100%; position: relative">
-      <app-comment (outputClick)="onCommentAnswer()" (outputLike)="onCommentLike(svWebinar.bsComment.value!)" (outputSettings)="onCommentSettings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bIconAnswer]="true" [bHighlight]="true"></app-comment>
+         (panend)="cpListComments.onListInsideEndTwo($event)" style="width: 100%; position: relative">
+      <app-comment (outputClick)="onAddCommentAnswer()" (outputLike)="onClickComment_Like(svWebinar.bsComment.value!)" (outputSettings)="onClickComment_Settings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bButtonAnswer]="true" [bHighlight]="true"></app-comment>
       <div *ngFor="let aCommentAnswer of svWebinar.bsComment.value?.lCommentAnswers" style="margin-left: 2.75rem">
-        <app-comment (outputClick)="onCommentAnswerRegard(aCommentAnswer)" (outputLike)="onCommentAnswerLike(aCommentAnswer)" (outputSettings)="onCommentAnswerSettings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
+        <app-comment (outputClick)="onAddCommentAnswer(aCommentAnswer)" (outputLike)="onClickCommentAnswer_Like(aCommentAnswer)" (outputSettings)="onClickCommentAnswer_Settings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
       </div>
-
     </div>
   </ng-template>
 
@@ -197,9 +182,7 @@
         <div class="sph-1"></div>
         <input class="i" type="text" placeholder="Antwort hinzufügen...">
       </div>
-
     </div>
-
   </ng-template>
 
 </app-list-slider>
@@ -227,7 +210,6 @@
 <!-- list inputs comment-answer -->
 <app-list-input #cpListInputAddCommentAnswer [cHint]="'Antwort hinzufügen...'" (outputSubmit)="onCommentAnswerAdd($event)"></app-list-input>
 <app-list-input #cpListInputEditCommentAnswer [cHint]="'Antwort bearbeiten...'" (outputSubmit)="onEditCommentAnswer($event)"></app-list-input>
-
 
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
@@ -270,7 +252,7 @@
 <div class="flex flex-vertical bg-dark no-marker" style="position: fixed; height: calc(100dvh - 3.5rem); width: 100%; z-index: 5;">
 
   <!-- needed for catching the swipe gesture, however only for 75% witdh of screen so that icons can be clicked on the right side -->
-  <div #vSwipe (click)="onClickVideo()" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)"
+  <div #vSwipe (click)="onClickVideo()" (panstart)="onSwipeStart($event)" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)"
        style="position: absolute; z-index: 4; height: calc(100dvh - 3.5rem); width: 75%"></div>
 
   <!-- video elements -->
@@ -286,91 +268,104 @@
            style="object-fit: cover; position: relative; z-index: 1; height: calc(100dvh - 3.5rem); width: 100%;">
     </div>
 
+    <!-- horizontal axis -->
+    <div #vHorizontalAxis style="position: relative; z-index: 2; width: 100dvw; transform: translateX(calc(-100dvw)); height: calc(100dvh - 3.5rem)">
 
-    <!-- video center container -->
-    <div style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)">
+      <!-- video wind preview left - no real video -->
+      <img #videoLeft [src]="urlIntervalThumbnailLeft" style="object-fit: cover; position: relative; width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="540" height="960"/>
 
-      <!-- interaction overlay of video -->
-      <div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+      <!-- video wind preview right - no real video -->
+      <img #videoRight [src]="urlIntervalThumbnailRight" style="object-fit: cover; position: absolute; top: 0; left: calc(100dvw * 2); width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920"/>
 
-        <!-- title -->
-        <p #vTitle class="tsl-l tc-light tw-bold sh-text-soft"
-           style="position: absolute; top: 0; left: 0; margin: 1rem !important; width: 75%; opacity: 0">{{svWebinar.bsWebinar.value?.cName}}</p>
-        <!--<p #vTitle class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem !important; width: 75%; opacity: 0">{{cTitle}}</p>-->
+      <!-- video center container -->
+      <div style="position:absolute; left: 100dvw; top: 0; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)">
 
-        <!-- information -->
-        <div #vInformation class="flex-vertical a-transition" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem; opacity: 0">
+        <!-- interaction overlay of video -->
+        <div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
 
-          <!-- author -->
-          <div style="display: flex; align-items: center">
-            <img style="width: 2rem; height: 2rem; border-radius: 100%" width="50" height="50" class="sh-box-soft" [src]="svWebinar.bsCoachThumbnail.value ?? ''">
-            <p class="ts-xs tc-light tw-bold sh-text-soft" style="margin-left: 0.5rem !important;">{{'@' + svWebinar.bsWebinar.value?.oCoach?.oPlayer?.cName}}</p>
+          <!-- title -->
+          <p #vTitle class="tsl-l tc-light tw-bold sh-text-soft"
+             style="position: absolute; top: 0; left: 0; margin: 1rem !important; width: 75%; opacity: 0">{{svWebinar.bsWebinar.value?.cName}}</p>
+          <!--<p #vTitle class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem !important; width: 75%; opacity: 0">{{cTitle}}</p>-->
+
+          <!-- information -->
+          <div #vInformation class="flex-vertical a-transition" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem; opacity: 0">
+
+            <!-- author -->
+            <div style="display: flex; align-items: center">
+              <img style="width: 2rem; height: 2rem; border-radius: 100%" width="50" height="50" class="sh-box-soft" [src]="svWebinar.bsCoachThumbnail.value ?? ''">
+              <p class="ts-xs tc-light tw-bold sh-text-soft" style="margin-left: 0.5rem !important;">{{'@' + svWebinar.bsWebinar.value?.oCoach?.oPlayer?.cName}}</p>
+            </div>
+
+            <!-- unit name -->
+            <p class="ts-standard tc-light sh-text-soft" style="margin-top: 0.75rem !important;">{{svWebinar.bsUnit.value?.cName}}</p>
+
+            <!-- section name -->
+            <p class="ts-xxs tc-light sh-text-soft" style="margin-top: 0.375rem !important;">{{svWebinar.bsSection.value?.cName}}</p>
+
           </div>
 
-          <!-- unit name -->
-          <p class="ts-standard tc-light sh-text-soft" style="margin-top: 0.75rem !important;">{{svWebinar.bsUnit.value?.cName}}</p>
+          <!-- sidebar which enables click on icons and also applies swipe gesture due to pan events-->
+          <div (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; bottom: 0; right: 0; width: 25%; height: 100%;">
 
-          <!-- section name -->
-          <p class="ts-xxs tc-light sh-text-soft" style="margin-top: 0.375rem !important;">{{svWebinar.bsSection.value?.cName}}</p>
+            <!-- settings -->
+            <div class="flex" style="position: absolute; top: 0; right: 0; margin: 1rem">
+              <mat-icon class="is-standard ic-light sh-icon" fontIcon="more_vert"></mat-icon>
+            </div>
+
+            <!-- container for moving content to right bottom -->
+            <div #vSidebar class="flex-vertical a-transition" style="position: absolute; bottom: 0; right: 0; align-items: center; margin: 1rem; opacity: 0">
+              <!-- like -->
+              <div class="sidebar-container">
+                <mat-icon class="sidebar-icon" fontIcon="thumb_up_off_alt"></mat-icon>
+                <p class="sidebar-subtext">3245</p>
+              </div>
+
+              <!-- comment -->
+              <div class="sidebar-container">
+                <mat-icon (click)="onComments()" class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
+                <p class="sidebar-subtext">293</p>
+              </div>
+
+              <!-- share -->
+              <div class="sidebar-container">
+                <mat-icon (click)=onClickShare() class="sidebar-icon" fontIcon="share"></mat-icon>
+                <p class="sidebar-subtext">Teilen</p>
+              </div>
+
+              <!-- check -->
+              <div class="sidebar-container">
+                <mat-icon (click)=onClickCheck() class="sidebar-icon"
+                          [fontIcon]="svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'check_circle' : 'radio_button_unchecked'"></mat-icon>
+                <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'Abgehakt' : 'Abhaken'}}</p>
+              </div>
+            </div>
+
+          </div>
 
         </div>
 
-        <!-- sidebar which enables click on icons and also applies swipe gesture due to pan events-->
-        <div (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; bottom: 0; right: 0; width: 25%; height: 100%;">
+        <!-- video center - used with video.js -->
+        <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="none">
 
-          <!-- settings -->
-          <div class="flex" style="position: absolute; top: 0; right: 0; margin: 1rem">
-            <mat-icon class="is-standard ic-light sh-icon" fontIcon="more_vert"></mat-icon>
-          </div>
-
-          <!-- container for moving content to right bottom -->
-          <div #vSidebar class="flex-vertical a-transition" style="position: absolute; bottom: 0; right: 0; align-items: center; margin: 1rem; opacity: 0">
-            <!-- like -->
-            <div class="sidebar-container">
-              <mat-icon class="sidebar-icon" fontIcon="thumb_up_off_alt"></mat-icon>
-              <p class="sidebar-subtext">3245</p>
-            </div>
-
-            <!-- comment -->
-            <div class="sidebar-container">
-              <mat-icon (click)="cpListComments.onOpenList()" class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
-              <p class="sidebar-subtext">293</p>
-            </div>
-
-            <!-- share -->
-            <div class="sidebar-container">
-              <mat-icon (click)=onClickShare() class="sidebar-icon" fontIcon="share"></mat-icon>
-              <p class="sidebar-subtext">Teilen</p>
-            </div>
-
-            <!-- check -->
-            <div class="sidebar-container">
-              <mat-icon (click)=onClickCheck() class="sidebar-icon"
-                        [fontIcon]="svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'check_circle' : 'radio_button_unchecked'"></mat-icon>
-              <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'Abgehakt' : 'Abhaken'}}</p>
-            </div>
-          </div>
-
-        </div>
+        </video>
 
       </div>
 
-      <!-- video center - used with video.js -->
-      <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="none">
-
-      </video>
-
     </div>
 
-    <!--
-    <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline
-           preload="none">
-    </video>
-    -->
 
-    <!-- video preview bottom - no real video preview -->
+
+    <!--
+    <img #videoLeft [src]="svWebinar.bsUnitThumbnailNext.value !== null ? svWebinar.bsUnitThumbnailNext.value : svWebinar.bsUnitThumbnailLast.value"
+         style="object-fit: cover; position: absolute; left: -100dvw; width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920">
+         -->
+
+    <!-- video preview bottom - no real video -->
     <img #videoBottom [src]="svWebinar.bsUnitThumbnailNext.value !== null ? svWebinar.bsUnitThumbnailNext.value : svWebinar.bsUnitThumbnailLast.value"
          style="object-fit: cover; position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920">
+
+
   </div>
 
 

@@ -7,4 +7,5 @@ export interface Player {
   cStreetNumber: string
   cZip: string
   cCity: string
+  kFilterComments: number
 }

@@ -1,0 +1,12 @@
+
+<div #vContainer style="visibility: hidden; position:absolute; z-index: 31">
+  <div *ngFor="let aMenu of lMenu; first as isFirst; last as isLast" >
+    <p (click)="onSelect(aMenu.id)" class="tc-light" style="display: flex; flex-direction: column; justify-content: center; height: 2.5rem; padding-left: 1rem; padding-right: 1rem"
+       [class.item-first]="isFirst" [class.item-last]="isLast" [class.item-selected]="aMenu.id === svPlayer.bsUserData.value?.kFilterComments">{{aMenu['cName']}}</p>
+  </div>
+</div>
+<div #vArrowUp style="visibility: hidden; position: absolute; z-index: 31" class="arrow-up"></div>
+
+<div #vScreen (panmove)="null" (click)="onScreen()" style="opacity: 0; display: none; width: 100dvw; height: 100dvh; position: fixed; top: 0; z-index: 30"></div>
+
+

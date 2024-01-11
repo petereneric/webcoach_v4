@@ -31,8 +31,7 @@ export class ListActionComponent implements OnInit, AfterViewInit{
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'none')
   }
 
-  onOpenList() {
-    console.log("open action list")
+  show() {
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'block')
     this.svAnimation.backgroundOpacityIn(this.vClickScreen)
     this.svAnimation.slideIn(this.vList)

@@ -8,6 +8,7 @@ import {UnitPlayer} from "../../interfaces/unit-player";
 import {Note} from "../../interfaces/note";
 import {Comment} from "../../interfaces/comment"
 import {CommentAnswer} from "../../interfaces/comment-answer";
+import {Interval} from "../../interfaces/interval";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,8 @@ export class WebinarService {
   bsUnitThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsUnitThumbnailNext: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsUnitThumbnailLast: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsUnitThumbnailLeft: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsUnitThumbnailRight: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
   // move out later
   bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
@@ -30,9 +33,13 @@ export class WebinarService {
   bsCommentAnswer: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
   bsCommentAnswerRegard: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
 
+  bCheckIntervalThumbnails: boolean = true
+  bsUnitInterval: BehaviorSubject<Interval | null> = new BehaviorSubject<Interval | null>(null)
+
 
   constructor(private api: ConnApiService) {
     this.bsWebinar.subscribe((aWebinar) => {
+      // process that constantly load interval-thumbnails into current Unit asynchronously
 
     })
 
@@ -55,6 +62,36 @@ export class WebinarService {
         })
       }
 
+      // intervals
+      if (aUnit?.lIntervals === null || aUnit?.lIntervals === undefined || aUnit?.lIntervals.length === 0) {
+        const nIntervals = Math.floor(aUnit!.secDuration / 30)
+        console.log("nIntervals", nIntervals)
+        for (let i = 0; i <= nIntervals; i++) {
+          const secStart = i === 0 ? 0 : i*30+1
+          const secEnd = i === nIntervals ? aUnit!.secDuration : (i+1)*30
+          let aInterval: Interval = {index: i, secStart: secStart, secEnd: secEnd, urlImage: null}
+          if (aUnit?.lIntervals === undefined) aUnit!.lIntervals = []
+          console.log(aUnit?.lIntervals)
+          aUnit?.lIntervals.push(aInterval)
+        }
+        console.log(aUnit?.lIntervals)
+      }
+
+      aUnit?.lIntervals.forEach((aInterval: Interval) => {
+        if (aInterval.urlImage === null) {
+          console.log("UUUUUUUUUURL", 'webinar/unit/interval-thumbnail/' + aUnit?.id + '/' + aInterval.index)
+          this.api.getImage('webinar/unit/interval-thumbnail/' + aUnit?.id + '/' + aInterval.index, urlThumbnailInterval => {
+            aInterval.urlImage = urlThumbnailInterval
+            console.log("new aInterval set on lIntervals of unit", aInterval)
+          })
+        }
+      })
+
+    })
+
+    this.bsUnitThumbnailLeft.subscribe(urlImage => {
+      console.log("new left image")
+      console.log(urlImage)
     })
   }
 
@@ -228,6 +265,8 @@ export class WebinarService {
 
     // current
     this.api.safeDownloadImage('webinar/unit/thumbnail/' + this.bsUnit.value?.id, (urlThumbnail: any) => {
+      console.log("next thumbnail", urlThumbnail)
+      console.log(urlThumbnail)
       this.bsUnitThumbnail.next(urlThumbnail)
     })
 

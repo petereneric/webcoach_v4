@@ -19,4 +19,8 @@ export class PlayerService {
       this.bsUserData.next(aUserData)
     })
   }
+
+  isUser(kPlayer) {
+    return this.bsUserData.value?.id === kPlayer
+  }
 }

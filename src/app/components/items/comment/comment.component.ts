@@ -17,7 +17,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   @ViewChild('vLike') vLike!: ElementRef
 
   @Input('aComment') aComment: Comment | null = null
-  @Input('bIconAnswer') bIconAnswer: boolean = false
+  @Input('bButtonAnswer') bButtonAnswer: boolean = false
   @Input('bHighlight') bHighlight: boolean = false
   @Input('bShowAnswers') bShowAnswers: boolean = false
   @Input('bListen') bListen: boolean = false
@@ -26,7 +26,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   @Output() outputSettings: EventEmitter<any> = new EventEmitter<any>()
   @Output() outputClick: EventEmitter<any> = new EventEmitter<any>()
   @Output() outputLike: EventEmitter<any> = new EventEmitter<any>()
-  @Output() outputAnswer: EventEmitter<any> = new EventEmitter<any>()
+  @Output() outputClickAnswer: EventEmitter<any> = new EventEmitter<any>()
 
   // variables
   cTimeAgo: any = ''
@@ -72,6 +72,6 @@ export class CommentComponent implements OnInit, AfterViewInit {
 
   onAnswer(event) {
     event.stopPropagation();
-    this.outputAnswer.emit()
+    this.outputClickAnswer.emit()
   }
 }
