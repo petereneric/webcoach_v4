@@ -216,7 +216,7 @@
 <div class="bg-dark no-marker" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
 
 <!-- tabs - need to be also on top -->
-<div class="no-marker" #vTabs (panmove)="onProcessMove($event)" (panend)="onProcessEnd($event)" class="bg-dark"
+<div class="no-marker" #vTabs (panstart)="onProcessStart($event)" (panmove)="onProcessMove($event)" (panend)="onProcessEnd($event)" class="bg-dark"
      style="position: fixed; bottom: 0; z-index: 6; height: 3.5rem; width: 100%; display: flex; justify-content: center; align-items: center; ">
 
   <!-- needed so that the pan gesture works on the whole tab bar -->
@@ -317,30 +317,48 @@
             <div #vSidebar class="flex-vertical a-transition" style="position: absolute; bottom: 0; right: 0; align-items: center; margin: 1rem; opacity: 0">
               <!-- like -->
               <div class="sidebar-container">
-                <mat-icon class="sidebar-icon" fontIcon="thumb_up_off_alt"></mat-icon>
-                <p class="sidebar-subtext">3245</p>
+                <div #vUnitLikeAnimation class="sidebar-icon-animation"></div>
+                <mat-icon  (click)="onClickUnitLike()" class="sidebar-icon" [ngClass]="svWebinar.bsUnit.value?.oUnitPlayer?.bLike ? 'like-selected' : ''" fontIcon="thumb_up_alt"></mat-icon>
+                <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.nLikes}}</p>
               </div>
 
               <!-- comment -->
               <div class="sidebar-container">
+                <div #vUnitCommentAnimation class="sidebar-icon-animation"></div>
                 <mat-icon (click)="onComments()" class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
-                <p class="sidebar-subtext">293</p>
+                <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.nComments}}</p>
               </div>
 
               <!-- share -->
               <div class="sidebar-container">
+                <div #vShareAnimation class="sidebar-icon-animation"></div>
                 <mat-icon (click)=onClickShare() class="sidebar-icon" fontIcon="share"></mat-icon>
                 <p class="sidebar-subtext">Teilen</p>
               </div>
 
               <!-- check -->
               <div class="sidebar-container">
+                <div #vCheckAnimation class="sidebar-icon-animation"></div>
                 <mat-icon (click)=onClickCheck() class="sidebar-icon"
                           [fontIcon]="svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'check_circle' : 'radio_button_unchecked'"></mat-icon>
                 <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'Abgehakt' : 'Abhaken'}}</p>
               </div>
             </div>
 
+          </div>
+
+
+          <!-- process-thumbnails -->
+          <div #vProcessThumbnails class="flex-vertical align-items-center" style="width: 100%; display: none; position: absolute; bottom: 0;">
+            <div #vProcessThumbnail style="position: relative; width: 100%; left: 0">
+              <img #vProcessThumbnailImage [src]="imgProcessThumbnail" class="bo-light" style="border-radius: 0.5rem; width: 9rem; height: 16rem; background-color: aqua" width="216" height="384">
+            </div>
+
+            <div class="spv-05"></div>
+            <div class="bg-dark-two-transparent" style="box-sizing: border-box; text-align: center; border-radius: 1rem; padding: 0.5rem 1rem 0.5rem 1rem;transform: translateX(0rem)" [ngStyle]="{'left' : (wWindow/2) + 'px'}">
+              <p class="tc-light ts-xs tw-bold">{{pProcess + ' %'}}</p>
+            </div>
+            <div class="spv-1"></div>
           </div>
 
         </div>

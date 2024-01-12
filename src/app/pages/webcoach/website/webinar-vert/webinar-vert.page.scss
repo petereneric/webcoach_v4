@@ -2,6 +2,7 @@
 @import "../../../../../styles/icon";
 @import "../../../../../styles/shadow";
 @import "../../../../../styles/display";
+@import "../../../../../styles/border";
 
 .test {
   //background-color: #2dd36f;
@@ -105,4 +106,19 @@
   padding: 1rem;
   position: absolute;
   top: 0;
+}
+
+.sidebar-icon-animation {
+  position: absolute;
+  top: calc(1.9rem - 2.5rem);
+  opacity: 0;
+  width: 5rem;
+  height: 5rem;
+  background-color: rgba(244, 242, 245, 0.04);
+  border-radius: 100%;
+  border: 1px solid rgba(244, 242, 245, 0.37);
+}
+
+.like-selected {
+  color: $colorPrimary;
 }

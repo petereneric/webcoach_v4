@@ -7,4 +7,5 @@ export interface UnitPlayer {
   tStatus: number
   secVideo: number | null
   lNotes: Note[] | null
+  bLike: boolean
 }

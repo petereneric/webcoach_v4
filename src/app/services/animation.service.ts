@@ -22,6 +22,16 @@ export class AnimationService {
     setTimeout(() => {
         this.renderer.addClass(element.nativeElement, 'a-popup');
       },
+      25);
+  }
+
+  iconClick(element) {
+    this.renderer.removeClass(element.nativeElement, 'a-icon-click');
+
+    //
+    setTimeout(() => {
+        this.renderer.addClass(element.nativeElement, 'a-icon-click');
+      },
       50);
   }
 

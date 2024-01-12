@@ -16,4 +16,7 @@ export interface Unit {
   bSample: number
   lComments: Comment[]
   lIntervals: Interval[]
+  lProcessThumbnails: string[]
+  nComments: number
+  nLikes: number
 }

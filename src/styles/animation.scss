@@ -19,6 +19,7 @@
 .a-popup {
   animation: a-pop-keyframes 1s;
 }
+
 @keyframes a-pop-keyframes {
   0% {
     opacity: 0;
@@ -37,8 +38,30 @@
 }
 
 @keyframes MoveUpDown {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-10px); }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+// icon click
+.a-icon-click {
+  animation: a-icon_click-keyframes 0.5s ease-in-out;
+}
+
+@keyframes a-icon_click-keyframes {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+
 }
 
 
@@ -47,6 +70,7 @@
 .a-pump {
   animation: a-pump-keyframes 0.25s ease-in-out;
 }
+
 @keyframes a-pump-keyframes {
   0% {
     transform: scale(1)

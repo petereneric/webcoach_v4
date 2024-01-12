@@ -109,8 +109,6 @@ export class File {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-
-
   }
 
   openBlob(blob: Blob) {

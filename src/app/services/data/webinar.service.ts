@@ -87,6 +87,12 @@ export class WebinarService {
         }
       })
 
+      if (aUnit?.lProcessThumbnails === undefined || aUnit.lProcessThumbnails === null || aUnit.lProcessThumbnails.length === 0) {
+        this.api.get('webinar/unit/process-thumbnails/' + aUnit?.id, lProcessThumbnails => {
+          aUnit!.lProcessThumbnails = lProcessThumbnails
+        })
+      }
+
     })
 
     this.bsUnitThumbnailLeft.subscribe(urlImage => {

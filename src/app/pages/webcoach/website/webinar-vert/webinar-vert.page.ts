@@ -21,6 +21,8 @@ import {Comment} from "../../../../interfaces/comment";
 import {PlayerService} from "../../../../services/data/player.service";
 import {CommentAnswer} from "../../../../interfaces/comment-answer";
 import {Interval} from "../../../../interfaces/interval";
+import {File} from "../../../../utils/file";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-webinar-vert',
@@ -53,6 +55,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
   @ViewChild('vInputNote') vInputNote!: ElementRef
   @ViewChild('vInputNoteContainer') vInputNoteContainer!: ElementRef
+  @ViewChild('vProcessThumbnails') vProcessThumbnails!: ElementRef
+  @ViewChild('vProcessThumbnail') vProcessThumbnail!: ElementRef
+  @ViewChild('vProcessThumbnailImage') vProcessThumbnailImage!: ElementRef
+  @ViewChild('vUnitLikeAnimation') vUnitLikeAnimation!: ElementRef
+  @ViewChild('vUnitCommentAnimation') vUnitCommentAnimation!: ElementRef
+  @ViewChild('vShareAnimation') vShareAnimation!: ElementRef
+  @ViewChild('vCheckAnimation') vCheckAnimation!: ElementRef
 
   // integrated components
   @ViewChild('cpListActionNotes') cpListActionNotes!: ListActionComponent
@@ -95,7 +104,11 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   private wVideoWrapper = 0
 
   // needed for process
-  private wWindow = 0
+  public wWindow = 0
+
+  // process-thumbnails
+  public pProcess = 0
+  public imgProcessThumbnail: any = null
 
   // set when pan movement of list is started
   // works with deltaY as scroll reference for new topList
@@ -157,7 +170,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   public urlIntervalThumbnailLeft = ''
   public urlIntervalThumbnailRight = ''
 
-  constructor(public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
+  constructor(private sanitizer: DomSanitizer, private uFile: File, public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -493,6 +506,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  onProcessStart(event) {
+    this.renderer.setStyle(this.vProcessThumbnails.nativeElement, 'display', 'flex')
+  }
 
   onProcessMove(ev) {
     console.log("onProcessMove()")
@@ -505,14 +521,42 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.stopProcessUpdater()
 
     // set process bar according to process move
-    this.renderer.setStyle(this.vProcess.nativeElement, 'width', (ev.center.x / this.wWindow) * 100 + '%')
+    const pProcess_ = (ev.center.x / this.wWindow) * 100
+    this.renderer.setStyle(this.vProcess.nativeElement, 'width', pProcess_ + '%')
+
+    // percent view
+    this.pProcess = Math.round(pProcess_)
+
+    // process thumbnail
+    this.imgProcessThumbnail =  this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + this.svWebinar.bsUnit.value?.lProcessThumbnails[this.pProcess]);
+
+    // position x-axis thumbnail
+    const dimenProcessThumbnailImage = this.vProcessThumbnailImage.nativeElement.getBoundingClientRect()
+
+
+    //
+    console.log("1", dimenProcessThumbnailImage.width/2)
+    console.log("2", this.wWindow - (dimenProcessThumbnailImage.width/2))
+    let position = ((this.pProcess * this.wWindow) / 100) - (dimenProcessThumbnailImage.width /2)
+    console.log("position", position)
+    if (position <= 0) {
+      position = 0
+    }
+
+    if (position >= (this.wWindow - (dimenProcessThumbnailImage.width))) {
+      position = this.wWindow - dimenProcessThumbnailImage.width
+    }
+    console.log("ppposition", position)
+    this.renderer.setStyle(this.vProcessThumbnail.nativeElement, 'left', (position + 'px'))
+
 
     // pause player in the first place of the move
-    if (!this.player.paused()) this.pauseVideo()
+    if (!this.player.paused()) this.pauseVideo(false)
   }
 
 
   onProcessEnd(ev) {
+    this.renderer.setStyle(this.vProcessThumbnails.nativeElement, 'display', 'none')
     console.log("onProcessEnd()")
     // only called after real movement with delta values bigger than zero
 
@@ -962,6 +1006,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   onClickShare() {
     if (navigator.share !== undefined) {
+      this.svAnimation.iconClick(this.vShareAnimation)
 
       let shareData = {
         title: "Webcoach",
@@ -981,6 +1026,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickCheck() {
+    this.svAnimation.iconClick(this.vCheckAnimation)
     console.log(this.svWebinar.bsUnit.value!.oUnitPlayer!)
     this.svWebinar.bsUnit.value!.oUnitPlayer!.tStatus = this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 1 : 2
     console.log(this.svWebinar.bsUnit.value!.oUnitPlayer!)
@@ -1462,6 +1508,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       cText: $event,
     }
     this.connApi.safePut('comment', data, (aComment: Comment) => {
+      this.svWebinar.bsUnit.value!.nComments++
       console.log(aComment)
       this.svWebinar.bsUnit.value?.lComments?.push(aComment)
       this.svWebinar.sortComments()
@@ -1495,7 +1542,11 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   onDeleteComment() {
     console.log("onDeleteComment")
+
+
+    // remote
     this.connApi.safeDelete('comment/' + this.svWebinar.bsComment.value?.id, () => {
+      this.svWebinar.bsUnit.value!.nComments--
       this.cpListActionComments.onCloseList()
       this.svWebinar.bsUnit.value?.lComments!.forEach((item, index) => {
         if (item === this.svWebinar.bsComment.value) this.svWebinar.bsUnit.value?.lComments!.splice(index, 1);
@@ -1708,8 +1759,24 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onComments() {
+    this.svAnimation.iconClick(this.vUnitCommentAnimation)
     this.cpListComments.onOpenList()
     this.orderComments()
+  }
+
+  onClickUnitLike() {
+    this.svAnimation.iconClick(this.vUnitLikeAnimation)
+
+    // change local
+    this.svWebinar.bsUnit.value!.oUnitPlayer!.bLike = !this.svWebinar.bsUnit.value!.oUnitPlayer!.bLike
+    this.svWebinar.bsUnit.value!.nLikes = this.svWebinar.bsUnit.value!.oUnitPlayer!.bLike ? this.svWebinar.bsUnit.value!.nLikes + 1 : this.svWebinar.bsUnit.value!.nLikes - 1
+
+    // change remote
+    const data = {
+      kUnitPlayer:  this.svWebinar.bsUnit.value!.oUnitPlayer!.id,
+      bLike: this.svWebinar.bsUnit.value!.oUnitPlayer!.bLike ? 1 : 0
+    }
+    this.connApi.safePost('webinar/auth/unit-player/like', data, null)
   }
 
   // winding functions
