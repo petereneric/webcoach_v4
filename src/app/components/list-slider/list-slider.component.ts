@@ -34,6 +34,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   @ViewChild('vFilterOne', {read: ElementRef}) vFilterOne!: ElementRef
   @ViewChild('vFilterOneMenu', {read: ElementRef}) vFilterOneMenu!: ElementRef
   @ViewChild('cpFilterMenuOne') cpFilterMenuOne!: ActionMenuComponent
+  @ViewChild('vClickScreen') vClickScreen!: ElementRef
   @ContentChild('tpListInside') tpListInside!: TemplateRef<any>
   @ContentChild('tpListInsideTwo') tpListInsideTwo!: TemplateRef<any>
   @ContentChild('tpInput') tpInput!: TemplateRef<any>
@@ -94,6 +95,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.setPositionFilterOne()
     this.setHeight()
+    this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'none')
   }
 
   @HostListener('window:resize', ['$event'])
@@ -520,6 +522,12 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
         this.bScrollListInsideEnabled = false
       })
 
+      // click-screen
+      this.svAnimation.backgroundOpacityOut(this.vClickScreen, () => {
+        this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'none')
+        console.log("display none");
+      })
+
       // list closed and video played
       return true
     }
@@ -538,6 +546,10 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
 
       // animation
       this.svAnimation.slideIn(this.vList)
+
+      // clickScreen
+      this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'block')
+      this.svAnimation.backgroundOpacityIn(this.vClickScreen)
     }
   }
 

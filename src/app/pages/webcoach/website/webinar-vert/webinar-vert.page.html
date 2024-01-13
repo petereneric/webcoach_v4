@@ -223,7 +223,7 @@
 <app-list-action #cpListActionSettings [cHeader]="''" [bMargin]="true">
   <ng-template #tpListInside>
     <app-list-action-item (click)="onClick_Description()" [cName]="'Beschreibung'" [cIcon]="'text_snippet'"></app-list-action-item>
-    <app-list-action-item (click)="null" [cName]="'Materialien'" [cIcon]="'insert_drive_file'"></app-list-action-item>
+    <app-list-action-item *ngIf="svWebinar.bsUnit.value?.bMaterial" (click)="onClick_Material()" [cName]="'Materialien'" [cIcon]="'insert_drive_file'"></app-list-action-item>
     <app-list-action-item (click)="onClick_VideoSpeed()" [cName]="'Wiedergabe-Geschwindigkeit'" [cIcon]="'speed'"></app-list-action-item>
   </ng-template>
 </app-list-action>
@@ -234,6 +234,16 @@
     <div *ngFor="let aVideoSpeed of lVideoSpeed">
       <app-list-action-item (click)="onSelect_VideoSpeed(aVideoSpeed)" [cName]="aVideoSpeed.cName"
                             [cIcon]="aVideoSpeed.id === ksVideoSpeed ? 'radio_button_checked' : 'radio_button_unchecked'"></app-list-action-item>
+    </div>
+  </ng-template>
+</app-list-action>
+
+<!-- list-action material -->
+<app-list-action #cpListActionMaterial [cHeader]="'Material'" [bMargin]="true">
+  <ng-template #tpListInside>
+    <div *ngFor="let aMaterial of svWebinar.bsUnit.value?.lMaterials">
+      <app-list-action-item (click)="onSelect_Material(aMaterial)" [cName]="aMaterial['cName']"
+                            [cIcon]="'picture_as_pdf'"></app-list-action-item>
     </div>
   </ng-template>
 </app-list-action>
@@ -453,6 +463,17 @@
 
 
   <!-- centered play icon -->
+
+  <div #vVideoControls style="position:absolute; display: none; align-items: center; z-index: 5; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div #vReplayStart style="">
+      <mat-icon (click)="onClick_Replay()" class="is-xxl ic-light" fontIcon="replay"></mat-icon>
+    </div>
+    <div class="sph-2"></div>
+    <div #vPlayStart style="">
+      <mat-icon (click)="onClick_Play()" class="is-xxl ic-light" fontIcon="play_circle_filled"></mat-icon>
+    </div>
+  </div>
+
   <div #vPlay style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0;">
     <mat-icon class="is-xxl ic-light" fontIcon="play_circle_filled"></mat-icon>
   </div>

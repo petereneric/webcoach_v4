@@ -45,6 +45,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vTabs') vTabs!: ElementRef
   @ViewChild('vCover') vCover!: ElementRef
   @ViewChild('vPlay') vPlay!: ElementRef
+  @ViewChild('vReplayStart') vReplayStart!: ElementRef
+  @ViewChild('vPlayStart') vPlayStart!: ElementRef
   @ViewChild('vPause') vPause!: ElementRef
   @ViewChild('vTitle') vTitle!: ElementRef
   @ViewChild('vInformation') vInformation!: ElementRef
@@ -64,6 +66,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vShareAnimation') vShareAnimation!: ElementRef
   @ViewChild('vCheckAnimation') vCheckAnimation!: ElementRef
   @ViewChild('vUnitLike', {read: ElementRef}) vUnitLike!: ElementRef
+  @ViewChild('vVideoControls') vVideoControls!: ElementRef
 
   // integrated components
   @ViewChild('cpListActionNotes') cpListActionNotes!: ListActionComponent
@@ -73,6 +76,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cpListActionCommentAnswers') cpListActionCommentAnswers!: ListActionComponent
   @ViewChild('cpListActionSettings') cpListActionSettings!: ListActionComponent
   @ViewChild('cpListActionVideoSpeed') cpListActionVideoSpeed!: ListActionComponent
+  @ViewChild('cpListActionMaterial') cpListActionMaterial!: ListActionComponent
   @ViewChild('cpListInputAddNote') cpListInputAddNote!: ListInputComponent
   @ViewChild('cpListInputAddComment') cpListInputAddComment!: ListInputComponent
   @ViewChild('cpListInputAddCommentAnswer') cpListInputAddCommentAnswer!: ListInputComponent
@@ -266,14 +270,22 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.svWebinar.bsUnit.subscribe(aUnit => {
       if (this.vCover !== undefined && this.vCover.nativeElement.style.zIndex == 0) {
         // only play when cover is not shown
-        this.playUnit(aUnit)
+        console.log("PLLLAY")
+
+        this.playUnit(aUnit, false)
         this.player.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
+
+        this.setProcess(aUnit?.oUnitPlayer?.secVideo ?? 0, aUnit?.secDuration)
+        this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'flex')
 
         // update webinar-player set current-unit
         this.svWebinar.updateWebinarPlayer()
       } else {
         this.playUnit(aUnit, false)
         this.player.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
+
+        this.setProcess(aUnit?.oUnitPlayer?.secVideo ?? 0, aUnit?.secDuration)
+        this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'flex')
       }
 
     })
@@ -291,7 +303,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // play icon
     console.log("joooo")
-    this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 1)
+    //this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 1)
 
 
     // initial size calls
@@ -1054,6 +1066,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value!.oUnitPlayer!)
   }
 
+  setProcess(secCurrent, secTotal) {
+    this.vProcess.nativeElement.style.width = (secCurrent / secTotal) * 100 + '%'
+  }
 
   startProcessUpdater() {
     // set to true when process bar moved
@@ -1066,7 +1081,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
     // subscribe
     this.process = interval(this.INTERVAL_PROCESS_UPDATER).subscribe(val => {
       if (!this.bStopProcessUpdater) {
-        this.vProcess.nativeElement.style.width = (this.player.currentTime() / this.player.duration()) * 100 + '%'
+        this.setProcess(this.player.currentTime(), this.player.duration())
 
         // views
         // sidebar
@@ -1267,12 +1282,13 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // play callback
     this.player.on('play', data => {
+      console.log('not really')
       this.setVideoSpeed()
     });
 
     // pause callback
     this.player.on('pause', data => {
-
+      console.log("what ")
     });
   }
 
@@ -1284,7 +1300,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
   playVideo() {
     this.setNewUnitInterval()
-    if (this.player.paused()) {
+    if (this.player.paused() || true) {
+      console.log("play real")
       // set so that the video starts when coming back after swipe gesture on cover
       if (!this.bDocumentInteraction) {
         this.renderer.setStyle(this.vPlay.nativeElement, 'opacity', 0)
@@ -1294,6 +1311,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       // start process update for updating process bar
       this.startProcessUpdater()
 
+      console.log("PLAYING?")
       this.player.play()
     }
   }
@@ -1871,5 +1889,28 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   onClick_Description() {
     this.cpListActionSettings.onCloseList()
     this.cpListDescription.onOpenList()
+  }
+
+  onClick_Material() {
+    this.cpListActionSettings.onCloseList()
+    this.cpListActionMaterial.show()
+    console.log(this.svWebinar.bsUnit.value)
+  }
+
+  onSelect_Material(aMaterial) {
+    this.connApi.safeGetFile('webinar/auth/unit/material/' + this.svWebinar.bsUnit.value?.id + '/' + aMaterial.cName, (blob: any) => {
+      this.uFile.openBlob(blob)
+    })
+  }
+
+  onClick_Replay() {
+    this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'none');
+    this.player.currentTime(0)
+    this.playVideo()
+  }
+
+  onClick_Play() {
+    this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'none');
+    this.playVideo()
   }
 }

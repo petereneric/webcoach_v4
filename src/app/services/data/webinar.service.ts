@@ -121,6 +121,7 @@ export class WebinarService {
   loadSections(kWebinar: number) {
     this.api.safeGet('webinar/auth/sections/' + kWebinar, (lSections: Section[]) => {
       this.bsSections.next(lSections)
+      console.log("SECCCTIONS")
       console.log(lSections)
       this.loadUnit(kWebinar)
     })
