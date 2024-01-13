@@ -52,6 +52,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vListInsideNotes') vListInsideNotes!: ElementRef
   @ViewChild('vListInsideComments') vListInsideComments!: ElementRef
   @ViewChild('vListInsideCommentAnswers') vListInsideCommentAnswers!: ElementRef
+  @ViewChild('vListInsideDescription') vListInsideDescription!: ElementRef
   @ViewChild('video', {static: true}) video: ElementRef | undefined = undefined
   @ViewChild('vInputNote') vInputNote!: ElementRef
   @ViewChild('vInputNoteContainer') vInputNoteContainer!: ElementRef
@@ -62,12 +63,16 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('vUnitCommentAnimation') vUnitCommentAnimation!: ElementRef
   @ViewChild('vShareAnimation') vShareAnimation!: ElementRef
   @ViewChild('vCheckAnimation') vCheckAnimation!: ElementRef
+  @ViewChild('vUnitLike', {read: ElementRef}) vUnitLike!: ElementRef
 
   // integrated components
   @ViewChild('cpListActionNotes') cpListActionNotes!: ListActionComponent
   @ViewChild('cpListComments') cpListComments!: ListSliderComponent
+  @ViewChild('cpListDescription') cpListDescription!: ListSliderComponent
   @ViewChild('cpListActionComments') cpListActionComments!: ListActionComponent
   @ViewChild('cpListActionCommentAnswers') cpListActionCommentAnswers!: ListActionComponent
+  @ViewChild('cpListActionSettings') cpListActionSettings!: ListActionComponent
+  @ViewChild('cpListActionVideoSpeed') cpListActionVideoSpeed!: ListActionComponent
   @ViewChild('cpListInputAddNote') cpListInputAddNote!: ListInputComponent
   @ViewChild('cpListInputAddComment') cpListInputAddComment!: ListInputComponent
   @ViewChild('cpListInputAddCommentAnswer') cpListInputAddCommentAnswer!: ListInputComponent
@@ -170,6 +175,9 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   public urlIntervalThumbnailLeft = ''
   public urlIntervalThumbnailRight = ''
 
+  public lVideoSpeed = [{id: 0, speedFactor: 0.5, cName: '0.5x'}, {id: 1, speedFactor: 1, cName: '1x'}, {id: 2, speedFactor: 1.5, cName: '1.5x'}, {id: 3, speedFactor: 2, cName: '2x'}]
+  public ksVideoSpeed = 1
+
   constructor(private sanitizer: DomSanitizer, private uFile: File, public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
   }
 
@@ -249,6 +257,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         this.urlIntervalThumbnailRight = urlImageAfter!
       }
     })
+
   }
 
 
@@ -298,6 +307,18 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     }, this.TIME_INFORMATION_START * 1000)
 
+    // needs to be checked on android devices / chrome
+    this.vUnitLike.nativeElement.addEventListener('pointerdown', event => {
+      window.navigator.vibrate(1000)
+    });
+
+
+    // webinar-player
+    this.svWebinar.bsWebinarPlayer.subscribe(aWebinarPlayer => {
+      this.ksVideoSpeed = aWebinarPlayer?.kVideoSpeed!
+      console.log("video SPEEEEEEEEEED", this.ksVideoSpeed)
+      this.setVideoSpeed()
+    })
 
   }
 
@@ -1246,7 +1267,7 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
 
     // play callback
     this.player.on('play', data => {
-
+      this.setVideoSpeed()
     });
 
     // pause callback
@@ -1293,6 +1314,12 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
         this.bInformationHidden = false
       }
     }
+  }
+
+  setVideoSpeed() {
+    this.lVideoSpeed.forEach(aVideoSpeed => {
+      if (aVideoSpeed.id === this.ksVideoSpeed) this.player.playbackRate(aVideoSpeed.speedFactor)
+    })
   }
 
 
@@ -1765,6 +1792,8 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickUnitLike() {
+    // vibration
+
     this.svAnimation.iconClick(this.vUnitLikeAnimation)
 
     // change local
@@ -1812,5 +1841,35 @@ export class WebinarVertPage implements OnInit, AfterViewInit, OnDestroy {
       return nextInterval
     }
     return 0
+  }
+
+  onClick_Settings() {
+    this.cpListActionSettings.show()
+  }
+
+  onClick_VideoSpeed() {
+    this.cpListActionSettings.onCloseList()
+    this.cpListActionVideoSpeed.show()
+  }
+
+  onSelect_VideoSpeed(aVideoSpeed) {
+    // local
+    this.ksVideoSpeed = aVideoSpeed.id
+    this.setVideoSpeed()
+
+    // remote
+    const data = {
+      kWebinarPlayer: this.svWebinar.bsWebinarPlayer.value?.id,
+      kVideoSpeed: aVideoSpeed.id
+    }
+    this.connApi.safePost('webinar-player/video-speed', data, null)
+
+    this.cpListActionVideoSpeed.onCloseList()
+
+  }
+
+  onClick_Description() {
+    this.cpListActionSettings.onCloseList()
+    this.cpListDescription.onOpenList()
   }
 }

@@ -35,7 +35,7 @@
       </div>
 
       <!-- two -->
-      <div #vHeaderTwo class="bg-dark" [ngStyle]="{'left': wWindow + 'px'}" style="z-index: 8; position: absolute; top: 0; display: flex; align-items: center; box-sizing:border-box; width: 100%; height: 100%; padding: 0rem 0.75rem 0rem 0.75rem; margin-top: auto; margin-bottom: auto">
+      <div *ngIf="cHeaderTwoTitle !== ''" #vHeaderTwo class="bg-dark" [ngStyle]="{'left': wWindow + 'px'}" style="z-index: 8; position: absolute; top: 0; display: flex; align-items: center; box-sizing:border-box; width: 100%; height: 100%; padding: 0rem 0.75rem 0rem 0.75rem; margin-top: auto; margin-bottom: auto">
         <mat-icon (click)="hideListTwo()" class="is-s ic-light" fontIcon="arrow_back_ios" style="padding-left: 0.5rem"></mat-icon>
         <div class="sph-1"></div>
         <!-- title -->
@@ -69,7 +69,7 @@
   <!-- content two-->
 
   <div #vListOutsideTwo class="bg-dark" [ngStyle]="{'left': wWindow + 'px', 'width': wWindow + 'px'}" style="z-index: 7; padding-top: 4rem; position: absolute; top: 0; height: 100%"  (panmove)="null">
-    <ng-container *ngTemplateOutlet="tpListInsideTwo || vListInsideDefault">
+    <ng-container *ngTemplateOutlet="tpListInsideTwo || null">
 
     </ng-container>
   </div>

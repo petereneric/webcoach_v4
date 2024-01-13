@@ -127,28 +127,35 @@
 <app-list-input #cpListInputEditNote [cHint]="'Notiz bearbeiten...'" (outputSubmit)="onEditNote($event)"></app-list-input>
 
 
-
 <!-- list-slider comments -->
-<app-list-slider #cpListComments (outputFilterOneSelect)="setFilterComments($event)" (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [bHandleClick]="false" [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="'Kommentare'" [cHeaderTwoTitle]="'Antworten'"
-                 [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length!.toString()" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length!.toString()" [bFilterOne]="true" [lFilterOne]="lFilterOne" >
+<app-list-slider #cpListComments (outputFilterOneSelect)="setFilterComments($event)" (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [bHandleClick]="false"
+                 [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="'Kommentare'" [cHeaderTwoTitle]="'Antworten'"
+                 [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length!.toString()" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length!.toString()"
+                 [bFilterOne]="true" [lFilterOne]="lFilterOne">
 
   <!-- list-inside comments -->
   <ng-template #tpListInside>
-    <div #vListInsideComments (pressup)="cpListComments.onListInsidePressUp()" (tap)="cpListComments.onTap()" (click)="cpListComments.onListInsideClick($event)" (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
+    <div #vListInsideComments (pressup)="cpListComments.onListInsidePressUp()" (tap)="cpListComments.onTap()" (click)="cpListComments.onListInsideClick($event)"
+         (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
          (panend)="cpListComments.onListInsideEnd($event)" style="width: 100%; position: relative">
       <div *ngFor="let aComment of svWebinar.bsUnit.value?.lComments">
-        <app-comment (outputClick)="showListCommentAnswers(aComment)" (outputClickAnswer)="onClickComment_Answer(aComment)" (outputLike)="onClickComment_Like(aComment)" (outputSettings)="onClickComment_Settings(aComment)" [aComment]="aComment" [bButtonAnswer]="true" [bShowAnswers]="true"></app-comment>
+        <app-comment (outputClick)="showListCommentAnswers(aComment)" (outputClickAnswer)="onClickComment_Answer(aComment)" (outputLike)="onClickComment_Like(aComment)"
+                     (outputSettings)="onClickComment_Settings(aComment)" [aComment]="aComment" [bButtonAnswer]="true" [bShowAnswers]="true"></app-comment>
       </div>
     </div>
   </ng-template>
 
   <!-- list-inside comment-answers -->
   <ng-template #tpListInsideTwo>
-    <div #vListInsideCommentAnswers (press)="cpListComments.onListInsidePressTwo($event)" (panstart)="cpListComments.onListInsideStartTwo($event)" (panmove)="cpListComments.onListInsideMoveTwo($event)"
+    <div #vListInsideCommentAnswers (press)="cpListComments.onListInsidePressTwo($event)" (panstart)="cpListComments.onListInsideStartTwo($event)"
+         (panmove)="cpListComments.onListInsideMoveTwo($event)"
          (panend)="cpListComments.onListInsideEndTwo($event)" style="width: 100%; position: relative">
-      <app-comment (outputClick)="onAddCommentAnswer()" (outputLike)="onClickComment_Like(svWebinar.bsComment.value!)" (outputSettings)="onClickComment_Settings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bButtonAnswer]="true" [bHighlight]="true"></app-comment>
+      <app-comment (outputClick)="onAddCommentAnswer()" (outputLike)="onClickComment_Like(svWebinar.bsComment.value!)"
+                   (outputSettings)="onClickComment_Settings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bButtonAnswer]="true"
+                   [bHighlight]="true"></app-comment>
       <div *ngFor="let aCommentAnswer of svWebinar.bsComment.value?.lCommentAnswers" style="margin-left: 2.75rem">
-        <app-comment (outputClick)="onAddCommentAnswer(aCommentAnswer)" (outputLike)="onClickCommentAnswer_Like(aCommentAnswer)" (outputSettings)="onClickCommentAnswer_Settings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
+        <app-comment (outputClick)="onAddCommentAnswer(aCommentAnswer)" (outputLike)="onClickCommentAnswer_Like(aCommentAnswer)"
+                     (outputSettings)="onClickCommentAnswer_Settings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
       </div>
     </div>
   </ng-template>
@@ -160,7 +167,7 @@
       <div class="divider" style="position: absolute; top: 0"></div>
       <div class="flex section align-items-center" style="box-sizing: border-box;">
         <div class="bg-light" style="border-radius: 100%; min-width: 1.75rem; min-height: 1.75rem; display: flex; align-items: center; justify-content: center;">
-          <p class="ts-xs tc-dark tw-bold" style="">{{svPlayer.bsUserData!.value!.cName!.substring(0,1)}}</p>
+          <p class="ts-xs tc-dark tw-bold" style="">{{svPlayer.bsUserData!.value!.cName!.substring(0, 1)}}</p>
         </div>
         <div class="sph-1"></div>
         <input class="i" type="text" placeholder="Kommentar hinzufügen...">
@@ -177,7 +184,7 @@
       <div class="divider" style="position: absolute; top: 0"></div>
       <div class="flex section align-items-center" style="box-sizing: border-box;">
         <div class="bg-light" style="border-radius: 100%; min-width: 1.75rem; min-height: 1.75rem; display: flex; align-items: center; justify-content: center;">
-          <p class="ts-xs tc-dark tw-bold" style="">{{svPlayer.bsUserData!.value!.cName!.substring(0,1)}}</p>
+          <p class="ts-xs tc-dark tw-bold" style="">{{svPlayer.bsUserData!.value!.cName!.substring(0, 1)}}</p>
         </div>
         <div class="sph-1"></div>
         <input class="i" type="text" placeholder="Antwort hinzufügen...">
@@ -211,6 +218,59 @@
 <app-list-input #cpListInputAddCommentAnswer [cHint]="'Antwort hinzufügen...'" (outputSubmit)="onCommentAnswerAdd($event)"></app-list-input>
 <app-list-input #cpListInputEditCommentAnswer [cHint]="'Antwort bearbeiten...'" (outputSubmit)="onEditCommentAnswer($event)"></app-list-input>
 
+
+<!-- list-action settings -->
+<app-list-action #cpListActionSettings [cHeader]="''" [bMargin]="true">
+  <ng-template #tpListInside>
+    <app-list-action-item (click)="onClick_Description()" [cName]="'Beschreibung'" [cIcon]="'text_snippet'"></app-list-action-item>
+    <app-list-action-item (click)="null" [cName]="'Materialien'" [cIcon]="'insert_drive_file'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_VideoSpeed()" [cName]="'Wiedergabe-Geschwindigkeit'" [cIcon]="'speed'"></app-list-action-item>
+  </ng-template>
+</app-list-action>
+
+<!-- list-action video speed -->
+<app-list-action #cpListActionVideoSpeed [cHeader]="'Wiedergabe-Geschwindigkeit'" [bMargin]="true">
+  <ng-template #tpListInside>
+    <div *ngFor="let aVideoSpeed of lVideoSpeed">
+      <app-list-action-item (click)="onSelect_VideoSpeed(aVideoSpeed)" [cName]="aVideoSpeed.cName"
+                            [cIcon]="aVideoSpeed.id === ksVideoSpeed ? 'radio_button_checked' : 'radio_button_unchecked'"></app-list-action-item>
+    </div>
+  </ng-template>
+</app-list-action>
+
+<!-- list description -->
+<app-list-slider #cpListDescription (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [vListInside]="vListInsideDescription"
+                 [cHeaderOneTitle]="'Beschreibung'">
+  <ng-template #tpListInside>
+    <div #vListInsideDescription (press)="cpListNotes.onListInsidePress($event)" (panstart)="cpListNotes.onListInsideStart($event)" (panmove)="cpListNotes.onListInsideMove($event)"
+         (panend)="cpListNotes.onListInsideEnd($event)" class="bg-dark" style="width: 100%; box-sizing: border-box; position: relative; padding: 2rem 0.75rem 0.75rem 0.75rem">
+      <p class="ts-l tc-light tw-bold">{{svWebinar.bsUnit.value?.cName}}</p>
+      <div class="spv-2"></div>
+      <div class="flex" style="justify-content: space-evenly;">
+        <div class="description-box">
+          <p class="description-box-title">{{svWebinar.bsUnit.value?.nLikes}}</p>
+          <p class="description-box-subtitle text-align-center">"Mag ich" Bewertungen</p>
+        </div>
+        <div class="description-box">
+          <p class="description-box-title">{{svWebinar.bsUnit.value?.nCalls}}</p>
+          <p class="description-box-subtitle">Aufrufe</p>
+        </div>
+        <div class="description-box">
+          <p class="description-box-title">{{svWebinar.bsUnit.value?.dCreation | date: 'd. MMM'}}</p>
+          <p class="description-box-subtitle">{{svWebinar.bsUnit.value?.dCreation | date: 'yyyy'}}</p>
+        </div>
+      </div>
+      <div class="spv-2"></div>
+      <div class="bg-dark-two" style="padding: 0.75rem; border-radius: 1rem;">
+        <p class="ts-s tc-light">{{svWebinar.bsUnit.value?.cDescription ?? 'Keine Beschreibung'}}</p>
+      </div>
+
+
+
+    </div>
+  </ng-template>
+
+</app-list-slider>
 
 <!-- overlaps the list so that the nav bar in safari is dark -->
 <div class="bg-dark no-marker" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
@@ -272,10 +332,12 @@
     <div #vHorizontalAxis style="position: relative; z-index: 2; width: 100dvw; transform: translateX(calc(-100dvw)); height: calc(100dvh - 3.5rem)">
 
       <!-- video wind preview left - no real video -->
-      <img #videoLeft [src]="urlIntervalThumbnailLeft" style="object-fit: cover; position: relative; width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="540" height="960"/>
+      <img #videoLeft [src]="urlIntervalThumbnailLeft" style="object-fit: cover; position: relative; width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="540"
+           height="960"/>
 
       <!-- video wind preview right - no real video -->
-      <img #videoRight [src]="urlIntervalThumbnailRight" style="object-fit: cover; position: absolute; top: 0; left: calc(100dvw * 2); width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920"/>
+      <img #videoRight [src]="urlIntervalThumbnailRight"
+           style="object-fit: cover; position: absolute; top: 0; left: calc(100dvw * 2); width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920"/>
 
       <!-- video center container -->
       <div style="position:absolute; left: 100dvw; top: 0; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)">
@@ -310,7 +372,7 @@
 
             <!-- settings -->
             <div class="flex" style="position: absolute; top: 0; right: 0; margin: 1rem">
-              <mat-icon class="is-standard ic-light sh-icon" fontIcon="more_vert"></mat-icon>
+              <mat-icon (click)="onClick_Settings()" class="is-standard ic-light sh-icon" fontIcon="more_vert"></mat-icon>
             </div>
 
             <!-- container for moving content to right bottom -->
@@ -318,7 +380,8 @@
               <!-- like -->
               <div class="sidebar-container">
                 <div #vUnitLikeAnimation class="sidebar-icon-animation"></div>
-                <mat-icon  (click)="onClickUnitLike()" class="sidebar-icon" [ngClass]="svWebinar.bsUnit.value?.oUnitPlayer?.bLike ? 'like-selected' : ''" fontIcon="thumb_up_alt"></mat-icon>
+                <mat-icon #vUnitLike (click)="onClickUnitLike()" class="sidebar-icon" [ngClass]="svWebinar.bsUnit.value?.oUnitPlayer?.bLike ? 'like-selected' : ''"
+                          fontIcon="thumb_up_alt"></mat-icon>
                 <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.nLikes}}</p>
               </div>
 
@@ -351,11 +414,14 @@
           <!-- process-thumbnails -->
           <div #vProcessThumbnails class="flex-vertical align-items-center" style="width: 100%; display: none; position: absolute; bottom: 0;">
             <div #vProcessThumbnail style="position: relative; width: 100%; left: 0">
-              <img #vProcessThumbnailImage [src]="imgProcessThumbnail" class="bo-light" style="border-radius: 0.5rem; width: 9rem; height: 16rem; background-color: aqua" width="216" height="384">
+              <img #vProcessThumbnailImage [src]="imgProcessThumbnail" class="bo-light" style="border-radius: 0.5rem; width: 9rem; height: 16rem; background-color: aqua"
+                   width="216" height="384">
             </div>
 
             <div class="spv-05"></div>
-            <div class="bg-dark-two-transparent" style="box-sizing: border-box; text-align: center; border-radius: 1rem; padding: 0.5rem 1rem 0.5rem 1rem;transform: translateX(0rem)" [ngStyle]="{'left' : (wWindow/2) + 'px'}">
+            <div class="bg-dark-two-transparent"
+                 style="box-sizing: border-box; text-align: center; border-radius: 1rem; padding: 0.5rem 1rem 0.5rem 1rem;transform: translateX(0rem)"
+                 [ngStyle]="{'left' : (wWindow/2) + 'px'}">
               <p class="tc-light ts-xs tw-bold">{{pProcess + ' %'}}</p>
             </div>
             <div class="spv-1"></div>
@@ -371,7 +437,6 @@
       </div>
 
     </div>
-
 
 
     <!--

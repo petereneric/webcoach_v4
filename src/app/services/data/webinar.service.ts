@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Webinar} from "../../interfaces/webinar";
+import {WebinarPlayer} from "../../interfaces/webinar-player";
 import {ConnApiService} from "../conn-api/conn-api.service";
 import {Section} from "../../interfaces/section";
 import {Unit} from "../../interfaces/unit";
@@ -16,6 +17,7 @@ import {Interval} from "../../interfaces/interval";
 export class WebinarService {
 
   bsWebinar: BehaviorSubject<Webinar | null> = new BehaviorSubject<Webinar | null>(null)
+  bsWebinarPlayer: BehaviorSubject<WebinarPlayer | null> = new BehaviorSubject<WebinarPlayer | null>(null)
   bsWebinarThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsSections: BehaviorSubject<Section[] | null> = new BehaviorSubject<Section[] | null>(null)
   bsSection: BehaviorSubject<Section | null> = new BehaviorSubject<Section | null>(null)
@@ -40,7 +42,9 @@ export class WebinarService {
   constructor(private api: ConnApiService) {
     this.bsWebinar.subscribe((aWebinar) => {
       // process that constantly load interval-thumbnails into current Unit asynchronously
-
+      this.api.safeGet('webinar/auth/webinar-player/' + aWebinar?.id, aWebinarPlayer => {
+        this.bsWebinarPlayer.next(aWebinarPlayer)
+      })
     })
 
     this.bsUnit.subscribe((aUnit) => {

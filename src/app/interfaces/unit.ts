@@ -4,8 +4,10 @@ import {Interval} from "./interval";
 
 export interface Unit {
   id: number
+  dCreation: string
   kSection: number
   cName: string
+  cDescription: string | null
   secDuration: number
   oUnitPlayer: UnitPlayer | null
   imgThumbnail: string
@@ -19,4 +21,5 @@ export interface Unit {
   lProcessThumbnails: string[]
   nComments: number
   nLikes: number
+  nCalls: number
 }

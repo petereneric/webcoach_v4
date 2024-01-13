@@ -14,6 +14,7 @@ export class ListActionComponent implements OnInit, AfterViewInit{
   @ViewChild('vClickScreen') vClickScreen!: ElementRef
 
   @Input('cHeader') cHeader: string = ''
+  @Input('bMargin') bMargin: boolean = false
 
   // variables
   hWindow: number = 0
