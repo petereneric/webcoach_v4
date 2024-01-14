@@ -215,6 +215,8 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   }
 
   onListInsideStart(event: any, vListInside: ElementRef = this.vListInside) {
+    // needs to be set here cause for some reason afterviewInit call does not work
+    //this.setHeight()
     // enable scrolling
     //this.bScrollListInsideEnabled = true
     this.bScrollListInsideEnabled = true
@@ -331,9 +333,12 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
     const gapListInsideOutside = this.hListOutside - hListInside
     const offsetTopList = this.vList.nativeElement.offsetTop
     const movementList = offsetTopList - this.offsetTopListStart
-    const middleList = this.heightList / 2
+    const middleList = this.vList.nativeElement.offsetHeight / 2
 
     // console outputs
+    console.log('height List', this.vList.nativeElement.offsetHeight)
+    console.log('OFFSET_TOP_LIST', offsetTopList)
+    console.log('offsetTopListStart', this.offsetTopListStart)
     console.log('VELOCITY: ' + event.velocityY)
     console.log('topListInsideOld: ' + topListInside)
     console.log('DELTA: ' + event.deltaY)
@@ -459,6 +464,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
       this.bScrollListInsideEnabled = true
 
       const offsetTopList = this.vList.nativeElement.offsetTop
+      console.log("OffsetTopList", offsetTopList)
       const restList = this.hWindow - offsetTopList
 
       // close list
@@ -468,8 +474,10 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
       const secTransitionListClose = restList / event.velocityY / 1000
 
       this.svAnimation.moveVertical(this.vList, this.hWindow, secTransitionListClose, () => {
+        this.onCloseList(false)
         this.bListOpen = false
         console.log("set scrolling false on ListInsideEnd 6")
+
         if (!this.bPress) this.bScrollListInsideEnabled = false
       })
     }
@@ -554,6 +562,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   }
 
   setHeight() {
+    console.log("SEET HEIGHT", this.vList.nativeElement.offsetHeight)
     this.heightList = this.vList.nativeElement.offsetHeight
     this.hListOutside = this.vListOutside.nativeElement.offsetHeight
     this.hWindow = window.innerHeight
@@ -636,10 +645,13 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   }
 
   setPositionFilterOne() {
-    let dimenFilterOne = this.vFilterOne.nativeElement.getBoundingClientRect()
-    let dimenList = this.vList.nativeElement.getBoundingClientRect()
-    this.posFilterOne.x = dimenFilterOne.x + dimenFilterOne.width / 2
-    this.posFilterOne.y = dimenFilterOne.y - dimenList.y + dimenFilterOne.height
+    if (this.bFilterOne) {
+      let dimenFilterOne = this.vFilterOne.nativeElement.getBoundingClientRect()
+      let dimenList = this.vList.nativeElement.getBoundingClientRect()
+      this.posFilterOne.x = dimenFilterOne.x + dimenFilterOne.width / 2
+      this.posFilterOne.y = dimenFilterOne.y - dimenList.y + dimenFilterOne.height
+    }
+
   }
 
   showFilterMenuOne() {
