@@ -26,8 +26,6 @@ export class WebinarService {
   bsUnitThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsUnitThumbnailNext: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsUnitThumbnailLast: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-  bsUnitThumbnailLeft: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-  bsUnitThumbnailRight: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
   // move out later
   bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
@@ -91,17 +89,12 @@ export class WebinarService {
         }
       })
 
-      if (aUnit?.lProcessThumbnails === undefined || aUnit.lProcessThumbnails === null || aUnit.lProcessThumbnails.length === 0) {
+      if (aUnit?.lProgressThumbnails === undefined || aUnit.lProgressThumbnails === null || aUnit.lProgressThumbnails.length === 0) {
         this.api.get('webinar/unit/process-thumbnails/' + aUnit?.id, lProcessThumbnails => {
-          aUnit!.lProcessThumbnails = lProcessThumbnails
+          aUnit!.lProgressThumbnails = lProcessThumbnails
         })
       }
 
-    })
-
-    this.bsUnitThumbnailLeft.subscribe(urlImage => {
-      console.log("new left image")
-      console.log(urlImage)
     })
   }
 

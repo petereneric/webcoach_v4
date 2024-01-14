@@ -73,9 +73,13 @@ export class ListInputComponent implements OnInit, AfterViewInit {
     console.log("hello")
     console.log(cRegard)
     this.cRegard = cRegard
-    if (cRegard !== null) this.cHint = ''
+    if (cRegard !== null) {
+      this.cHint = ''
+    } else {
+      if (cHint !== null) this.cHint = cHint
+    }
     // show input and keyboard
-    if (cHint !== null) this.cHint = cHint
+
 
 
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'block')

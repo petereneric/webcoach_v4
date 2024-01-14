@@ -3,9 +3,9 @@ import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
-import {WebinarVertPageRoutingModule} from './webinar-vert-routing.module';
+import {WebinarPageRoutingModule} from './webinar-routing.module';
 
-import {WebinarVertPage} from './webinar-vert.page';
+import {WebinarPage} from './webinar.page';
 import {VjsPlayerModule} from "../../../../components/vjs-player/vjs-player.module";
 import {MatIconModule} from "@angular/material/icon";
 import {ItemSectionModule} from "../../../../components/webinar/item-section/item-section.module";
@@ -21,7 +21,7 @@ import {CommentPipe} from "../../../../pipes/comment.pipe";
     imports: [
         CommonModule,
         FormsModule,
-        WebinarVertPageRoutingModule,
+        WebinarPageRoutingModule,
         VjsPlayerModule,
         MatIconModule,
         ItemSectionModule,
@@ -35,7 +35,7 @@ import {CommentPipe} from "../../../../pipes/comment.pipe";
         CommentModule,
         CommentPipe,
     ],
-  declarations: [WebinarVertPage]
+  declarations: [WebinarPage]
 })
-export class WebinarVertPageModule {
+export class WebinarPageModule {
 }

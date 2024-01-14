@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { WebinarVertPage } from './webinar-vert.page';
+import { WebinarPage } from './webinar.page';
 import {PaymentGuard} from "../../../../services/guards/payment-guard.service";
 import {AuthGuard} from "../../../../services/guards/auth-guard.service";
 
@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     //path: '',
     path: ':kWebinar',
-    component: WebinarVertPage,
+    component: WebinarPage,
     canActivate: [AuthGuard, PaymentGuard]
   }
 ];
@@ -18,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WebinarVertPageRoutingModule {}
+export class WebinarPageRoutingModule {}

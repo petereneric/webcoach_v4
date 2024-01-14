@@ -36,7 +36,7 @@ export class UnitsPage implements OnInit {
   }
 
   addUnit(section: Section) {
-    let newUnit = {id: 0, dCreation: "", cName: "", cDescription: null, nComments: 0, nLikes: 0, lProcessThumbnails: [], lIntervals: [], lComments: [], kSection: section.id, secDuration: 0, oUnitPlayer: null, imgThumbnail: "", bMaterial: false, lMaterials: [], bVideo: false, nPosition: section.lUnits.length+1, bSample: 0, nCalls: 0}
+    let newUnit = {id: 0, dCreation: "", cName: "", cDescription: null, nComments: 0, nLikes: 0, lProgressThumbnails: [], lIntervals: [], lComments: [], kSection: section.id, secDuration: 0, oUnitPlayer: null, imgThumbnail: "", bMaterial: false, lMaterials: [], bVideo: false, nPosition: section.lUnits.length+1, bSample: 0, nCalls: 0}
     section.lUnits.push(newUnit)
   }
 

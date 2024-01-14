@@ -84,25 +84,25 @@
 </div>
 
 <!-- list-slider notes -->
-<app-list-slider #cpListNotes (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [vListInside]="vListInsideNotes" [cHeaderOneTitle]="'Notizen'"
+<app-list-slider #cpListNotes (outputListClosed)="on_ListClosed()" (outputListOpened)="on_ListOpened()" [vListInside]="vListInsideNotes" [cHeaderOneTitle]="'Notizen'"
                  [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.length! + ''">
   <ng-template #tpListInside>
     <div #vListInsideNotes (press)="cpListNotes.onListInsidePress($event)" (panstart)="cpListNotes.onListInsideStart($event)" (panmove)="cpListNotes.onListInsideMove($event)"
          (panend)="cpListNotes.onListInsideEnd($event)" class="bg-dark" style="width: 100%; position: relative">
       <div *ngFor="let aNote of svWebinar.bsUnit.value?.oUnitPlayer?.lNotes">
-        <app-note-unit (outputClick)="onNote()" (outputSettings)="onNoteSettings(aNote)" [aNote]="aNote"></app-note-unit>
+        <app-note-unit (outputClick)="onClick_Note(aNote)" (outputSettings)="onClick_NoteSettings(aNote)" [aNote]="aNote"></app-note-unit>
       </div>
 
     </div>
   </ng-template>
 
   <ng-template #tpInput>
-    <div (click)="onAddNote()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
+    <div (click)="onClick_InputAddNote()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
       <!-- structure needed to avoid overflow-x -->
       <div class="divider" style="position: absolute; top: 0"></div>
       <div class="flex section align-items-center" style="box-sizing: border-box;">
         <div class="bg-light" style="border-radius: 0.75rem; padding: 0.5rem;">
-          <p class="ts-xs tc-dark tw-bold" style="padding-top: 0.1rem">{{uDateTime.secondsToDefault(player.currentTime())}}</p>
+          <p class="ts-xs tc-dark tw-bold" style="padding-top: 0.1rem">{{uDateTime.secondsToDefault(oPlayer.currentTime())}}</p>
         </div>
         <div class="sph-1"></div>
         <input class="i" type="text" placeholder="Notiz hinzufügen...">
@@ -117,18 +117,18 @@
 <!-- list-action notes-->
 <app-list-action #cpListActionNotes [cHeader]="'Notiz'">
   <ng-template #tpListInside>
-    <app-list-action-item (click)="onShowEditNote()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
-    <app-list-action-item (click)="onDeleteNote()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_InputEditNote()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_DeleteNote()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
   </ng-template>
 </app-list-action>
 
 <!-- list-inputs notes-->
-<app-list-input #cpListInputAddNote [cHint]="'Notiz hinzufügen...'" (outputSubmit)="onNoteAdd($event)"></app-list-input>
-<app-list-input #cpListInputEditNote [cHint]="'Notiz bearbeiten...'" (outputSubmit)="onEditNote($event)"></app-list-input>
+<app-list-input #cpListInputAddNote [cHint]="'Notiz hinzufügen...'" (outputSubmit)="onClick_NoteAdd($event)"></app-list-input>
+<app-list-input #cpListInputEditNote [cHint]="'Notiz bearbeiten...'" (outputSubmit)="onClick_EditNote($event)"></app-list-input>
 
 
 <!-- list-slider comments -->
-<app-list-slider #cpListComments (outputFilterOneSelect)="setFilterComments($event)" (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [bHandleClick]="false"
+<app-list-slider #cpListComments (outputFilterOneSelect)="setFilterComments($event)" (outputListClosed)="on_ListClosed()" (outputListOpened)="on_ListOpened()" [bHandleClick]="false"
                  [vListInside]="vListInsideComments" [vListInsideTwo]="vListInsideCommentAnswers" [cHeaderOneTitle]="'Kommentare'" [cHeaderTwoTitle]="'Antworten'"
                  [cHeaderOneSubtitle]="svWebinar.bsUnit.value?.lComments?.length!.toString()" [cHeaderTwoSubtitle]="svWebinar.bsComment.value?.lCommentAnswers?.length!.toString()"
                  [bFilterOne]="true" [lFilterOne]="lFilterOne">
@@ -139,8 +139,8 @@
          (press)="cpListComments.onListInsidePress($event)" (panstart)="cpListComments.onListInsideStart($event)" (panmove)="cpListComments.onListInsideMove($event)"
          (panend)="cpListComments.onListInsideEnd($event)" style="width: 100%; position: relative">
       <div *ngFor="let aComment of svWebinar.bsUnit.value?.lComments">
-        <app-comment (outputClick)="showListCommentAnswers(aComment)" (outputClickAnswer)="onClickComment_Answer(aComment)" (outputLike)="onClickComment_Like(aComment)"
-                     (outputSettings)="onClickComment_Settings(aComment)" [aComment]="aComment" [bButtonAnswer]="true" [bShowAnswers]="true"></app-comment>
+        <app-comment (outputClick)="showListCommentAnswers(aComment)" (outputClickAnswer)="onClick_InputAddCommentAnswer(aComment)" (outputLike)="onClick_CommentLike(aComment)"
+                     (outputSettings)="onClick_CommentSettings(aComment)" [aComment]="aComment" [bButtonAnswer]="true" [bShowAnswers]="true"></app-comment>
       </div>
     </div>
   </ng-template>
@@ -150,19 +150,19 @@
     <div #vListInsideCommentAnswers (press)="cpListComments.onListInsidePressTwo($event)" (panstart)="cpListComments.onListInsideStartTwo($event)"
          (panmove)="cpListComments.onListInsideMoveTwo($event)"
          (panend)="cpListComments.onListInsideEndTwo($event)" style="width: 100%; position: relative">
-      <app-comment (outputClick)="onAddCommentAnswer()" (outputLike)="onClickComment_Like(svWebinar.bsComment.value!)"
-                   (outputSettings)="onClickComment_Settings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bButtonAnswer]="true"
+      <app-comment (outputClick)="onClick_InputAddCommentAnswer()" (outputLike)="onClick_CommentLike(svWebinar.bsComment.value!)"
+                   (outputSettings)="onClick_CommentSettings(svWebinar.bsComment.value!)" [bListen]="true" [aComment]="svWebinar.bsComment.value!" [bButtonAnswer]="true"
                    [bHighlight]="true"></app-comment>
       <div *ngFor="let aCommentAnswer of svWebinar.bsComment.value?.lCommentAnswers" style="margin-left: 2.75rem">
-        <app-comment (outputClick)="onAddCommentAnswer(aCommentAnswer)" (outputLike)="onClickCommentAnswer_Like(aCommentAnswer)"
-                     (outputSettings)="onClickCommentAnswer_Settings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
+        <app-comment (outputClick)="onClick_InputAddCommentAnswerRegard(aCommentAnswer)" (outputLike)="onClick_CommentAnswerLike(aCommentAnswer)"
+                     (outputSettings)="onClick_CommentAnswerSettings(aCommentAnswer)" [aComment]="aCommentAnswer | comment"></app-comment>
       </div>
     </div>
   </ng-template>
 
   <!-- input comment -->
   <ng-template #tpInput>
-    <div (click)="onAddComment()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
+    <div (click)="onClick_InputAddComment()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
       <!-- structure needed to avoid overflow-x -->
       <div class="divider" style="position: absolute; top: 0"></div>
       <div class="flex section align-items-center" style="box-sizing: border-box;">
@@ -179,7 +179,7 @@
 
   <!-- input comment-answer -->
   <ng-template #tpInputTwo>
-    <div (click)="onAddCommentAnswer()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
+    <div (click)="onClick_InputAddCommentAnswer()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
       <!-- structure needed to avoid overflow-x -->
       <div class="divider" style="position: absolute; top: 0"></div>
       <div class="flex section align-items-center" style="box-sizing: border-box;">
@@ -197,26 +197,26 @@
 <!-- list-action comment -->
 <app-list-action #cpListActionComments [cHeader]="'Kommentar'">
   <ng-template #tpListInside>
-    <app-list-action-item (click)="onShowEditComment()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
-    <app-list-action-item (click)="onDeleteComment()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_InputEditComment()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_DeleteComment()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
   </ng-template>
 </app-list-action>
 
 <!-- list-action comment-answers -->
 <app-list-action #cpListActionCommentAnswers [cHeader]="'Antwort'">
   <ng-template #tpListInside>
-    <app-list-action-item (click)="onShowEditCommentAnswer()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
-    <app-list-action-item (click)="onDeleteCommentAnswer()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_InputEditCommentAnswer()" [cName]="'Bearbeiten'" [cIcon]="'edit'"></app-list-action-item>
+    <app-list-action-item (click)="onClick_DeleteCommentAnswer()" [cName]="'Löschen'" [cIcon]="'delete'"></app-list-action-item>
   </ng-template>
 </app-list-action>
 
 <!-- list inputs comment -->
-<app-list-input #cpListInputAddComment [cHint]="'Kommentar hinzufügen...'" (outputSubmit)="onCommentAdd($event)"></app-list-input>
-<app-list-input #cpListInputEditComment [cHint]="'Kommentar bearbeiten...'" (outputSubmit)="onEditComment($event)"></app-list-input>
+<app-list-input #cpListInputAddComment [cHint]="'Kommentar hinzufügen...'" (outputSubmit)="onClick_AddComment($event)"></app-list-input>
+<app-list-input #cpListInputEditComment [cHint]="'Kommentar bearbeiten...'" (outputSubmit)="onClick_EditComment($event)"></app-list-input>
 
 <!-- list inputs comment-answer -->
-<app-list-input #cpListInputAddCommentAnswer [cHint]="'Antwort hinzufügen...'" (outputSubmit)="onCommentAnswerAdd($event)"></app-list-input>
-<app-list-input #cpListInputEditCommentAnswer [cHint]="'Antwort bearbeiten...'" (outputSubmit)="onEditCommentAnswer($event)"></app-list-input>
+<app-list-input #cpListInputAddCommentAnswer [cHint]="'Antwort hinzufügen...'" (outputSubmit)="onClick_AddCommentAnswer($event)"></app-list-input>
+<app-list-input #cpListInputEditCommentAnswer [cHint]="'Antwort bearbeiten...'" (outputSubmit)="onClick_EditCommentAnswer($event)"></app-list-input>
 
 
 <!-- list-action settings -->
@@ -249,11 +249,11 @@
 </app-list-action>
 
 <!-- list description -->
-<app-list-slider #cpListDescription (outputListClosed)="onListClosed()" (outputListOpened)="onListOpened()" [vListInside]="vListInsideDescription"
+<app-list-slider #cpListDescription (outputListClosed)="on_ListClosed()" (outputListOpened)="on_ListOpened()" [vListInside]="vListInsideDescription"
                  [cHeaderOneTitle]="'Beschreibung'">
   <ng-template #tpListInside>
-    <div #vListInsideDescription (press)="cpListNotes.onListInsidePress($event)" (panstart)="cpListNotes.onListInsideStart($event)" (panmove)="cpListNotes.onListInsideMove($event)"
-         (panend)="cpListNotes.onListInsideEnd($event)" class="bg-dark" style="width: 100%; box-sizing: border-box; position: relative; padding: 2rem 0.75rem 0.75rem 0.75rem">
+    <div #vListInsideDescription (press)="cpListDescription.onListInsidePress($event)" (panstart)="cpListDescription.onListInsideStart($event)" (panmove)="cpListDescription.onListInsideMove($event)"
+         (panend)="cpListDescription.onListInsideEnd($event)" class="bg-dark" style="width: 100%; box-sizing: border-box; position: relative; padding: 2rem 0.75rem 0.75rem 0.75rem">
       <p class="ts-l tc-light tw-bold">{{svWebinar.bsUnit.value?.cName}}</p>
       <div class="spv-2"></div>
       <div class="flex" style="justify-content: space-evenly;">
@@ -286,7 +286,7 @@
 <div class="bg-dark no-marker" style="position: fixed; bottom: 0; z-index: 8; height: 30rem; width: 100%; transform: translateY(30rem); "></div>
 
 <!-- tabs - need to be also on top -->
-<div class="no-marker" #vTabs (panstart)="onProcessStart($event)" (panmove)="onProcessMove($event)" (panend)="onProcessEnd($event)" class="bg-dark"
+<div class="no-marker" #vTabs (panstart)="onStart_ProgressBar()" (panmove)="onMove_ProgressBar($event)" (panend)="onEnd_ProgressBar($event)" class="bg-dark"
      style="position: fixed; bottom: 0; z-index: 6; height: 3.5rem; width: 100%; display: flex; justify-content: center; align-items: center; ">
 
   <!-- needed so that the pan gesture works on the whole tab bar -->
@@ -295,7 +295,7 @@
 -->
 
   <!-- home -->
-  <div class="tab-container" (click)="onTabHome()">
+  <div class="tab-container" (click)="onClick_TabHome()">
     <mat-icon class="is-standard ic-light" fontIcon="home"></mat-icon>
     <p class="tab-title">Start</p>
   </div>
@@ -315,14 +315,14 @@
 </div>
 
 <!-- process bar for showing how much of the video has been played-->
-<div #vProcess class="process no-marker" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
+<div #vProgressBar class="process no-marker" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
 
 
 <!-- container for video -->
 <div class="flex flex-vertical bg-dark no-marker" style="position: fixed; height: calc(100dvh - 3.5rem); width: 100%; z-index: 5;">
 
   <!-- needed for catching the swipe gesture, however only for 75% witdh of screen so that icons can be clicked on the right side -->
-  <div #vSwipe (click)="onClickVideo()" (panstart)="onSwipeStart($event)" (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)"
+  <div #vSwipe (click)="onClickVideo()" (panstart)="onStart_Video()" (panend)="onEnd_Video($event)" (panmove)="onMove_Video($event)"
        style="position: absolute; z-index: 4; height: calc(100dvh - 3.5rem); width: 75%"></div>
 
   <!-- video elements -->
@@ -378,7 +378,7 @@
           </div>
 
           <!-- sidebar which enables click on icons and also applies swipe gesture due to pan events-->
-          <div (panend)="onSwipeEnd($event)" (panmove)="onSwipeMove($event)" style="position: absolute; bottom: 0; right: 0; width: 25%; height: 100%;">
+          <div (panend)="onEnd_Video($event)" (panmove)="onMove_Video($event)" style="position: absolute; bottom: 0; right: 0; width: 25%; height: 100%;">
 
             <!-- settings -->
             <div class="flex" style="position: absolute; top: 0; right: 0; margin: 1rem">
@@ -390,7 +390,7 @@
               <!-- like -->
               <div class="sidebar-container">
                 <div #vUnitLikeAnimation class="sidebar-icon-animation"></div>
-                <mat-icon #vUnitLike (click)="onClickUnitLike()" class="sidebar-icon" [ngClass]="svWebinar.bsUnit.value?.oUnitPlayer?.bLike ? 'like-selected' : ''"
+                <mat-icon #vUnitLike (click)="onClick_UnitLike()" class="sidebar-icon" [ngClass]="svWebinar.bsUnit.value?.oUnitPlayer?.bLike ? 'like-selected' : ''"
                           fontIcon="thumb_up_alt"></mat-icon>
                 <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.nLikes}}</p>
               </div>
@@ -398,21 +398,21 @@
               <!-- comment -->
               <div class="sidebar-container">
                 <div #vUnitCommentAnimation class="sidebar-icon-animation"></div>
-                <mat-icon (click)="onComments()" class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
+                <mat-icon (click)="onClick_Comments()" class="sidebar-icon sh-icon-soft" fontIcon="comment"></mat-icon>
                 <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.nComments}}</p>
               </div>
 
               <!-- share -->
               <div class="sidebar-container">
                 <div #vShareAnimation class="sidebar-icon-animation"></div>
-                <mat-icon (click)=onClickShare() class="sidebar-icon" fontIcon="share"></mat-icon>
+                <mat-icon (click)=onClick_Share() class="sidebar-icon" fontIcon="share"></mat-icon>
                 <p class="sidebar-subtext">Teilen</p>
               </div>
 
               <!-- check -->
               <div class="sidebar-container">
                 <div #vCheckAnimation class="sidebar-icon-animation"></div>
-                <mat-icon (click)=onClickCheck() class="sidebar-icon"
+                <mat-icon (click)=onClick_Check() class="sidebar-icon"
                           [fontIcon]="svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'check_circle' : 'radio_button_unchecked'"></mat-icon>
                 <p class="sidebar-subtext">{{svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 'Abgehakt' : 'Abhaken'}}</p>
               </div>
@@ -424,7 +424,7 @@
           <!-- process-thumbnails -->
           <div #vProcessThumbnails class="flex-vertical align-items-center" style="width: 100%; display: none; position: absolute; bottom: 0;">
             <div #vProcessThumbnail style="position: relative; width: 100%; left: 0">
-              <img #vProcessThumbnailImage [src]="imgProcessThumbnail" class="bo-light" style="border-radius: 0.5rem; width: 9rem; height: 16rem; background-color: aqua"
+              <img #vProgressThumbnail [src]="imgProgressThumbnail" class="bo-light" style="border-radius: 0.5rem; width: 9rem; height: 16rem; background-color: aqua"
                    width="216" height="384">
             </div>
 
@@ -432,7 +432,7 @@
             <div class="bg-dark-two-transparent"
                  style="box-sizing: border-box; text-align: center; border-radius: 1rem; padding: 0.5rem 1rem 0.5rem 1rem;transform: translateX(0rem)"
                  [ngStyle]="{'left' : (wWindow/2) + 'px'}">
-              <p class="tc-light ts-xs tw-bold">{{pProcess + ' %'}}</p>
+              <p class="tc-light ts-xs tw-bold">{{pProgress + ' %'}}</p>
             </div>
             <div class="spv-1"></div>
           </div>

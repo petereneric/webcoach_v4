@@ -7,8 +7,8 @@ import {UserDataComponent} from "./tab-account/user-data/user-data.component";
 const routes: Routes = [
 
   {
-    path: 'webinar-vert',
-    loadChildren: () => import('./webinar-vert/webinar-vert.module').then( m => m.WebinarVertPageModule)
+    path: 'webinar',
+    loadChildren: () => import('./webinar/webinar.module').then(m => m.WebinarPageModule)
   },
   {
     path: 'webinar-intro',
