@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {AuthApiService} from "../conn-api/auth-api.service";
+import {AuthApiService} from "../api/auth-api.service";
 import {HttpResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 

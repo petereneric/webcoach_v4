@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Webinar} from "../../interfaces/webinar";
 import {Currency} from "../../utils/currency";
 import {Router} from "@angular/router";
-import {ConnApiService} from "../../services/conn-api/conn-api.service";
+import {ApiService} from "../../services/api/api.service";
 
 @Component({
   selector: 'app-webinar-cart',
@@ -17,7 +17,7 @@ export class WebinarCartComponent implements OnInit {
   // data
   urlThumbnail: any | null= null
 
-  constructor(public uCurrency: Currency, private connApi: ConnApiService) {
+  constructor(public uCurrency: Currency, private connApi: ApiService) {
   }
 
   ngOnInit(): void {

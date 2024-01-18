@@ -1,9 +1,15 @@
-@import "../theme/variables";
+@import "../theme/color.theme";
 
 // icon size
 $isStandard: 1.5rem;
 $isItem: 1rem;
 $isItemSub: 0.8rem;
+
+.i-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .is-xxs {
   font-size: 0.7rem;

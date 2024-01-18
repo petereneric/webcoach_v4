@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ConnApiService} from "../conn-api/conn-api.service";
+import {ApiService} from "../api/api.service";
 import {RoleService} from "../authentication/role.service";
 import {Webinar} from "../../interfaces/webinar";
 import {Router} from "@angular/router";
@@ -15,7 +15,7 @@ resolving true.
 })
 export class WebinarPlayerGuardService {
 
-  constructor(private router: Router, private roleService: RoleService, private connApi: ConnApiService) {
+  constructor(private router: Router, private roleService: RoleService, private connApi: ApiService) {
   }
 
   canActivate(route: any): Promise<boolean> {

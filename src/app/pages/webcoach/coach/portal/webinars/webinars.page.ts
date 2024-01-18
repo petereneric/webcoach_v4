@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../services/api/api.service";
 import {Webinar} from "../../../../../interfaces/webinar";
 import {Router} from "@angular/router";
 
@@ -17,7 +17,7 @@ export class WebinarsPage implements OnInit {
   bAdd = false
   cWebinarAdd = ""
 
-  constructor(private router: Router, private connApi: ConnApiService) { }
+  constructor(private router: Router, private connApi: ApiService) { }
 
   ngOnInit() {
     this.connApi.safeGet('coach/webinars', (data: any) => {

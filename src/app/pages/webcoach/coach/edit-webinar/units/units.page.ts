@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Communication} from "../../../../../services/communication/communication.service";
 import {Webinar} from "../../../../../interfaces/webinar";
 import {Section} from "../../../../../interfaces/section";
-import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../services/api/api.service";
 import {File} from "../../../../../utils/file";
 import {Toast} from "../../../../../utils/toast";
 import {Unit} from "../../../../../interfaces/unit";
@@ -20,7 +20,7 @@ export class UnitsPage implements OnInit {
   // menu
   menuUnit = [{id: 0, cName: 'Video herunterladen'}]
 
-  constructor(private uToast: Toast, private uFile: File, private connApi: ConnApiService, private svCommunication: Communication) { }
+  constructor(private uToast: Toast, private uFile: File, private connApi: ApiService, private svCommunication: Communication) { }
 
   ngOnInit() {
     this.svCommunication.webinarEdit.subscribe((webinar: Webinar | null) => {

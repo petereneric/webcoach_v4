@@ -1,9 +1,9 @@
 <div #vList (panstart)="onListStart($event)" (panmove)="onListMove($event)" (panend)="onListEnd($event)" class="bg-dark-two no-marker"
-     [ngStyle]="{'top': hWindow + 'px'}" [style]="bMargin ? {'width': '95%', 'margin-left': '2.5%', 'margin-right': '2.5%'} : null" style="position: fixed; z-index: 22; width: 100%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
+     [ngStyle]="{'top': hWindow + 'px'}" [style]="bMargin ? {'width': '95%', 'margin-left': '2.5%', 'margin-right': '2.5%'} : null" style="visibility: hidden; position: fixed; overflow-y: hidden; z-index: 22; width: 100%; overflow: auto; border-radius: 1.3rem 1.3rem 0rem 0rem;">
 
   <!-- header -->
   <div #vListHeader
-       style="position: fixed; z-index: 9; width: 100%; height: 2.5rem; display: flex; flex-direction: column; align-items: center; border-radius: 1.3rem 1.3rem 0rem 0rem; ">
+       style="position: static; z-index: 9; width: 100%; display: flex; flex-direction: column; align-items: center; !important; border-radius: 1.3rem 1.3rem 0rem 0rem; ">
     <!-- slide-bar -->
     <div class="slide-bar">
       <p style="opacity: 0">dummy text so that div gets shown as bar</p>
@@ -18,7 +18,7 @@
 
   <!-- content -->
   <!-- needs to be with margin below header -->
-  <div #vListOutside style="height: calc(100% - 2.5rem); z-index: 8; margin-top: 2.5rem; margin-bottom: 0.25rem">
+  <div #vListOutside style="z-index: 8; margin-bottom: 0.5rem">
     <ng-container *ngTemplateOutlet="tpListInside || vListInsideDefault" style="position: relative;  z-index: 7; width: 100%;">
 
     </ng-container>

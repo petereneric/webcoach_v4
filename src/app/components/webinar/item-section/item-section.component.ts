@@ -5,6 +5,8 @@ import {EventUnit} from "../../../interfaces/events/eventUnit";
 import {Communication} from "../../../services/communication/communication.service";
 import {Unit} from "../../../interfaces/unit";
 import {WebinarService} from "../../../services/data/webinar.service";
+import {UnitComponent} from "../../webinar-intro/unit/unit.component";
+import {ItemUnitComponent} from "../item-unit/item-unit.component";
 
 @Component({
   selector: 'app-item-section',
@@ -20,6 +22,7 @@ export class ItemSectionComponent implements OnInit, AfterViewInit {
   // input
   @Input() oSection: Section | null = null
   @Input() aHeights: any
+  @Input() bLastSection: boolean = false
 
   // output
   @Output() eventUnit = new EventEmitter<any>()
@@ -27,7 +30,7 @@ export class ItemSectionComponent implements OnInit, AfterViewInit {
   // variables
   secSection: string = ''
 
-  constructor(private svWebinar: WebinarService, private svCommunication: Communication, private uDateTime: DateTime) {
+  constructor(public svWebinar: WebinarService, private svCommunication: Communication, private uDateTime: DateTime) {
   }
 
   ngOnInit() {
@@ -71,15 +74,12 @@ export class ItemSectionComponent implements OnInit, AfterViewInit {
   }
 
   onExpand() {
-    this.oSection!.bExpand = !this.oSection!.bExpand
-    if (!this.oSection!.bExpand) {
+    //if (!this.oSection!.bExpand) {
       let event = {
         cEvent: 'collapse',
-        unit: null,
+        oSection: this.oSection,
       }
       this.eventUnit.emit(event)
-    }
+    //}
   }
-
-
 }

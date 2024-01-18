@@ -1,7 +1,9 @@
+/*** last-refactoring: 14.01.2024 by eric ***/
+
 import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Unit} from "../../../../interfaces/unit";
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 import {Communication} from "../../../../services/communication/communication.service";
 import * as videojs from "video.js";
 import {interval, Subscription} from "rxjs";
@@ -21,6 +23,7 @@ import {PlayerService} from "../../../../services/data/player.service";
 import {CommentAnswer} from "../../../../interfaces/comment-answer";
 import {File} from "../../../../utils/file";
 import {DomSanitizer} from "@angular/platform-browser";
+import {ItemSectionComponent} from "../../../../components/webinar/item-section/item-section.component";
 
 @Component({
   selector: 'app-webinar',
@@ -65,6 +68,8 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('videoBottom') videoBottom!: ElementRef
   @ViewChild('videoTop') videoTop!: ElementRef
   @ViewChild('videoWrapper') videoWrapper!: ElementRef
+  @ViewChild('vVideoContainer') vVideoContainer!: ElementRef
+  @ViewChild('vContainer') vContainer!: ElementRef
 
   // components
   @ViewChild('cpListActionCommentAnswers') cpListActionCommentAnswers!: ListActionComponent
@@ -82,6 +87,8 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cpListInputEditComment') cpListInputEditComment!: ListInputComponent
   @ViewChild('cpListInputEditCommentAnswer') cpListInputEditCommentAnswer!: ListInputComponent
   @ViewChild('cpListInputEditNote') cpListInputEditNote!: ListInputComponent
+  @ViewChild('cpListOverview') cpListOverview!: ListSliderComponent
+  @ViewChild('cpItemSection') cpItemSection!: ItemSectionComponent
 
   // constants
   readonly THRESHOLD_COVER_SCROLL = 3
@@ -144,9 +151,10 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   private offsetTopListStart = 0
   private tDirectionListStart = 0
   private wVideoWrapper = 0
+  private bShowVideoControls: boolean = false
 
 
-  constructor(private sanitizer: DomSanitizer, private uFile: File, public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private api: ConnApiService, private route: ActivatedRoute) {
+  constructor(private sanitizer: DomSanitizer, private uFile: File, public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private api: ApiService, private route: ActivatedRoute) {
   }
 
 
@@ -161,9 +169,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       this.api.get('webinar/sections-content/' + kWebinar, aContent => this.aContent = aContent)
     })
 
-
     this.setupPlayer()
-
 
     // callback for change of visibility, e.g. on tab change
     document.addEventListener("visibilitychange", () => {
@@ -172,15 +178,14 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
           break;
 
         case "hidden":
-          this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo = this.oPlayer.currentTime()
-          this.svWebinar.bsUnit.value!.oUnitPlayer!.tStatus = 1
-          this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value!.oUnitPlayer)
+          this.svWebinar.uploadUnitPlayer()
 
           this.pauseVideo()
           this.vCover.nativeElement.style.zIndex = 7
           // scroll to top
           this.resetScroll()
           this.bVisibilityChange = true
+          this.closeAllLists()
           break;
       }
     });
@@ -192,12 +197,21 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.svWebinar.bsUnit.subscribe(aUnit => {
       if (this.vCover !== undefined && this.vCover.nativeElement.style.zIndex == 0) {
+        const kUnit = aUnit?.id
+        setTimeout(() => {
+          if (kUnit === this.svWebinar.bsUnit.value?.id) {
+            aUnit!.nCalls = aUnit!.nCalls + 1
+            this.api.safePost('unit/call', {kUnit: kUnit}, null)
+          }
+        }, 10000)
+
 
         this.playUnit(aUnit, false)
         this.oPlayer.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
 
         this.updateProgressBar(aUnit?.oUnitPlayer?.secVideo ?? 0, aUnit?.secDuration)
-        this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'flex')
+        console.log("video time: ", this.getVideoTime())
+        this.showVideoControls()
 
         this.svWebinar.updateWebinarPlayer()
 
@@ -208,7 +222,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
         this.oPlayer.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
 
         this.updateProgressBar(aUnit?.oUnitPlayer?.secVideo ?? 0, aUnit?.secDuration)
-        this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'flex')
+        this.showVideoControls()
       }
     })
 
@@ -234,17 +248,24 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       this.setVideoSpeed()
     })
 
-
     this.startProgressUpdater()
 
     // works only on non safari browsers
     this.vUnitLike.nativeElement.addEventListener('pointerdown', event => {
       window.navigator.vibrate(1000)
     });
+
+    this.vContainer.nativeElement.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      if (touch.pageX > 15 && touch.pageX < window.innerWidth - 15) return
+      e.preventDefault();
+    })
   }
 
 
   ngOnDestroy(): void {
+    console.log("CHANGE 3")
+    this.svWebinar.uploadUnitPlayer()
     this.oPlayer.dispose();
     this.stopProgressUpdater()
 
@@ -292,9 +313,12 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   onStart_Video() {
     this.bMovementHorizontal = false
     this.bMovementVertical = false
+    this.bShowVideoControls = this.vVideoControls.nativeElement.style.display === 'flex'
   }
 
   onMove_Video(event) {
+    this.hideVideoControls()
+
     if (!this.bMovementHorizontal && !this.bMovementVertical) {
       if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
         this.bMovementVertical = true
@@ -319,6 +343,8 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
       if (Math.abs(ev.deltaY) < this.hVideoWrapper / 2 && Math.abs(ev.velocityY) < this.THRESHOLD_VIDEO_VELOCITY) {
         // threshold not reached and therefore bouncing video back - no video change
+
+        if (this.bShowVideoControls) this.showVideoControls()
 
         // transition is set and after swipe taken away for instant movement in onSwipeMove()
         this.renderer.setStyle(this.videoWrapper.nativeElement, 'transition', this.TRANSITION_VIDEO_SWIPE + 's')
@@ -363,7 +389,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
           this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', this.hVideoWrapper + 'px')
 
           // set video poster with enough time to load before end of swipe
-          this.oPlayer.poster("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.lastUnit()?.id)
+          this.oPlayer.poster("https://webcoach-api.digital/webinar/unit/thumbnail/" + this.svWebinar.getLastUnit()?.id)
           this.hideSidebar()
           this.bProgressUpdaterRunning = false
           setTimeout(() => {
@@ -373,7 +399,8 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
               this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', 0 + 'px')
 
               // play last unit
-              this.svWebinar.setUnit(this.svWebinar.lastUnit(), this.oPlayer.currentTime())
+              this.svWebinar.setLastUnit()
+              //this.svWebinar.setUnit(this.svWebinar.getLastUnit(), this.oPlayer.currentTime())
             },
             this.TRANSITION_VIDEO_SWIPE * 1000);
         }
@@ -384,7 +411,10 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     if (this.bMovementHorizontal) {
       if (Math.abs(ev.deltaX) < this.wVideoWrapper / 2 && Math.abs(ev.velocityX) < this.THRESHOLD_VIDEO_VELOCITY) {
         // threshold not reached and therefore bouncing video back - no video change
-        this.svAnimation.moveHorizontal(this.videoWrapper, 0, this.TRANSITION_VIDEO_SWIPE)
+        if (this.bShowVideoControls) this.showVideoControls()
+        this.svAnimation.moveHorizontal(this.videoWrapper, 0, this.TRANSITION_VIDEO_SWIPE, () => {
+
+        })
       } else {
         // threshold reached and therefore bouncing showing either backward of forward winding
         if (ev.deltaX < 0) {
@@ -460,11 +490,6 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     this.playVideo()
     this.startProgressUpdater()
   }
-
-
-
-
-
 
 
   startProgressUpdater() {
@@ -547,6 +572,8 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   startProgressObserver() {
     this.oProgressObserver = interval(this.INTERVAL_PROGRESS_OBSERVER).subscribe(val => {
       if (this.bProgressUpdaterRunning) {
+        this.svWebinar.setUnitPlayerTime(this.oPlayer.currentTime())
+
         if (this.svWebinar.bsUnitInterval.value !== null) {
           if (this.oPlayer.currentTime() > this.svWebinar.bsUnitInterval.value?.secEnd || this.oPlayer.currentTime() < this.svWebinar.bsUnitInterval.value?.secStart) {
             this.setNewUnitInterval()
@@ -593,60 +620,62 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
       // unit selected
       case 'select':
-        if (!this.bClickListInsideDisabled) {
+        console.log("item clickk")
+        if (this.scrollCheckListOverview()) {
           // upload status and time of current unit
           let aUnitOld: Unit = event.unitOld
           if (aUnitOld !== null) {
             aUnitOld.oUnitPlayer!.tStatus = 1
             aUnitOld.oUnitPlayer!.secVideo = this.getVideoTime()
-            this.svWebinar.uploadUnitPlayer(aUnitOld.oUnitPlayer)
+            //this.svWebinar.updateUnitPlayer(aUnitOld.oUnitPlayer!)
           }
 
           this.hideSidebar()
           this.bProgressUpdaterRunning = false
           this.svWebinar.setUnit(event.unit)
+          this.cpListOverview.onCloseList()
         }
         break
 
       // unit checked
       case 'check':
-        // upload status and time of checked unit
-        let unit: Unit = event.unit
-        unit.oUnitPlayer!.tStatus = unit.oUnitPlayer?.tStatus! < 2 ? 2 : 0
-        unit.oUnitPlayer!.secVideo = 0
+        if (this.scrollCheckListOverview()) {
+          this.svWebinar.checkUnitPlayer(event.unit.oUnitPlayer)
+        }
 
-        this.svWebinar.uploadUnitPlayer(unit.oUnitPlayer)
         break
       case 'collapse':
-        console.log("collapse")
-
         // timeout needed so that collapse can take effect in first place
-        setTimeout(() => {
-            const topListInside = this.vListInside.nativeElement.offsetTop // is not 0 when on top, has listheader added
-            const heightListInside = this.vListInside.nativeElement.offsetHeight
-            const heightListOutside = this.vListOutside.nativeElement.offsetHeight
-            const hListHeader = this.vListHeader.nativeElement.offsetHeight
-            const difference = heightListOutside - heightListInside + hListHeader
+        if (this.scrollCheckListOverview()) {
+          event.oSection!.bExpand = !event.oSection!.bExpand
+          setTimeout(() => {
+              this.cpListOverview.bounceAfterCollapse()
+              const topListInside = this.vListInside.nativeElement.offsetTop // is not 0 when on top, has listheader added
+              const heightListInside = this.vListInside.nativeElement.offsetHeight
+              const heightListOutside = this.vListOutside.nativeElement.offsetHeight
+              const hListHeader = this.vListHeader.nativeElement.offsetHeight
+              const difference = heightListOutside - heightListInside + hListHeader
 
 
-            console.log("topListInside: ", topListInside)
-            console.log("heightListInside: ", heightListInside)
-            console.log("heightListOutside: ", heightListOutside)
-            console.log("difference: ", difference)
-            console.log("hListHeader: ", hListHeader)
+              console.log("topListInside: ", topListInside)
+              console.log("heightListInside: ", heightListInside)
+              console.log("heightListOutside: ", heightListOutside)
+              console.log("difference: ", difference)
+              console.log("hListHeader: ", hListHeader)
 
-            // total crazy, setting listInsideTop to 0 is just right getting its offsetTop however is height ListHeader when it is complete at top
-            // offset top is the distance the child element has to parent start, top is connected to the start of the view itself, 0 is start then
-            // TODO note this important issue --> difference offsetTop and Top
-            if (difference < 0 && difference > topListInside) {
-              this.renderer.setStyle(this.vListInside.nativeElement, 'top', heightListOutside - heightListInside + 'px')
-            }
+              // total crazy, setting listInsideTop to 0 is just right getting its offsetTop however is height ListHeader when it is complete at top
+              // offset top is the distance the child element has to parent start, top is connected to the start of the view itself, 0 is start then
+              // TODO note this important issue --> difference offsetTop and Top
+              if (difference < 0 && difference > topListInside) {
+                this.renderer.setStyle(this.vListInside.nativeElement, 'top', heightListOutside - heightListInside + 'px')
+              }
 
-            if (difference > 0) {
-              this.renderer.setStyle(this.vListInside.nativeElement, 'top', 0 + 'px')
-            }
-          },
-          200);
+              if (difference > 0) {
+                this.renderer.setStyle(this.vListInside.nativeElement, 'top', 0 + 'px')
+              }
+            },
+            200);
+        }
         break
     }
   }
@@ -735,15 +764,29 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getVideoTime() {
+    return this.svWebinar.bsUnit.value?.oUnitPlayer?.secVideo ?? 0
+    /*
     if (this.oPlayer !== null) {
       return this.oPlayer.currentTime()
     } else {
       return 0
     }
+
+     */
   }
 
   onClick_TabHome() {
     this.router.navigate(['start'])
+  }
+
+  onClick_TabOverview() {
+    console.log(this.aHeights)
+    const pxPositionOne = this.aHeights.pxHeightSection * (this.svWebinar.bsSection.value!.nPosition) + 1
+    const pxUnitGap = this.aHeights.pxHeightUnit * (this.svWebinar.bsUnit.value!.nPosition + 1) + this.aHeights.pxHeightSection
+    const pxPositionTwo = this.aHeights.pxHeightSection * (this.svWebinar.bsSection.value!.nPosition + 1) +
+      this.aHeights.pxHeightUnit * (this.svWebinar.bsUnit.value!.nPosition > 0 ? (this.svWebinar.bsUnit.value!.nPosition - 1) : this.svWebinar.bsUnit.value!.nPosition)
+    this.cpListOverview.scrollPosition({pxPositionOne: pxPositionOne, pxUnitGap: pxUnitGap, pxPositionTwo: pxPositionTwo})
+    this.cpListOverview.onOpenList()
   }
 
 
@@ -771,18 +814,16 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
   onClick_Check() {
     this.svAnimation.iconClick(this.vCheckAnimation)
-    console.log(this.svWebinar.bsUnit.value!.oUnitPlayer!)
-    this.svWebinar.bsUnit.value!.oUnitPlayer!.tStatus = this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus == 2 ? 1 : 2
-    console.log(this.svWebinar.bsUnit.value!.oUnitPlayer!)
-    this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value!.oUnitPlayer!)
+    this.svWebinar.checkUnitPlayer()
   }
 
 
   onClickVideo() {
+    console.log("ne")
     if (true) {
       if (this.oPlayer.paused()) {
         if (this.bDocumentInteraction) {
-          this.svAnimation.popup(this.vPlay)
+          if (!this.isVideoControls()) this.svAnimation.popup(this.vPlay)
         }
         this.playVideo()
       } else {
@@ -793,13 +834,17 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClick_Note(aNote: Note) {
-    this.setVideoTime(aNote.secTime)
-    this.cpListNotes.onCloseList()
+    if (this.scrollCheckListNotes()) {
+      this.setVideoTime(aNote.secTime)
+      this.cpListNotes.onCloseList()
+    }
   }
 
   onClick_NoteSettings(aNote: Note) {
-    this.svWebinar.bsNote.next(aNote)
-    this.cpListActionNotes.show()
+    if (this.scrollCheckListNotes()) {
+      this.svWebinar.bsNote.next(aNote)
+      this.cpListActionNotes.show()
+    }
   }
 
   onClick_NoteAdd($event) {
@@ -906,12 +951,11 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showListCommentAnswers(aComment: Comment) {
-    if (!this.cpListComments.isScrolling()) {
+    console.log("showListCommentAnswers")
+    if (this.scrollCheckListComments()) {
       this.svWebinar.bsComment.next(aComment)
       if (aComment.nAnswers > 0) this.svWebinar.loadCommentAnswers(aComment)
       this.cpListComments.showListTwo()
-    } else {
-      this.cpListComments.stopScrolling(this.vListInsideComments)
     }
   }
 
@@ -1068,7 +1112,29 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     this.orderComments()
   }
 
+  scrollCheckListOverview() {
+    if (this.cpListOverview.bClickBlocked) return false
+    if (this.cpListOverview.isScrolling()) {
+      console.log("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+      //if (this.cpListOverview.)
+      this.cpListOverview.stopScrolling(this.vListInsideOverview)
+      return false
+    }
+    console.log("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES")
+    return true
+  }
+
+  scrollCheckListNotes() {
+    if (this.cpListNotes.bClickBlocked) return false
+    if (this.cpListNotes.isScrolling()) {
+      this.cpListNotes.stopScrolling(this.vListInsideNotes)
+      return false
+    }
+    return true
+  }
+
   scrollCheckListComments() {
+    if (this.cpListComments.bClickBlocked) return false
     if (this.cpListComments.isScrolling()) {
       this.cpListComments.stopScrolling(this.vListInsideComments)
       return false
@@ -1077,6 +1143,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollCheckListCommentAnswers() {
+    if (this.cpListComments.bClickBlocked) return false
     if (this.cpListComments.isScrolling()) {
       this.cpListComments.stopScrolling(this.vListInsideCommentAnswers)
       return false
@@ -1142,6 +1209,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   onClick_Replay() {
     this.hideVideoControls()
     this.oPlayer.currentTime(0)
+    console.log("jo")
     this.playVideo()
   }
 
@@ -1154,12 +1222,32 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'none')
   }
 
+  showVideoControls() {
+    this.renderer.setStyle(this.vVideoControls.nativeElement, 'display', 'flex')
+    if (this.getVideoTime() > 2) {
+      this.renderer.setStyle(this.vReplayStart.nativeElement, 'display', 'flex')
+    } else {
+      this.renderer.setStyle(this.vReplayStart.nativeElement, 'display', 'none')
+    }
+  }
+
+  isVideoControls() {
+    return this.vVideoControls.nativeElement.style.display === 'flex'
+  }
+
   on_ListOpened() {
-    this.pauseVideo()
+    this.pauseVideo(false)
   }
 
   on_ListClosed() {
     this.playVideo()
+  }
+
+  on_ListOverviewClosed() {
+    this.svWebinar.bsSections.value?.forEach(section => {
+      section.bExpand = section.id === this.svWebinar.bsUnit.value?.kSection
+    })
+    this.on_ListClosed()
   }
 
   getNextIntervalTime(): number | null {
@@ -1197,8 +1285,6 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-
-
   resetScroll() {
     // disable tracking with scrolling counter
     this.bScrollDisabled = true;
@@ -1211,6 +1297,18 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
     // enable tracking scrolling counter
     this.bScrollDisabled = false;
+  }
+
+  closeAllLists() {
+    this.cpListOverview.onCloseList(true)
+    this.cpListNotes.onCloseList(true)
+    this.cpListComments.onCloseList(true)
+    this.cpListActionMaterial.onCloseList()
+    this.cpListActionComments.onCloseList()
+    this.cpListActionCommentAnswers.onCloseList()
+    this.cpListActionNotes.onCloseList()
+    this.cpListActionSettings.onCloseList()
+    this.cpListActionVideoSpeed.onCloseList()
   }
 
   setDimensions() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Router} from "@angular/router";
-import {ConnApiService} from "../conn-api/conn-api.service";
+import {ApiService} from "../api/api.service";
 import {Webinar} from "../../interfaces/webinar";
 //import {create} from "ionicons/icons";
 
@@ -9,7 +9,7 @@ import {Webinar} from "../../interfaces/webinar";
 })
 export class PaymentGuard {
 
-  constructor(private connApi: ConnApiService, private router: Router) { }
+  constructor(private connApi: ApiService, private router: Router) { }
 
   canActivate(route: any): Promise<boolean> {
     console.log("joo")

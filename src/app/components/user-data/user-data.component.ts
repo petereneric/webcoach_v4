@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CommonModule, Location} from '@angular/common';
 import {FormBuilder, Validators} from "@angular/forms";
-import {ConnApiService} from "../../services/conn-api/conn-api.service";
+import {ApiService} from "../../services/api/api.service";
 import {Player} from "../../interfaces/player";
 
 @Component({
@@ -32,7 +32,7 @@ export class UserDataComponent implements OnInit {
   // data
   aPlayer: Player | null = null
 
-  constructor(private location: Location, private api: ConnApiService, private formBuilder: FormBuilder) {
+  constructor(private location: Location, private api: ApiService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {

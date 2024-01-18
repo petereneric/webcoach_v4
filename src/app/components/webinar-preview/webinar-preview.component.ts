@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Webinar} from "../../interfaces/webinar";
-import {ConnApiService} from "../../services/conn-api/conn-api.service";
+import {ApiService} from "../../services/api/api.service";
 import {Numbers} from "../../utils/numbers";
 import {Router} from "@angular/router";
 import {Currency} from "../../utils/currency";
@@ -17,7 +17,7 @@ export class WebinarPreviewComponent  implements OnInit {
   // data
   urlThumbnail: any | null= null
 
-  constructor(public uCurrency: Currency, private router: Router, private connApi: ConnApiService) { }
+  constructor(public uCurrency: Currency, private router: Router, private connApi: ApiService) { }
 
   ngOnInit() {
     this.connApi.getImage('webinar/thumbnail/' +  this.aWebinar?.id, (urlCover: any) => {

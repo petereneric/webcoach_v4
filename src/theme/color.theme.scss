@@ -1,0 +1,59 @@
+// theme
+$colorPrimary: #ea0bdf;
+$colorPrimaryLight: #e76ce1;
+$colorPrimaryDark: #47088a;
+$colorAccent: #59D21C;
+
+// light
+$colorLight: #f4f2f5;
+$colorLightTwo: #b0acb0;
+$colorLightThree: #696669;
+
+// dark
+$colorDark: #0c0c17;
+$colorDarkTwo: #282828;
+
+// background
+$colorBackgroundLight: $colorLight;
+$colorBackgroundLightTwo: $colorLightTwo;
+$colorBackgroundDark: $colorDark;
+$colorBackgroundDarkTwo: $colorDarkTwo;
+$colorBackgroundDarkTwoTransparent: rgba(40, 40, 40, 0.9);
+
+// special
+$colorError: #c34a4a;
+$colorWhite: #ffffff;
+
+// screen
+$screenMobile: 1024px;
+
+// menu
+$heightMenu: 4rem;
+
+// text
+$colorTextPrimary: #313131;
+$colorTextSecondary: #585858;
+$colorTextTertiary: #8d8d8d;
+
+// divider
+$colorDivider: #cccccc;
+$colorDividerDark: #656565;
+
+
+
+
+
+
+
+
+
+
+
+
+@media (prefers-color-scheme: dark) {
+  /*
+   * Dark Colors
+   * -------------------------------------------
+   */
+
+}

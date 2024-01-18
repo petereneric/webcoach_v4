@@ -1,6 +1,6 @@
 import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 import {Webinar} from "../../../../interfaces/webinar";
 import {Section} from "../../../../interfaces/section";
 import {MatDialog} from "@angular/material/dialog";
@@ -34,7 +34,7 @@ export class WebinarIntroPage implements OnInit {
   aContent: any | null = null
   lSections: Section[] | null = null
 
-  constructor(private renderer: Renderer2, private location: Location, public svWebinar: WebinarService, public sanitizer: DomSanitizer, public uDateTime: DateTime, public uCurrency: Currency, public uNumber: Numbers, private dialog: MatDialog, private router: Router, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) { }
+  constructor(private renderer: Renderer2, private location: Location, public svWebinar: WebinarService, public sanitizer: DomSanitizer, public uDateTime: DateTime, public uCurrency: Currency, public uNumber: Numbers, private dialog: MatDialog, private router: Router, private connApi: ApiService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
 

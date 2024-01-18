@@ -54,6 +54,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   onClick() {
+    console.log("onClick Comment")
     this.outputClick.emit()
   }
 
@@ -71,6 +72,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   onAnswer(event) {
+    console.log("what the fuck")
     event.stopPropagation();
     this.outputClickAnswer.emit()
   }

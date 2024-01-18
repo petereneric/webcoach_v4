@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Webinar} from "../../../../interfaces/webinar";
 import {Currency} from "../../../../utils/currency";
@@ -21,7 +21,7 @@ export class CheckoutPage implements OnInit {
   aWebinar: Webinar | null = null
   bUserData: boolean = true
 
-  constructor(private router: Router, public uCurrency: Currency, private activatedRoute: ActivatedRoute, private api: ConnApiService) {
+  constructor(private router: Router, public uCurrency: Currency, private activatedRoute: ActivatedRoute, private api: ApiService) {
   }
 
   ngOnInit(): void {

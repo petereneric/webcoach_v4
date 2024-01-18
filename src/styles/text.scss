@@ -1,4 +1,4 @@
-@import "../theme/variables";
+@import "../theme/color.theme";
 
 // text size
 
@@ -138,8 +138,16 @@
   color: $colorDark;
 }
 
+.tc-dark-two {
+  color: $colorDarkTwo;
+}
+
 .tc-primary_ {
   color: $colorPrimary;
+}
+
+.tc-transparent {
+  color: transparent;
 }
 
 // text weight

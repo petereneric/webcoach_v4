@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../services/api/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Communication} from "../../../../../services/communication/communication.service";
 import {DialogService} from "../../../../../services/dialogs/dialog.service";
@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
     cPassword: ['', [Validators.required]],
   })
 
-  constructor(private svDialog: DialogService, private svCommunication: Communication, private activatedRoute: ActivatedRoute, private router: Router, private connApi: ConnApiService, public formBuilder: FormBuilder) {
+  constructor(private svDialog: DialogService, private svCommunication: Communication, private activatedRoute: ActivatedRoute, private router: Router, private connApi: ApiService, public formBuilder: FormBuilder) {
   }
 
   ngOnInit() {

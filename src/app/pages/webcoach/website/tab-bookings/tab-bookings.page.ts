@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 
 @Component({
   selector: 'app-tab-bookings',
@@ -11,7 +11,7 @@ export class TabBookingsPage implements OnInit {
   // data
   lWebinarPlayer = []
 
-  constructor(private api: ConnApiService) {
+  constructor(private api: ApiService) {
   }
 
 

@@ -13,7 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 
-export class ConnApiService {
+export class ApiService {
   private urlApi: string = 'https://webcoach-api.digital/'
 
   // Registration
@@ -71,7 +71,7 @@ export class ConnApiService {
     })
   }
 
-  safePost(url: string, json: any, bodyFunction: any | null) {
+  safePost(url: string, json: any, bodyFunction: any | null = null) {
     var httpOptionsToken = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}).set('Authorization', `Bearer ${localStorage.getItem('token')}`),
       observe: 'response' as 'body'

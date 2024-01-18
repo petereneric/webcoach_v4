@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Webinar} from "../../../../interfaces/webinar";
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 
 @Component({
   selector: 'app-webinars',
@@ -12,7 +12,7 @@ export class WebinarsPage implements OnInit {
   // data
   lWebinars: Webinar[] | null = null
 
-  constructor(private connApi: ConnApiService) { }
+  constructor(private connApi: ApiService) { }
 
   ngOnInit() {
     this.connApi.get('webinar', (data: Webinar[]) => {

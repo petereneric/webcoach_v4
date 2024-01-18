@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ConnApiService} from "../../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../../services/api/api.service";
 
 @Component({
   selector: 'app-verification',
@@ -8,7 +8,7 @@ import {ConnApiService} from "../../../../../../services/conn-api/conn-api.servi
 })
 export class VerificationPage implements OnInit {
 
-  constructor(private connApi: ConnApiService) { }
+  constructor(private connApi: ApiService) { }
 
   ngOnInit() {
   }

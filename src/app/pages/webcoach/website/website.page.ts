@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 //import {MenuController} from "@ionic/angular";
-import {AuthApiService} from "../../../services/conn-api/auth-api.service";
+import {AuthApiService} from "../../../services/api/auth-api.service";
 import {Communication} from "../../../services/communication/communication.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MainMenuService} from "../../../services/menu/main-menu.service";

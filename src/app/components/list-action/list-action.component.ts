@@ -35,6 +35,7 @@ export class ListActionComponent implements OnInit, AfterViewInit{
   show() {
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'block')
     this.svAnimation.backgroundOpacityIn(this.vClickScreen)
+    this.vList.nativeElement.style.visibility = 'visible'
     this.svAnimation.slideIn(this.vList)
   }
 
@@ -44,7 +45,9 @@ export class ListActionComponent implements OnInit, AfterViewInit{
       this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'none')
       console.log("display none");
     })
-    this.svAnimation.slideOut(this.vList)
+    this.svAnimation.slideOut(this.vList, environment.TRANSITION_LIST_SWIPE, () => {
+      this.vList.nativeElement.style.visibility = 'hidden'
+    })
   }
 
   onListStart($event) {

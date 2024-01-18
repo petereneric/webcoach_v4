@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, Validators} from "@angular/forms";
-import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../services/api/api.service";
 import {jwtDecode } from 'jwt-decode';
 import {Toast} from "../../../../../utils/toast";
 import {DialogService} from "../../../../../services/dialogs/dialog.service";
@@ -25,7 +25,7 @@ export class PasswordResetPage implements OnInit {
     cPassword: ['', Validators.required]
   })
 
-  constructor(private svDialog: DialogService, private toast: Toast, private router: Router, private connApi: ConnApiService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+  constructor(private svDialog: DialogService, private toast: Toast, private router: Router, private connApi: ApiService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
   }
 
   ngOnInit() {

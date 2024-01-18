@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Webinar} from "../../interfaces/webinar";
-import {ConnApiService} from "../../services/conn-api/conn-api.service";
+import {ApiService} from "../../services/api/api.service";
 
 @Component({
   selector: 'app-webinar-preview-small',
@@ -14,7 +14,7 @@ export class WebinarPreviewSmallComponent  implements OnInit {
   // data
   urlCover: any | null= null
 
-  constructor(private connApi: ConnApiService) { }
+  constructor(private connApi: ApiService) { }
 
   ngOnInit() {
     this.connApi.getImage('webinar/cover/' +  this.oWebinar?.id, (urlCover: any) => {

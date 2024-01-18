@@ -1,12 +1,17 @@
-<div [routerLink]="'/webinar/' + aWebinarPlayer.kWebinar" class="p-1" style="display: flex; align-items: center">
+<div [routerLink]="'/webinar/' + aWebinarPlayer?.kWebinar" class="p-1" style="display: flex; align-items: center">
   <img [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; object-fit: cover; border-radius: 0.2rem;">
-  <div class="flex-vertical ml-1 mr-1" style="width: 100%">
-    <p class="tsl-s tw-bold tc-light">{{aWebinarPlayer?.aWebinar.cName}}</p>
-    <p class="ts-xs tc-light-two mt-025">{{aWebinarPlayer?.aCoach.cName}}</p>
+  <div class="flex-vertical ml-1 mr-1" style="width: 100%;">
+    <div [ngClass]="{'bg-dark-two tc-transparent': aWebinarPlayer === null}" style="border-radius: 0.25rem; position: relative">
+      <div style="width: 2rem; height: 100%; position: absolute;" class="bg-light a-load"></div>
+      <p class="tsl-s tw-bold tc-light"  [ngClass]="{'tc-transparent': aWebinarPlayer === null}"style="width: 100%">{{aWebinarPlayer?.aWebinar?.cName ?? 'dummy text'}}</p>
+
+    </div>
+
+    <p class="ts-xs tc-light-two mt-025">{{aWebinarPlayer?.aCoach?.cName}}</p>
     <div style="width: 100%; height: 0.2rem; position: relative; margin-top: 1rem;">
       <div class="bg-divider" style="width: 100%; height: 0.2rem; position: absolute; border-radius: 1rem"></div>
-      <div class="bg-primary" [ngStyle]="{'width': aWebinarPlayer.pProgress + '%'}" style="height: 0.2rem; position: absolute; border-radius: 1rem"></div>
+      <div class="bg-primary" [ngStyle]="{'width': aWebinarPlayer?.pProgress + '%'}" style="height: 0.2rem; position: absolute; border-radius: 1rem"></div>
     </div>
-    <p class="ts-xxs tc-light-two mt-05">{{aWebinarPlayer.pProgress + '% abgeschlossen'}}</p>
+    <p class="ts-xxs tc-light-two mt-05">{{aWebinarPlayer?.pProgress + '% abgeschlossen'}}</p>
   </div>
 </div>

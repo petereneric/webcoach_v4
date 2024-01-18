@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ConnApiService} from "../../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../../services/api/api.service";
 
 @Component({
   selector: 'app-confirmation',
@@ -9,7 +9,7 @@ import {ConnApiService} from "../../../../../../services/conn-api/conn-api.servi
 })
 export class ConfirmationPage implements OnInit {
 
-  constructor(private router: Router, private connApi: ConnApiService, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private connApi: ApiService, private activatedRoute: ActivatedRoute) {
 
   }
 

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 import {Webinar} from "../../../../interfaces/webinar";
 
 @Component({
@@ -12,7 +12,7 @@ export class TabHomeComponent implements OnInit {
   // data
   lWebinar: Webinar[] = []
 
-  constructor(private api: ConnApiService) {
+  constructor(private api: ApiService) {
   }
 
   ngOnInit(): void {

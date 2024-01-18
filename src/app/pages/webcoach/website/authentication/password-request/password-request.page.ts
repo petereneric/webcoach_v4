@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {ConnApiService} from "../../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../../services/api/api.service";
 import {Router} from "@angular/router";
 import {DialogService} from "../../../../../services/dialogs/dialog.service";
 
@@ -19,7 +19,7 @@ export class PasswordRequestPage implements OnInit {
     cEmail: ['', Validators.required]
   })
 
-  constructor(private svDialog: DialogService, private router: Router, private connApi: ConnApiService, private formBuilder: FormBuilder) {
+  constructor(private svDialog: DialogService, private router: Router, private connApi: ApiService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {

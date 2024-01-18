@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ConnApiService} from "../conn-api/conn-api.service";
+import {ApiService} from "../api/api.service";
 import {BehaviorSubject} from "rxjs";
 import {Player} from "../../interfaces/player";
 
@@ -11,7 +11,7 @@ export class PlayerService {
   // BehaviourSubject
   bsUserData: BehaviorSubject<Player | null> = new BehaviorSubject<Player | null>(null)
 
-  constructor(private api: ConnApiService) {
+  constructor(private api: ApiService) {
   }
 
   downloadUserData() {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ConnApiService} from "../../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../../services/api/api.service";
 import {Communication} from "../../../../services/communication/communication.service";
 
 @Component({
@@ -16,7 +16,7 @@ export class EditWebinarPage implements OnInit {
   // menu
   lMenu = [{topic: 'Content erstellen', items: [{item: 'Kursplan', link: 'kursplan'}]}]
 
-  constructor(private svCommunication: Communication, private connApi: ConnApiService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private svCommunication: Communication, private connApi: ApiService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {

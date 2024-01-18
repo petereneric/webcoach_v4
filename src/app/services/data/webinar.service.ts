@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Webinar} from "../../interfaces/webinar";
 import {WebinarPlayer} from "../../interfaces/webinar-player";
-import {ConnApiService} from "../conn-api/conn-api.service";
+import {ApiService} from "../api/api.service";
 import {Section} from "../../interfaces/section";
 import {Unit} from "../../interfaces/unit";
 import {UnitPlayer} from "../../interfaces/unit-player";
@@ -10,39 +10,43 @@ import {Note} from "../../interfaces/note";
 import {Comment} from "../../interfaces/comment"
 import {CommentAnswer} from "../../interfaces/comment-answer";
 import {Interval} from "../../interfaces/interval";
+import {WebinarRepository} from "../repositories/webinar.repository";
+import {WebinarPlayerRepository} from "../repositories/webinar-player.repository";
+import {NoteRepository} from "../repositories/note.repository";
+import {CommentRepository} from "../repositories/comment.repository";
+import {UnitRepository} from "../repositories/unit.repository";
+import {SectionRepository} from "../repositories/section.repository";
+import {CoachService} from "./coach.service";
+import {CoachRepository} from "../repositories/coach.repository";
+import {CommentAnswerRepository} from "../repositories/comment-answer.repository";
+import {UnitPlayerRepository} from "../repositories/unit-player.repository";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebinarService {
 
-  bsWebinar: BehaviorSubject<Webinar | null> = new BehaviorSubject<Webinar | null>(null)
-  bsWebinarPlayer: BehaviorSubject<WebinarPlayer | null> = new BehaviorSubject<WebinarPlayer | null>(null)
-  bsWebinarThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-  bsSections: BehaviorSubject<Section[] | null> = new BehaviorSubject<Section[] | null>(null)
-  bsSection: BehaviorSubject<Section | null> = new BehaviorSubject<Section | null>(null)
-  bsUnit: BehaviorSubject<Unit | null> = new BehaviorSubject<Unit | null>(null)
   bsCoachThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-  bsUnitThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-  bsUnitThumbnailNext: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-  bsUnitThumbnailLast: BehaviorSubject<any> = new BehaviorSubject<any>(null)
-
-  // move out later
-  bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   bsComment: BehaviorSubject<Comment | null> = new BehaviorSubject<Comment | null>(null)
   bsCommentAnswer: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
   bsCommentAnswerRegard: BehaviorSubject<CommentAnswer | null> = new BehaviorSubject<CommentAnswer | null>(null)
-
-  bCheckIntervalThumbnails: boolean = true
+  bsNote: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsSection: BehaviorSubject<Section | null> = new BehaviorSubject<Section | null>(null)
+  bsSections: BehaviorSubject<Section[] | null> = new BehaviorSubject<Section[] | null>(null)
+  bsUnit: BehaviorSubject<Unit | null> = new BehaviorSubject<Unit | null>(null)
   bsUnitInterval: BehaviorSubject<Interval | null> = new BehaviorSubject<Interval | null>(null)
+  bsUnitThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsUnitThumbnailLast: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsUnitThumbnailNext: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+  bsWebinar: BehaviorSubject<Webinar | null> = new BehaviorSubject<Webinar | null>(null)
+  bsWebinarPlayer: BehaviorSubject<WebinarPlayer | null> = new BehaviorSubject<WebinarPlayer | null>(null)
+  bsWebinarThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
 
-  constructor(private api: ConnApiService) {
+  constructor(private rUnitPlayer: UnitPlayerRepository, private rCommentAnswer: CommentAnswerRepository, private rCoach: CoachRepository, private rSection: SectionRepository, private rUnit: UnitRepository, private rComment: CommentRepository, private rNote: NoteRepository, private rWebinarPlayer: WebinarPlayerRepository, private rWebinar: WebinarRepository, private api: ApiService) {
+
     this.bsWebinar.subscribe((aWebinar) => {
-      // process that constantly load interval-thumbnails into current Unit asynchronously
-      this.api.safeGet('webinar/auth/webinar-player/' + aWebinar?.id, aWebinarPlayer => {
-        this.bsWebinarPlayer.next(aWebinarPlayer)
-      })
+      rWebinarPlayer.safeGet_WebinarPlayer(aWebinar?.id, aWebinarPlayer => this.bsWebinarPlayer.next(aWebinarPlayer))
     })
 
     this.bsUnit.subscribe((aUnit) => {
@@ -50,18 +54,11 @@ export class WebinarService {
       this.setUnitThumbnails()
 
       if (aUnit?.oUnitPlayer?.lNotes === undefined || aUnit?.oUnitPlayer?.lNotes === null) {
-        // load Notes
-        this.api.safeGet('notes/unit-player/' + aUnit!.oUnitPlayer!.id, (lNotes: Note[]) => {
-          aUnit!.oUnitPlayer!.lNotes = lNotes
-        })
+        this.rNote.safeGet_Notes(aUnit!.oUnitPlayer!.id, (lNotes: Note[]) => aUnit!.oUnitPlayer!.lNotes = lNotes)
       }
 
       if (aUnit?.lComments === undefined || aUnit?.lComments === null) {
-        // load comments
-        this.api.safeGet('comments/unit/' + aUnit!.id, (lComments: Comment[]) => {
-          console.log(lComments)
-          aUnit!.lComments = lComments
-        })
+        this.rComment.safeGet_Comments(aUnit!.id, (lComments: Comment[]) => aUnit!.lComments = lComments)
       }
 
       // intervals
@@ -69,8 +66,8 @@ export class WebinarService {
         const nIntervals = Math.floor(aUnit!.secDuration / 30)
         console.log("nIntervals", nIntervals)
         for (let i = 0; i <= nIntervals; i++) {
-          const secStart = i === 0 ? 0 : i*30+1
-          const secEnd = i === nIntervals ? aUnit!.secDuration : (i+1)*30
+          const secStart = i === 0 ? 0 : i * 30 + 1
+          const secEnd = i === nIntervals ? aUnit!.secDuration : (i + 1) * 30
           let aInterval: Interval = {index: i, secStart: secStart, secEnd: secEnd, urlImage: null}
           if (aUnit?.lIntervals === undefined) aUnit!.lIntervals = []
           console.log(aUnit?.lIntervals)
@@ -81,7 +78,6 @@ export class WebinarService {
 
       aUnit?.lIntervals.forEach((aInterval: Interval) => {
         if (aInterval.urlImage === null) {
-          console.log("UUUUUUUUUURL", 'webinar/unit/interval-thumbnail/' + aUnit?.id + '/' + aInterval.index)
           this.api.getImage('webinar/unit/interval-thumbnail/' + aUnit?.id + '/' + aInterval.index, urlThumbnailInterval => {
             aInterval.urlImage = urlThumbnailInterval
             console.log("new aInterval set on lIntervals of unit", aInterval)
@@ -90,11 +86,8 @@ export class WebinarService {
       })
 
       if (aUnit?.lProgressThumbnails === undefined || aUnit.lProgressThumbnails === null || aUnit.lProgressThumbnails.length === 0) {
-        this.api.get('webinar/unit/process-thumbnails/' + aUnit?.id, lProcessThumbnails => {
-          aUnit!.lProgressThumbnails = lProcessThumbnails
-        })
+        this.rUnit.safeGet_ProcessThumbnails(aUnit?.id, lProcessThumbnails => aUnit!.lProgressThumbnails = lProcessThumbnails)
       }
-
     })
   }
 
@@ -103,26 +96,23 @@ export class WebinarService {
   }
 
   loadWebinar(kWebinar: number) {
-    this.api.get('webinar/' + kWebinar, (aWebinar: Webinar) => {
+    this.rWebinar.safeGet_Webinar(kWebinar, (aWebinar: Webinar) => {
       this.bsWebinar.next(aWebinar)
-
       this.loadSections(kWebinar)
       this.loadCoachThumbnail(aWebinar.oCoach.id)
     })
   }
 
   loadSections(kWebinar: number) {
-    this.api.safeGet('webinar/auth/sections/' + kWebinar, (lSections: Section[]) => {
+    this.rSection.safeGet_Sections(kWebinar, (lSections: Section[]) => {
       this.bsSections.next(lSections)
-      console.log("SECCCTIONS")
-      console.log(lSections)
       this.loadUnit(kWebinar)
     })
   }
 
   loadUnit(kWebinar: number) {
     console.log(kWebinar)
-    this.api.safeGet('webinar/auth/webinar-player/' + kWebinar, (aWebinarPlayer: any) => {
+    this.rWebinarPlayer.safeGet_WebinarPlayer(kWebinar, aWebinarPlayer => {
       // current unit
       let aUnit = aWebinarPlayer.aUnit;
 
@@ -131,52 +121,57 @@ export class WebinarService {
         // select first unit as current unit
         aUnit = this.bsSections.value![0].lUnits[0]
       }
-
       this.bsUnit.next(aUnit)
     })
   }
 
   loadWebinarThumbnail(kWebinar: number) {
-    this.api.getImage('webinar/cover/' +  kWebinar, (urlImage: any) => {
-      console.log("loaded")
-      console.log(urlImage)
-      this.bsWebinarThumbnail.next(urlImage)
-    })
+    this.rWebinar.get_Thumbnail(kWebinar, (urlImage: any) => this.bsWebinarThumbnail.next(urlImage))
   }
 
   loadCoachThumbnail(kCoach: number) {
-
-    this.api.safeDownloadImage('webinar/coach/thumbnail/' + kCoach, (urlThumbnail: any) => {
-      this.bsCoachThumbnail.next(urlThumbnail)
-      console.log("HELLLLO")
-      console.log(urlThumbnail)
-    })
+    this.rCoach.safeGet_Thumbnail(kCoach, urlThumbnail => this.bsCoachThumbnail.next(urlThumbnail))
   }
 
   loadCommentAnswers(aComment: Comment) {
     if (aComment.lCommentAnswers === undefined || aComment.lCommentAnswers === null || aComment.lCommentAnswers.length === 0) {
-      this.api.safeGet('comment-answers/comment/' + aComment.id, (lCommentAnswers: CommentAnswer[]) => {
-        aComment.lCommentAnswers = lCommentAnswers
-        console.log(lCommentAnswers)
-      })
+      this.rCommentAnswer.safeGet_CommentAnswers(aComment.id, (lCommentAnswers: CommentAnswer[]) => aComment.lCommentAnswers = lCommentAnswers)
     }
   }
 
   setUnit(aUnit: Unit | null, secVideo = 0) {
-    this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
-    if (secVideo > 0 && this.bsUnit.value!.oUnitPlayer!.tStatus == 0) {
-      this.bsUnit.value!.oUnitPlayer!.tStatus = 1
-    }
-    this.uploadUnitPlayer(this.bsUnit.value?.oUnitPlayer!)
+    this.uploadUnitPlayer()
 
     if (aUnit !== null) this.bsUnit.next(aUnit)
   }
 
-
-  uploadUnitPlayer(aUnitPlayer: UnitPlayer | null) {
-    console.log(aUnitPlayer)
-    this.api.safePost('webinar/auth/unit-player', aUnitPlayer, null)
+  checkUnitPlayer(aUnitPlayer = this.bsUnit.value!.oUnitPlayer!) {
+    this.setUnitPlayerStatus(aUnitPlayer.tStatus! < 2 ? 2 : 1, aUnitPlayer)
   }
+
+  setUnitPlayerStatus(tStatus, aUnitPlayer = this.bsUnit.value!.oUnitPlayer!) {
+    aUnitPlayer.tStatus = tStatus
+    if (aUnitPlayer.id === this.bsUnit.value!.oUnitPlayer!.id) this.bsUnit.value!.oUnitPlayer!.tStatus = tStatus
+  }
+
+  setUnitPlayerTime(secVideo) {
+    this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
+    if (this.bsUnit.value!.oUnitPlayer!.tStatus < 1 && secVideo > 0) {
+      this.setUnitPlayerStatus(1)
+    }
+  }
+
+  uploadUnitPlayer(aUnitPlayer: UnitPlayer = this.bsUnit.value?.oUnitPlayer!) {
+    console.log("UPDATE UNIT PLAYER")
+    console.log(aUnitPlayer)
+    const data = {
+      kUnit: aUnitPlayer.kUnit,
+      tStatus: aUnitPlayer.tStatus,
+      secVideo: aUnitPlayer.secVideo,
+    }
+    this.rUnitPlayer.safePost_UnitPlayer(data)
+  }
+
 
 
   updateWebinarPlayer() {
@@ -184,19 +179,25 @@ export class WebinarService {
       kWebinar: this.bsWebinar.value?.id,
       kCurrentUnit: this.bsUnit.value?.id
     }
-
-    this.api.safePost('webinar/auth/webinar-player', data, () => {})
+    this.rWebinarPlayer.safePost_WebinarPlayer(data)
   }
 
 
   // + 1
   setNextUnit(secVideo = 0) {
+    console.log("CHHANGE 1")
+    this.bsSection.value?.lUnits.forEach(aUnit => {
+      if (aUnit.id === this.bsUnit.value!.id) {
+        aUnit.oUnitPlayer!.secVideo = secVideo
+        // TODO Status
+      }
+    })
     this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
     if (secVideo > 0 && this.bsUnit.value!.oUnitPlayer!.tStatus == 0) {
       this.bsUnit.value!.oUnitPlayer!.tStatus = 1
     }
-    this.uploadUnitPlayer(this.bsUnit.value?.oUnitPlayer!)
-    this.bsUnit.next(this.getNextUnit())
+    console.log("NEEXT", this.bsUnit.value?.oUnitPlayer!)
+    this.setUnit(this.getNextUnit())
   }
 
   getNextUnit() {
@@ -229,8 +230,12 @@ export class WebinarService {
     return null
   }
 
+  setLastUnit() {
+    this.setUnit(this.getLastUnit())
+  }
+
   // - 1
-  lastUnit(): Unit | null {
+  getLastUnit(): Unit | null {
     let aCurrentUnit = this.bsUnit.value
 
     // save settings
@@ -275,7 +280,7 @@ export class WebinarService {
     })
 
     // last
-    const aLastUnit = this.lastUnit()
+    const aLastUnit = this.getLastUnit()
 
     if (aLastUnit !== null) {
       this.api.safeDownloadImage('webinar/unit/thumbnail/' + aLastUnit?.id, (urlThumbnail: any) => {
@@ -298,11 +303,11 @@ export class WebinarService {
   }
 
   sortNotes() {
-    this.bsUnit.value!.oUnitPlayer!.lNotes = this.bsUnit.value!.oUnitPlayer!.lNotes!.sort((a, b) => a.secTime-b.secTime)
+    this.bsUnit.value!.oUnitPlayer!.lNotes = this.bsUnit.value!.oUnitPlayer!.lNotes!.sort((a, b) => a.secTime - b.secTime)
   }
 
   sortComments() {
-    this.bsUnit.value!.lComments = this.bsUnit.value!.lComments!.sort((a, b) => (a.dtCreation as any)-(b.dtCreation as any))
+    this.bsUnit.value!.lComments = this.bsUnit.value!.lComments!.sort((a, b) => (a.dtCreation as any) - (b.dtCreation as any))
   }
 
 }

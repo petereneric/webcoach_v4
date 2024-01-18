@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Webinar} from "../../interfaces/webinar";
 import {Unit} from "../../interfaces/unit";
-import {ConnApiService} from "../../services/conn-api/conn-api.service";
+import {ApiService} from "../../services/api/api.service";
 import {VjsPlayerComponent} from "../../components/vjs-player/vjs-player.component";
 
 @Component({
@@ -22,7 +22,7 @@ export class DialogWebinarIntroComponent  implements OnInit {
   oWebinar: Webinar | null = null
   lUnits: Unit[] | null = null
 
-  constructor(private connApi: ConnApiService, public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private connApi: ApiService, public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
     this.oWebinar = this.data.oWebinar

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ConnApiService} from "../../services/conn-api/conn-api.service";
+import {ApiService} from "../../services/api/api.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {VjsPlayerComponent} from "../../components/vjs-player/vjs-player.component";
 import {Unit} from "../../interfaces/unit";
@@ -18,7 +18,7 @@ export class VideoDialog implements OnInit, AfterViewInit, OnDestroy {
   // data
   urlVideo!: string
 
-  constructor(private api: ConnApiService, public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit(): void {

@@ -14,7 +14,7 @@ import {Unit} from "../../../interfaces/unit";
 import {DateTime} from "../../../utils/date-time";
 import {Communication} from "../../../services/communication/communication.service";
 import {EventUnit} from "../../../interfaces/events/eventUnit";
-import {ConnApiService} from "../../../services/conn-api/conn-api.service";
+import {ApiService} from "../../../services/api/api.service";
 import {UnitPlayer} from "../../../interfaces/unit-player";
 import {File} from "../../../utils/file";
 import {WebinarService} from "../../../services/data/webinar.service";
@@ -40,7 +40,7 @@ export class ItemUnitComponent implements OnInit, AfterViewInit {
   // variables
   currentUnit: Unit | null = null
 
-  constructor(private svWebinar: WebinarService, private file: File, private changeDetector: ChangeDetectorRef, private connApi: ConnApiService, private svCommunication: Communication, public uDateTime: DateTime) {
+  constructor(private svWebinar: WebinarService, private file: File, private changeDetector: ChangeDetectorRef, private connApi: ApiService, private svCommunication: Communication, public uDateTime: DateTime) {
   }
 
   ngOnInit() {
@@ -98,5 +98,4 @@ export class ItemUnitComponent implements OnInit, AfterViewInit {
       this.file.openBlob(blob)
     })
   }
-
 }
