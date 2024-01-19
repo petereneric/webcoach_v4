@@ -1,79 +1,64 @@
 import {ComponentFactoryResolver, ComponentRef, Directive, Input, OnInit, Renderer2, TemplateRef, ViewContainerRef} from '@angular/core';
 import {LoadAnimationComponent} from "../components/load-animation/load-animation.component";
 
+/***
+ * Caller needs to handle the views (first) created with view-child and boolean
+ * in ngOnit of Caller bLoad needs to be false so that views can render and get dimensions for mocking later with animation
+ * in ngAfterViewInit bLoading can be set to true
+ * text views needs a dummy text for filling out dimensions
+ * in load-animation-component a timeout for setting the values is needed
+ * images need a div around so that width setting works correctly
+ */
+
 @Directive({
   selector: '[appLoad]',
   standalone: true,
 })
-export class LoadDirective implements OnInit{
+export class LoadDirective {
+
+
   private isVisible: boolean | null = null;
   private height = 0
-  private teeest = 0
+  private width = 0
+  private margin = ""
+  private padding = ""
 
   private context: any = {};
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver, private renderer: Renderer2, private templateRef: TemplateRef<any>, private viewContainer: ViewContainerRef) {
+  constructor(private renderer: Renderer2, private templateRef: TemplateRef<any>, private viewContainer: ViewContainerRef) {
     this.context = {
       options: []
     }
   }
 
-  @Input() set appLoad(condition: any) {
-    console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHH___________________________")
-    console.log(this.teeest)
-    this.height = 1000
-    if (condition !== undefined) {
-      let nativeElement = condition.nativeElement
-      if (nativeElement !== undefined) {
-        console.log("____________________JA___________________")
-        console.log(nativeElement.offsetHeight)
-        this.height = nativeElement.offsetHeight
-      } else {
-        console.log("NEEEEEEEEEEEEEEEEE")
-      }
-    } else {
-      console.log("HIER NICCCCCCHHHHHHHHHHHHHHHHHT")
+  @Input() set appLoad(view: any) {
+    if (view !== undefined) {
+      let nativeElement = view.nativeElement
+      this.height = nativeElement.offsetHeight
+      this.width = nativeElement.offsetWidth
+      this.margin = window.getComputedStyle(nativeElement).margin
+      this.padding = window.getComputedStyle(nativeElement).padding
     }
-
-
   }
 
-  @Input() set appLoadStatus(condition: boolean) {
-    this.teeest = 1
-    if (condition) {
+  @Input() set appLoadStatus(bLoading: boolean) {
+    if (bLoading) {
       if (this.isVisible === null || !this.isVisible) {
-
-        console.log("heeeighttttttttttttttttttttttttttttt: ", this.height)
-
         this.viewContainer.clear()
-        let factory = this.componentFactoryResolver.resolveComponentFactory(LoadAnimationComponent)
-        console.log("hheeekjwlejkrkjwer")
-        console.log("HEIG", this.height)
-        console.log(factory)
-        let result: ComponentRef<LoadAnimationComponent> = this.viewContainer.createComponent(factory)
-        console.log(result.instance.setHeight(this.height))
-        //console.log("height my friend", result.location.nativeElement.offsetHeight)
-        //result.location.nativeElement.style.height = '30px'
-        //this.renderer.setStyle(result.location.nativeElement, 'height', '5rem')
+        let cLoadingAnimation: ComponentRef<LoadAnimationComponent> = this.viewContainer.createComponent(LoadAnimationComponent)
+        cLoadingAnimation.instance.setHeight(this.height)
+        cLoadingAnimation.instance.setWidth(this.width)
+        cLoadingAnimation.instance.setPadding(this.padding)
+        cLoadingAnimation.instance.setMargin(this.margin)
         this.isVisible = true
       }
     } else {
       if (this.isVisible === null || this.isVisible) {
-        console.log("joooooooooooooooooooooooooPPPPPPPPPPPPPPPPPPPPPPPPPPo")
-        console.log("heeeight: ", this.height)
         this.viewContainer.clear()
         this.viewContainer.createEmbeddedView(this.templateRef)
-        console.log("jo")
-        console.log(this.templateRef.elementRef.nativeElement)
         this.isVisible = false
       }
 
     }
   }
-
-  ngOnInit(): void {
-  }
-
-
-
 }

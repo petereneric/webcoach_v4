@@ -7,14 +7,32 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 })
 export class LoadAnimationComponent {
 
-  @ViewChild('block') block!: ElementRef
+  @ViewChild('vBlock') vBlock!: ElementRef
+
+  public setWidth(width) {
+    setTimeout(() => {
+      /*** width sets wrong value therefore not used ***/
+      this.vBlock.nativeElement.style.width = width + 'px'
+      console.log("width_______________", width)
+    }, )
+  }
 
   public setHeight(height) {
-
     setTimeout(() => {
-      console.log("TEEEEEEEEEEEEST")
-      this.block.nativeElement.style.height = height + 'px'
-    }, 10)
+      this.vBlock.nativeElement.style.height = height + 'px'
+    }, )
+  }
 
+  public setMargin(value) {
+    setTimeout(() => {
+      this.vBlock.nativeElement.style.margin = value
+    }, )
+
+  }
+
+  public setPadding(value) {
+    setTimeout(() => {
+      this.vBlock.nativeElement.style.padding = value
+    }, )
   }
 }

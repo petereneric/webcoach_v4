@@ -17,56 +17,39 @@ export class ItemBookingComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('loader') loader!: ElementRef
   @ViewChild('vTitle') vTitle!: ElementRef
   @ViewChild('vProcess') vProcess!: ElementRef
+  @ViewChild('vCoach') vCoach!: ElementRef
   @ViewChild('vThumbnail') vThumbnail!: ElementRef
+
 
   // data
   aWebinarPlayer: WebinarPlayer | null = null
   urlThumbnail
   bLoading: boolean = false
 
-  oLoadingProcess
-
   constructor(private renderer: Renderer2, public router: Router, private api: ApiService) {
   }
 
 
   ngOnInit(): void {
-    // webinar-player
-
-
-
-
   }
 
   ngOnDestroy(): void {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.kWebinarPlayer)
-    console.log("hee")
     this.bLoading = true
-    setTimeout(() => {
-
-    }, 1000)
 
     this.api.safeGet('webinar-player/' + this.kWebinarPlayer, aWebinarPlayer => {
-      console.log("biii-2");
-      console.log(aWebinarPlayer)
-      if (true) {
 
-        this.aWebinarPlayer = aWebinarPlayer
-        // image webinar
-        const kWebinar = this.aWebinarPlayer!['kWebinar']
-        this.api.getImage('webinar/thumbnail/' + kWebinar, urlThumbnail => {
-          this.urlThumbnail = urlThumbnail
-          setTimeout(() => {
-            this.bLoading = false
-          }, 30000)
-        })
-
-
-      }
-
+      this.aWebinarPlayer = aWebinarPlayer
+      // image webinar
+      const kWebinar = this.aWebinarPlayer!['kWebinar']
+      this.api.getImage('webinar/thumbnail/' + kWebinar, urlThumbnail => {
+        this.urlThumbnail = urlThumbnail
+        setTimeout(() => {
+          this.bLoading = false
+        }, 10000)
+      })
     })
   }
 

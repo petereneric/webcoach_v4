@@ -1,9 +1,11 @@
 <div [routerLink]="'/webinar/' + aWebinarPlayer?.kWebinar" class="p-1" style="position: relative; display: flex; align-items: center; z-index: 6">
-  <img *appLoad="vThumbnail;status:bLoading" #vThumbnail [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; object-fit: cover; border-radius: 0.2rem;">
+  <div>
+    <img *appLoad="vThumbnail;status:bLoading" #vThumbnail [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; box-sizing: border-box; object-fit: cover; border-radius: 0.2rem;">
+  </div>
   <div class="flex-vertical ml-1 mr-1" style="width: 100%;">
     <p *appLoad="vTitle;status:bLoading" #vTitle class="tsl-s tw-bold tc-light" style="width: 100%">{{aWebinarPlayer?.aWebinar?.cName ?? 'dummy text'}}</p>
-    <p class="ts-xs tc-light-two mt-025">{{aWebinarPlayer?.aCoach?.cName}}</p>
-    <div *ngIf="!bLoading" style="width: 100%; height: 0.2rem; position: relative; margin-top: 1rem;">
+    <p *appLoad="vCoach;status:bLoading" #vCoach class="ts-xs tc-light-two mt-1">{{aWebinarPlayer?.aCoach?.cName ?? 'dummy text'}}</p>
+    <div [ngStyle]="{'visibility' : !bLoading ? 'visible' : 'hidden'}" style="width: 100%; height: 0.2rem; position: relative; margin-top: 1rem;">
       <div class="bg-divider" style="width: 100%; height: 0.2rem; position: absolute; border-radius: 1rem"></div>
       <div class="bg-primary" [ngStyle]="{'width': aWebinarPlayer?.pProgress + '%'}" style="height: 0.2rem; position: absolute; border-radius: 1rem"></div>
     </div>
@@ -11,12 +13,6 @@
   </div>
 </div>
 
-
-<!--
-    <div #block [ngClass]="{'bg-dark-two tc-transparent mask': aWebinarPlayer === null}" style="border-radius: 0.25rem; z-index: 2">
-      <div #loader style="position: absolute; width: 0px; height: 100%; z-index: 3" class="bg-light loader a-load"></div>
-          </div>
-      -->
 
 
 
