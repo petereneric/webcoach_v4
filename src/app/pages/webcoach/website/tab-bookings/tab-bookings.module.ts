@@ -4,6 +4,7 @@ import {TabBookingsPage} from "./tab-bookings.page";
 import {TitleModule} from "../../../../components/title/title.module";
 import {TabBookingsRoutingModule} from "./tab-bookings-routing.module";
 import { ItemBookingComponent } from './item-booking/item-booking.component';
+import {LoadDirective} from "../../../../directives/load.directive";
 
 
 
@@ -12,7 +13,8 @@ import { ItemBookingComponent } from './item-booking/item-booking.component';
   imports: [
     CommonModule,
     TitleModule,
-    TabBookingsRoutingModule
+    TabBookingsRoutingModule,
+    LoadDirective,
   ],
   exports: []
 })

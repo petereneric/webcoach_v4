@@ -1,3 +1,37 @@
+.a-load {
+  animation: a-load-keyframes 10s infinite normal;
+}
+
+
+
+@keyframes a-load-keyframes {
+0% {
+  transform: translateX(-10rem);
+}
+
+100% {
+  transform: translateX(100vw)
+}
+
+}
+
+
+.mask {
+  mask-image: url("https://assets.codepen.io/907368/mask.svg");
+  mask-repeat: no-repeat;
+  mask-origin: content-box;
+  mask-size: 20rem;
+  mask-position: 0 0;
+  mask-composite: exclude;
+}
+
+
+
+
+
+
+
+
 .main {
   position: relative;
   width: 200px;

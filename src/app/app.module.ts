@@ -19,6 +19,9 @@ import {environment} from "../environments/environment";
 import {MatIconModule} from "@angular/material/icon";
 import { MenuDirective } from './directives/menu.directive';
 import { ActionMenuComponent } from './components/action-menu/action-menu.component';
+import { LoadDirective } from './directives/load.directive';
+import { LoadAnimationComponent } from './components/load-animation/load-animation.component';
+import {LoadAnimationModule} from "./components/load-animation/load-animation.module";
 
 
 export class MyHammerConfig extends HammerGestureConfig {
@@ -35,12 +38,12 @@ export class MyHammerConfig extends HammerGestureConfig {
     MenuDirective,
   ],
     imports: [
-        BrowserModule,
+        BrowserModule, LoadAnimationModule,
         AppRoutingModule, HammerModule, MatFormFieldModule, MatMenuModule, MatToolbarModule, MatButtonModule, BrowserAnimationsModule, MatDialogModule, VjsPlayerModule, HttpClientModule, MatIconModule
     ],
   providers: [DatePipe, {provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig}],
-  exports: [
-  ],
+    exports: [
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
