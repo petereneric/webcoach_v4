@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./verification/verification.module').then( m => m.VerificationPageModule)
   },
   {
-    path: 'abgeschlossen',
+    path: ':kWebinar/abgeschlossen',
     loadChildren: () => import('./confirmation/confirmation.module').then( m => m.ConfirmationPageModule)
   },
   {

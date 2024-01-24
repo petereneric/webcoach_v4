@@ -36,7 +36,6 @@ export class TestScrollPage implements OnInit, OnDestroy {
         let a = 360 - this.seconds * 36
         //this.renderer.setStyle(this.vTest.nativeElement, 'background-image', 'conic-gradient(pink ' + this.angle + 'deg, transparent 0)')
         this.renderer.setStyle(this.vTestOther.nativeElement, 'background', 'conic-gradient(white ' + a + 'deg, transparent ' + 0 + 'deg)')
-
         console.log("jo")
       }
 

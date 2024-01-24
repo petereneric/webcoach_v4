@@ -162,6 +162,12 @@
   hyphens: auto;
 }
 
+.t-xl {
+  @extend .tsl-xl;
+  @extend .tc-primary;
+  @extend .t;
+}
+
 .t-l {
   @extend .tsl-l;
   @extend .tc-primary;

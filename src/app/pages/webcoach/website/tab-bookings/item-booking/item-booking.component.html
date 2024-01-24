@@ -1,15 +1,15 @@
 <div [routerLink]="'/webinar/' + aWebinarPlayer?.kWebinar" class="p-1" style="position: relative; display: flex; align-items: center; z-index: 6">
   <div>
-    <img *appLoad="vThumbnail;status:bLoading" #vThumbnail [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; box-sizing: border-box; object-fit: cover; border-radius: 0.2rem;">
+    <img *ngLoad="vThumbnail;status:bLoading" #vThumbnail [src]="urlThumbnail" class="bo-light" style="height: 3rem; width: 3rem; box-sizing: border-box; object-fit: cover; border-radius: 0.2rem;">
   </div>
   <div class="flex-vertical ml-1 mr-1" style="width: 100%;">
-    <p *appLoad="vTitle;status:bLoading" #vTitle class="tsl-s tw-bold tc-light" style="width: 100%">{{aWebinarPlayer?.aWebinar?.cName ?? 'dummy text'}}</p>
-    <p *appLoad="vCoach;status:bLoading" #vCoach class="ts-xs tc-light-two mt-1">{{aWebinarPlayer?.aCoach?.cName ?? 'dummy text'}}</p>
+    <p *ngLoad="vTitle;status:bLoading" #vTitle class="tsl-s tw-bold tc-light" style="width: 100%">{{aWebinarPlayer?.aWebinar?.cName ?? 'dummy text'}}</p>
+    <p *ngLoad="vCoach;status:bLoading" #vCoach class="ts-xs tc-light-two mt-1">{{aWebinarPlayer?.aCoach?.cName ?? 'dummy text'}}</p>
     <div [ngStyle]="{'visibility' : !bLoading ? 'visible' : 'hidden'}" style="width: 100%; height: 0.2rem; position: relative; margin-top: 1rem;">
       <div class="bg-divider" style="width: 100%; height: 0.2rem; position: absolute; border-radius: 1rem"></div>
       <div class="bg-primary" [ngStyle]="{'width': aWebinarPlayer?.pProgress + '%'}" style="height: 0.2rem; position: absolute; border-radius: 1rem"></div>
     </div>
-    <p *appLoad="vProcess;status:bLoading" #vProcess class="ts-xxs tc-light-two mt-05">{{aWebinarPlayer?.pProgress + '% abgeschlossen'}}</p>
+    <p *ngLoad="vProcess;status:bLoading" #vProcess class="ts-xxs tc-light-two mt-05">{{aWebinarPlayer?.pProgress + '% abgeschlossen'}}</p>
   </div>
 </div>
 

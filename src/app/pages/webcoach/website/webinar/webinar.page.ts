@@ -70,6 +70,9 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('videoWrapper') videoWrapper!: ElementRef
   @ViewChild('vVideoContainer') vVideoContainer!: ElementRef
   @ViewChild('vContainer') vContainer!: ElementRef
+  @ViewChild('vCoverBoxWebinar') vCoverBoxWebinar!: ElementRef
+  @ViewChild('vCoverBoxSection') vCoverBoxSection!: ElementRef
+  @ViewChild('vCoverBoxUnit') vCoverBoxUnit!: ElementRef
 
   // components
   @ViewChild('cpListActionCommentAnswers') cpListActionCommentAnswers!: ListActionComponent
@@ -91,7 +94,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cpItemSection') cpItemSection!: ItemSectionComponent
 
   // constants
-  readonly THRESHOLD_COVER_SCROLL = 3
+  readonly THRESHOLD_COVER_SCROLL = 0.005
   readonly THRESHOLD_VIDEO_VELOCITY = 0.25 // px/ms
   readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
   readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
@@ -152,6 +155,12 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   private tDirectionListStart = 0
   private wVideoWrapper = 0
   private bShowVideoControls: boolean = false
+  private pxCoverScroll: number | null = null
+  private velocityCoverScroll: number = 0
+  private directionCoverScroll: number | null = null // 0 --> down , 1 --> up
+  private pCoverScroll: number = 0
+  private tsCoverScroll: number = 0
+  public testText: string = ""
 
 
   constructor(private sanitizer: DomSanitizer, private uFile: File, public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private api: ApiService, private route: ActivatedRoute) {
@@ -159,6 +168,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit() {
+    this.resetScroll()
     this.route.params.subscribe(params => {
       const kWebinar = params['kWebinar'];
 
@@ -180,6 +190,11 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
         case "hidden":
           this.svWebinar.uploadUnitPlayer()
 
+          this.svWebinar.setCurrentUnitProgress()
+          this.svWebinar.setCurrentSectionProgress()
+          this.svWebinar.setWebinarProgress()
+
+
           this.pauseVideo()
           this.vCover.nativeElement.style.zIndex = 7
           // scroll to top
@@ -193,7 +208,21 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit(): void {
+
+
     this.setDimensions()
+
+    this.svWebinar.bsWebinarProgress.subscribe(pProgress => {
+      this.vCoverBoxWebinar.nativeElement.style.setProperty('--progress-webinar', (pProgress * 360) + 'deg')
+    })
+
+    this.svWebinar.bsSectionProgress.subscribe(pProgress => {
+      this.vCoverBoxSection.nativeElement.style.setProperty('--progress-section', (pProgress * 360) + 'deg')
+    })
+
+    this.svWebinar.bsUnitProgress.subscribe(pProgress => {
+      this.vCoverBoxUnit.nativeElement.style.setProperty('--progress-unit', (pProgress * 360) + 'deg')
+    })
 
     this.svWebinar.bsUnit.subscribe(aUnit => {
       if (this.vCover !== undefined && this.vCover.nativeElement.style.zIndex == 0) {
@@ -257,9 +286,40 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.vContainer.nativeElement.addEventListener('touchstart', (e) => {
       const touch = e.touches[0];
-      if (touch.pageX > 15 && touch.pageX < window.innerWidth - 15) return
+      if (touch.pageX > 20 && touch.pageX < window.innerWidth - 0) return
       e.preventDefault();
     })
+
+
+    this.vCover.nativeElement.addEventListener('touchend', event => {
+      let timeout = 200
+      console.log("vCover - touchend")
+      setTimeout(() => {
+        this.bScrollDisabled = true
+        if (this.pCoverScroll >= 1) {
+          window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
+        } else {
+          if ((this.directionCoverScroll === 1 || this.pCoverScroll >= 0.4) && ((this.velocityCoverScroll > 2 && (new Date().getTime() - this.tsCoverScroll) < 50) || this.pCoverScroll >= 0.4)) {
+            setTimeout(() => {
+              window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "smooth"});
+            }, 400)
+          } else {
+            this.testText = this.testText + "Hier_"
+            setTimeout(() => {
+              if (this.pCoverScroll < 0.4) {
+                this.testText = this.testText + "Da_"
+                window.scroll({top: 0, left: 0, behavior: "smooth"});
+              } else {
+                this.testText = this.testText + "Nun_"
+                window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "smooth"});
+              }
+
+            }, 400)
+          }
+        }
+
+      }, timeout);
+    });
   }
 
 
@@ -268,9 +328,6 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     this.svWebinar.uploadUnitPlayer()
     this.oPlayer.dispose();
     this.stopProgressUpdater()
-
-    // close slider
-    //this.svAnimation.slideOut(this.vList)
   }
 
 
@@ -280,33 +337,40 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     this.setDimensions()
   }
 
-
   @HostListener('window:scroll', ['$event'])
   onScroll() {
-    if (!this.bScrollDisabled) this.nScroll++
+    this.tsCoverScroll = new Date().getTime()
+    console.log("scrolling")
+    let pScroll: number = Number(Number((((document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight) / this.hWindow)).toFixed(2))
+    this.pCoverScroll = pScroll
+    this.renderer.setStyle(this.vCover.nativeElement, 'filter', 'blur(' + (pScroll * 15) + 'px)')
+    const pxScroll = (document.documentElement.scrollTop || document.body.scrollTop)
+    //console.log("pxScroll", pxScroll)
+    this.directionCoverScroll = this.pxCoverScroll !== null ? (pxScroll - this.pxCoverScroll) > 0 ? 1 : 0 : 1
+    //console.log("direction", this.directionCoverScroll)
+    this.velocityCoverScroll = this.pxCoverScroll !== null ? pxScroll - this.pxCoverScroll : 0
+    //console.log("velocityCoverScroll", this.velocityCoverScroll)
+    this.pxCoverScroll = pxScroll
 
-    if (this.nScroll === this.THRESHOLD_COVER_SCROLL) {
-      // scrolling at the beginning when window is covered for triggered user engagement
-      // in order for shrinking the browsers nav bar
-
-      // info: There was a bug on ios which blocked the click on the video screen so that video couldn't be started or stopped
-      // It was either solved by setting nScroll === Threshold or by timeout for scroll to bottom or by the order
-      // where zIndex is set in the end. In the result user can swipe now and immediately click to play without waiting till scroll bar finished
-      // giving only then the click for play free
-
-      setTimeout(() => {
-        window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
-      }, 10);
-
-      // hide cover
+    if (pScroll >= 1) {
       this.vCover.nativeElement.style.zIndex = 0
-
-      // hereby the video starts playing on scroll when it has been started already
-      // Note: player can only be started manually when user interacted with the document
-      // for some reason scroll event is triggered when changing tab, therefore a check
-      // for visibility is necessary
       if (this.bDocumentInteraction && document.visibilityState === "visible") this.playVideo()
     }
+
+    // scrolling at the beginning when window is covered for triggered user engagement
+    // in order for shrinking the browsers nav bar
+
+    // info: There was a bug on ios which blocked the click on the video screen so that video couldn't be started or stopped
+    // It was either solved by setting nScroll === Threshold or by timeout for scroll to bottom or by the order
+    // where zIndex is set in the end. In the result user can swipe now and immediately click to play without waiting till scroll bar finished
+    // giving only then the click for play free
+
+    // hide cover
+
+    // hereby the video starts playing on scroll when it has been started already
+    // Note: player can only be started manually when user interacted with the document
+    // for some reason scroll event is triggered when changing tab, therefore a check
+    // for visibility is necessary
   }
 
 

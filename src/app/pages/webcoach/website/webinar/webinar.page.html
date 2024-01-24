@@ -2,11 +2,74 @@
 <div #vContainer>
 
 
+  <div class="no-marker flex-vertical" autoscroll="true" #vCover
+       style="position: absolute; top: 0; z-index: 9; width: 100%; height: calc(400svh); overflow: auto; background: rgb(0, 0, 0, 0)">
+
+    <div class="cover bg-dark" style="position: relative; height: 100svh; box-sizing: border-box;">
+      <div class="flex-vertical" style="height: 87svh; padding-top: 1rem !important; padding-bottom: 1rem !important;position: relative; box-sizing: border-box;">
+
+        <div class="flex align-items-center section" style="padding-left: 0rem !important;  position: relative; height: 33.33%; box-sizing: border-box">
+          <mat-icon [routerLink]="'/buchungen'" class="cover-back is-l ic-light-two" style="width: 20%" fontIcon="arrow_back_ios_new"></mat-icon>
+
+          <div class="cover-container">
+            <p class="cover-box-title">WEBINAR</p>
+            <div #vCoverBoxWebinar class="cover-box-webinar" style="position:relative;">
+              <div class="cover-box-inside flex-vertical">
+                <p class="cover-box-text tw-bold" style="">{{svWebinar.bsWebinar.value?.cName}}</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex align-items-center section" style="padding-left: 0rem !important; position: relative; height: 33.33%; box-sizing: border-box">
+          <p class="cover-subtitle">{{(svWebinar.bsSection.value!.nPosition + 1) + '/' + svWebinar.bsSections.value?.length}}</p>
+
+          <div class="cover-container">
+            <p class="cover-box-title">KAPITEL</p>
+            <div #vCoverBoxSection class="cover-box-section">
+              <div class="cover-box-inside">
+                <p class="cover-box-text" style="">{{svWebinar.bsSection.value?.cName}}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex align-items-center section" style="padding-left: 0rem !important; position: relative; height: 33.33%; box-sizing: border-box">
+          <p class="cover-subtitle">{{(svWebinar.bsUnit.value!.nPosition + 1) + '/' + svWebinar.bsSection.value!.lUnits!.length}}</p>
+
+          <div class="cover-container">
+            <p class="cover-box-title">KAPITEL-EINHEIT</p>
+            <div #vCoverBoxUnit class="cover-box-unit">
+              <div class="cover-box-inside">
+                <p class="cover-box-text" style="">{{svWebinar.bsUnit.value?.cName}}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="bg-light flex-vertical align-items-center" style="position: relative; box-sizing: border-box; height: 13svh; width: 100%; font-weight: 700; justify-content: center">
+        <p class="ts-xl tc-dark text-align-center">NACH OBEN WISCHEN</p>
+        <div class="slide-bar-page bg-dark a-move-up" style="margin-top: 1rem"></div>
+      </div>
+    </div>
+
+  </div>
+  <!--
   <div class="cover-container no-marker" autoscroll="true" #vCover
+
+
+
+
+
        style="overflow: hidden; position: absolute; top: 0; z-index: 9; width: 100%; height: calc(400dvh); overflow: auto; ">
     <div class="page">
 
-      <!-- header -->
       <div class="flex section">
         <mat-icon class="is-standard ic-light sh-icon" fontIcon="arrow_back_ios"></mat-icon>
       </div>
@@ -44,6 +107,7 @@
     </div>
 
   </div>
+  -->
 
 
   <!-- list-slider overview -->
@@ -299,11 +363,11 @@
   </div>
 
   <!-- process bar for showing how much of the video has been played-->
-  <div #vProgressBar class="process no-marker" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
+  <div #vProgressBar class="no-marker" style="position: fixed; bottom: 0; z-index: 6; height: 0.2rem; width: 0%; margin-bottom: 3.4rem; background-color: white; "></div>
 
 
   <!-- container for video -->
-  <div #vVideoContainer class="flex flex-vertical bg-dark no-marker" style="position: fixed; height: calc(100dvh - 3.5rem); width: 100%; z-index: 5;">
+  <div #vVideoContainer class="flex flex-vertical bg-dark no-marker" style="position: fixed; height: calc(100lvh - 3.5rem); width: 100%; z-index: 5;">
 
     <div #vVideoControls style="position:absolute; display: none; opacity: 0.9; align-items: center; z-index: 40; top: 50%; left: 50%; transform: translate(-50%, -50%);">
       <div #vReplayStart style="">
@@ -316,34 +380,34 @@
 
     <!-- needed for catching the swipe gesture, however only for 75% witdh of screen so that icons can be clicked on the right side -->
     <div #vSwipe (click)="onClickVideo()" (panstart)="onStart_Video()" (panend)="onEnd_Video($event)" (panmove)="onMove_Video($event)"
-         style="position: absolute; z-index: 4; height: calc(100dvh - 3.5rem); width: 75%"></div>
+         style="position: absolute; z-index: 4; height: calc(100lvh - 3.5rem); width: 75%"></div>
 
     <!-- video elements -->
     <div #videoWrapper
-         style="position:relative; top: 0; z-index: 2; width: 100%; height: calc(100dvh - 3.5rem); transform: translateY(calc(-100dvh + 3.5rem)); margin-bottom: 3.5rem;">
+         style="position:relative; top: 0; z-index: 2; width: 100%; height: calc(100lvh - 3.5rem); transform: translateY(calc(-100lvh + 3.5rem)); margin-bottom: 3.5rem;">
 
       <!-- video preview top - no real video preview -->
-      <div style="position: relative; z-index: 2; height: calc(100dvh - 3.5rem); width: 100%;">
+      <div style="position: relative; z-index: 2; height: calc(100lvh - 3.5rem); width: 100%;">
         <!-- needed due to ios bug where pixel line of last video is shown in the beginning, herewith blacked out -->
         <div *ngIf="bShowBlackLineTop" style="position: absolute; z-index: 2; bottom: 0; height: 1px; width: 100%" class="bg-dark"></div>
 
         <img #videoTop [src]="svWebinar.bsUnitThumbnailLast.value !== null ? svWebinar.bsUnitThumbnailLast.value : svWebinar.bsUnitThumbnailNext.value" class="bg-dark"
-             style="object-fit: cover; position: relative; z-index: 1; height: calc(100dvh - 3.5rem); width: 100%;">
+             style="object-fit: cover; position: relative; z-index: 1; height: calc(100lvh - 3.5rem); width: 100%;">
       </div>
 
       <!-- horizontal axis -->
-      <div #vHorizontalAxis style="position: relative; z-index: 2; width: 100dvw; transform: translateX(calc(-100dvw)); height: calc(100dvh - 3.5rem)">
+      <div #vHorizontalAxis style="position: relative; z-index: 2; width: 100dvw; transform: translateX(calc(-100dvw)); height: calc(100lvh - 3.5rem)">
 
         <!-- video wind preview left - no real video -->
-        <img #videoLeft [src]="urlIntervalThumbnailLeft" style="object-fit: cover; position: relative; width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="540"
+        <img #videoLeft [src]="urlIntervalThumbnailLeft" style="object-fit: cover; position: relative; width: 100dvw; z-index: 2; height: calc(100lvh - 3.5rem)" width="540"
              height="960"/>
 
         <!-- video wind preview right - no real video -->
         <img #videoRight [src]="urlIntervalThumbnailRight"
-             style="object-fit: cover; position: absolute; top: 0; left: calc(100dvw * 2); width: 100dvw; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920"/>
+             style="object-fit: cover; position: absolute; top: 0; left: calc(100dvw * 2); width: 100dvw; z-index: 2; height: calc(100lvh - 3.5rem)" width="1080" height="1920"/>
 
         <!-- video center container -->
-        <div style="position:absolute; left: 100dvw; top: 0; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)">
+        <div style="position:absolute; left: 100dvw; top: 0; z-index: 2;width: 100%; height: calc(100lvh - 3.5rem)">
 
           <!-- interaction overlay of video -->
           <div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
@@ -354,7 +418,8 @@
             <!--<p #vTitle class="ts-l tc-light tw-bold sh-text-soft" style="position: absolute; top: 0; left: 0; margin: 1rem !important; width: 75%; opacity: 0">{{cTitle}}</p>-->
 
             <!-- information -->
-            <div #vInformation class="flex-vertical a-transition" style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem; opacity: 0">
+            <div #vInformation class="flex-vertical a-transition"
+                 style="position: absolute; bottom: 0; left: 0; width: 75%; margin-left: 1rem; margin-bottom: 1.5rem; opacity: 0">
 
               <!-- author -->
               <div style="display: flex; align-items: center">
@@ -363,7 +428,7 @@
               </div>
 
               <!-- unit name -->
-              <p class="ts-l tc-light sh-text-soft tw-bold" style="margin-top: 0.75rem !important;">{{svWebinar.bsUnit.value?.cName}}</p>
+              <p class="ts-l tc-light sh-text-soft tw-bold" style="margin-top: 0.75rem !important;">{{svWebinar.bsUnit.value?.cName }}</p>
 
               <!-- section name -->
               <p class="ts-s tc-light sh-text-soft" style="margin-top: 0.375rem !important;">{{svWebinar.bsSection.value?.cName}}</p>
@@ -433,7 +498,7 @@
           </div>
 
           <!-- video center - used with video.js -->
-          <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100dvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="none">
+          <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100lvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="none">
 
           </video>
 
@@ -450,7 +515,7 @@
 
       <!-- video preview bottom - no real video -->
       <img #videoBottom [src]="svWebinar.bsUnitThumbnailNext.value !== null ? svWebinar.bsUnitThumbnailNext.value : svWebinar.bsUnitThumbnailLast.value"
-           style="object-fit: cover; position: relative; width: 100%; z-index: 2; height: calc(100dvh - 3.5rem)" width="1080" height="1920">
+           style="object-fit: cover; position: relative; width: 100%; z-index: 2; height: calc(100lvh - 3.5rem)" width="1080" height="1920">
 
     </div>
 

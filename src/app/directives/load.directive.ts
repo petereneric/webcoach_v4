@@ -11,7 +11,7 @@ import {LoadAnimationComponent} from "../components/load-animation/load-animatio
  */
 
 @Directive({
-  selector: '[appLoad]',
+  selector: '[ngLoad]',
   standalone: true,
 })
 export class LoadDirective {
@@ -31,7 +31,7 @@ export class LoadDirective {
     }
   }
 
-  @Input() set appLoad(view: any) {
+  @Input() set ngLoad(view: any) {
     if (view !== undefined) {
       let nativeElement = view.nativeElement
       this.height = nativeElement.offsetHeight
@@ -41,7 +41,7 @@ export class LoadDirective {
     }
   }
 
-  @Input() set appLoadStatus(bLoading: boolean) {
+  @Input() set ngLoadStatus(bLoading: boolean) {
     if (bLoading) {
       if (this.isVisible === null || !this.isVisible) {
         this.viewContainer.clear()

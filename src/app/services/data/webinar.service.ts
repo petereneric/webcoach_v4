@@ -42,16 +42,34 @@ export class WebinarService {
   bsWebinarPlayer: BehaviorSubject<WebinarPlayer | null> = new BehaviorSubject<WebinarPlayer | null>(null)
   bsWebinarThumbnail: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
+  bsWebinarProgress: BehaviorSubject<number> = new BehaviorSubject<number>(0)
+  bsSectionProgress: BehaviorSubject<number> = new BehaviorSubject<number>(0)
+  bsUnitProgress: BehaviorSubject<number> = new BehaviorSubject<number>(0)
 
   constructor(private rUnitPlayer: UnitPlayerRepository, private rCommentAnswer: CommentAnswerRepository, private rCoach: CoachRepository, private rSection: SectionRepository, private rUnit: UnitRepository, private rComment: CommentRepository, private rNote: NoteRepository, private rWebinarPlayer: WebinarPlayerRepository, private rWebinar: WebinarRepository, private api: ApiService) {
 
     this.bsWebinar.subscribe((aWebinar) => {
-      rWebinarPlayer.safeGet_WebinarPlayer(aWebinar?.id, aWebinarPlayer => this.bsWebinarPlayer.next(aWebinarPlayer))
+      rWebinarPlayer.safeGet_WebinarPlayer(aWebinar?.id, aWebinarPlayer => {
+        console.log("naaa Toll: ", aWebinarPlayer)
+        if (aWebinarPlayer) {
+          this.bsWebinarPlayer.next(aWebinarPlayer)
+        } else {
+          rWebinarPlayer.safePut_WebinarPlayer(aWebinar?.id, aWebinarPlayer => {
+            this.bsWebinarPlayer.next(aWebinarPlayer)
+          })
+        }
+
+      })
+    })
+
+    this.bsSection.subscribe((aSection) => {
+      this.setCurrentSectionProgress()
     })
 
     this.bsUnit.subscribe((aUnit) => {
       this.setSection(aUnit)
       this.setUnitThumbnails()
+      this.setCurrentUnitProgress()
 
       if (aUnit?.oUnitPlayer?.lNotes === undefined || aUnit?.oUnitPlayer?.lNotes === null) {
         this.rNote.safeGet_Notes(aUnit!.oUnitPlayer!.id, (lNotes: Note[]) => aUnit!.oUnitPlayer!.lNotes = lNotes)
@@ -105,8 +123,10 @@ export class WebinarService {
 
   loadSections(kWebinar: number) {
     this.rSection.safeGet_Sections(kWebinar, (lSections: Section[]) => {
+      console.log("SEEECTIONS", lSections)
       this.bsSections.next(lSections)
       this.loadUnit(kWebinar)
+      this.setWebinarProgress()
     })
   }
 
@@ -308,6 +328,36 @@ export class WebinarService {
 
   sortComments() {
     this.bsUnit.value!.lComments = this.bsUnit.value!.lComments!.sort((a, b) => (a.dtCreation as any) - (b.dtCreation as any))
+  }
+
+  setWebinarProgress() {
+    if (this.bsSections.value != null) {
+      let nUnitsChecked = 0
+      let nUnits = 0
+      this.bsSections.value?.forEach(aSection => {
+        aSection.lUnits.forEach(aUnit => {
+          nUnits++
+          if (aUnit.oUnitPlayer !== null && aUnit.oUnitPlayer.tStatus === 2) nUnitsChecked++
+        })
+      })
+      this.bsWebinarProgress.next(Number((nUnitsChecked/nUnits).toFixed(2)))
+    }
+  }
+
+  setCurrentSectionProgress() {
+    let nUnitsChecked = 0
+    let nUnits = 0
+    this.bsSection.value?.lUnits.forEach(aUnit => {
+      nUnits++
+      if (aUnit.oUnitPlayer !== null && aUnit.oUnitPlayer.tStatus === 2) nUnitsChecked++
+    })
+    this.bsSectionProgress.next(Number((nUnitsChecked/nUnits).toFixed(2)))
+  }
+
+  setCurrentUnitProgress() {
+    const secProgress = this.bsUnit.value?.oUnitPlayer?.secVideo ?? 0
+    const secTotal = this.bsUnit.value?.secDuration!
+    this.bsUnitProgress.next(Number((secProgress/secTotal).toFixed(2)))
   }
 
 }

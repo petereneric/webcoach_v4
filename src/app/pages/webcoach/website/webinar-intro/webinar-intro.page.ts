@@ -90,7 +90,7 @@ export class WebinarIntroPage implements OnInit {
   }
 
   routeWebinar() {
-    this.router.navigate([(this.oWebinar?.bVertical ? 'webinar-vert/' : 'webinar/') + this.kWebinar])
+    this.router.navigate(['webinar/' + this.kWebinar])
   }
 
   onBack() {

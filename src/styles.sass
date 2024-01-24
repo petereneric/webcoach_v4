@@ -22,13 +22,19 @@
 @import "video.js/dist/video-js.css"
 
 
+*
+  //box-sizing: border-box
+
 html
+
 
 
 body
   margin: 0
   padding: 0
   background-color: $colorDark
+
+
 
 
 // margin need to be set to 0, however padding doesn't
@@ -176,6 +182,13 @@ ul
   background-color: $colorDividerDark
   margin-top: 0.5rem
   border-radius: 0.75rem
+
+.slide-bar-page
+  @extend .slide-bar
+  width: 25dvw
+  height: 0.3rem
+  border-radius: 1rem
+
 
 
 .no-marker

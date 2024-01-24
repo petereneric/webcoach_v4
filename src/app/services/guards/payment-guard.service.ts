@@ -12,6 +12,7 @@ export class PaymentGuard {
   constructor(private connApi: ApiService, private router: Router) { }
 
   canActivate(route: any): Promise<boolean> {
+    console.log("Payment Guard")
     console.log("joo")
     return new Promise((resolve) => {
       let kWebinar = 0
@@ -34,16 +35,19 @@ export class PaymentGuard {
                 // create webinar-player
                 this.connApi.safePut('webinar/auth/webinar-player/' + kWebinar, null,(response: any) => {
                   webinarPlayer = response
+                  console.log("HEEEEJO")
                   // add webinar-player to cart
                   this.addToCart(webinar.id)
-                  resolve(false)
+                  //sresolve(false)
                 })
               } else {
                 if (!webinarPlayer.bAccess) {
                   // no access --> add to cart
+                  console.log("JOOOOOOJK")
                   this.addToCart(webinar.id)
-                  resolve(false)
+                  //resolve(false)
                 } else {
+                  console.log("FALLSE")
                   // access --> player can be handled to webinar-vert
                   resolve(true)
                 }
@@ -56,6 +60,7 @@ export class PaymentGuard {
   }
 
   addToCart(kWebinar: number) {
+    console.log("WHHHYY")
     this.router.navigate(['checkout/' + kWebinar])
     /*
     this.connApi.safePut('cart/' + kWebinar, null, (response: any) => {

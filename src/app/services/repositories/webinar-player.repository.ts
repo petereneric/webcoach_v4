@@ -13,6 +13,10 @@ export class WebinarPlayerRepository {
     this.api.safeGet('webinar/auth/webinar-player/' + kWebinar, aWebinarPlayer => callback(aWebinarPlayer))
   }
 
+  safePut_WebinarPlayer(kWebinar, callback) {
+    this.api.safePut('webinar/auth/webinar-player/' + kWebinar, {},aWebinarPlayer => callback(aWebinarPlayer))
+  }
+
   safePost_WebinarPlayer(data) {
     this.api.safePost('webinar/auth/webinar-player', data)
   }
