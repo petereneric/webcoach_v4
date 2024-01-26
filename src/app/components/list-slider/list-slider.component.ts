@@ -57,7 +57,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
   readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
   readonly THRESHOLD_LIST_INSIDE_VELOCITY = 0.30 // px/ms
-  readonly THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL = 0.007 // px/ms
+  readonly THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL = 0.038 // px/ms // sensitive value // before 0.03
   readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
   readonly DIRECTION_LIST_START_UP = 1
   readonly DIRECTION_LIST_START_DOWN = 2
@@ -380,7 +380,14 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
         }
 
         // seconds for scrolling are calculated based on velocity (px/ms) and overscroll
-        const secScroll = Math.abs(overScroll / velocityY) / 1000
+        let secScroll = (Math.abs(overScroll / velocityY) / 1000)
+
+        console.log("secScroll: ", secScroll)
+        //secScroll = secScroll*1.75
+        if (secScroll < 1 || true) {
+          //secScroll = secScroll / (Math.sqrt(1 + (secScroll ** 2)))
+          secScroll = secScroll * Math.exp((1/(1.5+secScroll))) // important
+        }
         console.log("secScroll: ", secScroll)
 
         // ease out for smooth transition
@@ -426,7 +433,15 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
         }
 
         // seconds for scrolling are calculated based on velocity (px/ms) and overscroll
-        const secScroll = Math.abs(overScroll / velocityY) / 1000
+        let secScroll = (Math.abs(overScroll / velocityY) / 1000)
+
+        console.log("secScroll: ", secScroll)
+        if (secScroll < 1 || true) {
+          //secScroll = secScroll / (Math.sqrt(1 + (secScroll ** 2)))
+          secScroll = secScroll * Math.exp((1/(1.5+secScroll))) // important
+
+        }
+
         console.log("secScroll: ", secScroll)
 
         // ease out for smooth transition
