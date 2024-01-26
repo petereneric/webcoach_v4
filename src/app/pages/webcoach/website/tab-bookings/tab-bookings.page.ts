@@ -14,19 +14,9 @@ export class TabBookingsPage implements OnInit {
   constructor(private api: ApiService) {
   }
 
-
   ngOnInit(): void {
-    console.log("jo")
-
-    // list webinar-player
-
-    this.api.safeGet('webinar-player', lWebinarPlayer => {
-      this.lWebinarPlayer = lWebinarPlayer
-      console.log("hiiiiiiiiiiiiiiii2")
-      console.log(this.lWebinarPlayer)
-    })
+    this.api.safeGet('webinar-player', lWebinarPlayer => this.lWebinarPlayer = lWebinarPlayer)
   }
-
 
 
 }

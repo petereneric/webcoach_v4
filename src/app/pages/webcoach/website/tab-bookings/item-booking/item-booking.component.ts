@@ -40,15 +40,11 @@ export class ItemBookingComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bLoading = true
 
     this.api.safeGet('webinar-player/' + this.kWebinarPlayer, aWebinarPlayer => {
-
       this.aWebinarPlayer = aWebinarPlayer
-      // image webinar
       const kWebinar = this.aWebinarPlayer!['kWebinar']
       this.api.getImage('webinar/thumbnail/' + kWebinar, urlThumbnail => {
         this.urlThumbnail = urlThumbnail
-        setTimeout(() => {
-          this.bLoading = false
-        }, 10000)
+        this.bLoading = false
       })
     })
   }

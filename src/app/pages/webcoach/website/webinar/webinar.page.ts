@@ -101,7 +101,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   readonly THRESHOLD_LIST_INSIDE_VELOCITY = 0.30 // px/ms
   readonly TRANSITION_VIDEO_SWIPE = 0.35 // s
   readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
-  readonly INTERVAL_PROGRESS_UPDATER = 100 // ms
+  readonly INTERVAL_PROGRESS_UPDATER = 300 // ms // fewer triggers for and back in the beginning
   readonly INTERVAL_PROGRESS_OBSERVER = 1000 // ms
   readonly DIRECTION_LIST_START_UP = 1
   readonly DIRECTION_LIST_START_DOWN = 2
@@ -161,6 +161,11 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   private pCoverScroll: number = 0
   private tsCoverScroll: number = 0
   public testText: string = ""
+  private bNewVideo: boolean = false
+  private bNewVideoSec: number = 0
+  private bVideoDelay: boolean = false
+
+  public testName: string = 'cool'
 
 
   constructor(private sanitizer: DomSanitizer, private uFile: File, public svPlayer: PlayerService, public uDateTime: DateTime, private svMenu: MainMenuService, private svCoach: CoachService, private router: Router, private svAnimation: AnimationService, public svWebinar: WebinarService, private renderer: Renderer2, private svCommunication: Communication, private api: ApiService, private route: ActivatedRoute) {
@@ -236,10 +241,8 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
 
         this.playUnit(aUnit, false)
-        this.oPlayer.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
 
         this.updateProgressBar(aUnit?.oUnitPlayer?.secVideo ?? 0, aUnit?.secDuration)
-        console.log("video time: ", this.getVideoTime())
         this.showVideoControls()
 
         this.svWebinar.updateWebinarPlayer()
@@ -248,7 +251,6 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
         this.showSidebar()
       } else {
         this.playUnit(aUnit, false)
-        this.oPlayer.currentTime(aUnit?.oUnitPlayer?.secVideo ?? 0)
 
         this.updateProgressBar(aUnit?.oUnitPlayer?.secVideo ?? 0, aUnit?.secDuration)
         this.showVideoControls()
@@ -277,7 +279,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       this.setVideoSpeed()
     })
 
-    this.startProgressUpdater()
+    //this.startProgressUpdater()
 
     // works only on non safari browsers
     this.vUnitLike.nativeElement.addEventListener('pointerdown', event => {
@@ -286,7 +288,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.vContainer.nativeElement.addEventListener('touchstart', (e) => {
       const touch = e.touches[0];
-      if (touch.pageX > 20 && touch.pageX < window.innerWidth - 0) return
+      if (touch.pageX > 20 && touch.pageX < (window.innerWidth - 0)) return
       e.preventDefault();
     })
 
@@ -320,6 +322,9 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
       }, timeout);
     });
+
+    this.showSidebar()
+    this.showInformation()
   }
 
 
@@ -343,7 +348,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     console.log("scrolling")
     let pScroll: number = Number(Number((((document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight) / this.hWindow)).toFixed(2))
     this.pCoverScroll = pScroll
-    this.renderer.setStyle(this.vCover.nativeElement, 'filter', 'blur(' + (pScroll * 15) + 'px)')
+    this.renderer.setStyle(this.vCover.nativeElement, 'filter', 'blur(' + (pScroll * 5) + 'px)')
     const pxScroll = (document.documentElement.scrollTop || document.body.scrollTop)
     //console.log("pxScroll", pxScroll)
     this.directionCoverScroll = this.pxCoverScroll !== null ? (pxScroll - this.pxCoverScroll) > 0 ? 1 : 0 : 1
@@ -354,6 +359,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
     if (pScroll >= 1) {
       this.vCover.nativeElement.style.zIndex = 0
+      // window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"}); // causes that the play button cant be pressed / does not react
       if (this.bDocumentInteraction && document.visibilityState === "visible") this.playVideo()
     }
 
@@ -439,7 +445,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
               this.renderer.setStyle(this.videoWrapper.nativeElement, 'top', 0 + 'px')
 
               // play next unit
-              this.svWebinar.setNextUnit(this.oPlayer.currentTime())
+              this.svWebinar.setNextUnit()
 
             },
             this.TRANSITION_VIDEO_SWIPE * 1000);
@@ -488,9 +494,12 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
           const nextIntervalTime = this.getNextIntervalTime()
           console.log(nextIntervalTime)
           if (nextIntervalTime) {
+            this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = nextIntervalTime
             this.oPlayer.currentTime(nextIntervalTime)
+
           } else {
-            this.svWebinar.setNextUnit(this.oPlayer.currentTime())
+            this.svWebinar.setUnitPlayerTime(0, this.svWebinar.bsUnit.value?.oUnitPlayer!)
+            this.svWebinar.setNextUnit()
           }
 
           this.svAnimation.moveHorizontal(this.videoWrapper, -this.wVideoWrapper, this.TRANSITION_VIDEO_SWIPE, () => {
@@ -502,7 +511,10 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
         if (ev.deltaX > 0) {
           // left interval
           this.pauseVideo(false)
-          this.oPlayer.currentTime(this.getLastIntervalTime())
+          const lastIntervalTime = this.getLastIntervalTime()
+          this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = lastIntervalTime
+          this.oPlayer.currentTime(lastIntervalTime)
+
           this.svAnimation.moveHorizontal(this.videoWrapper, +this.wVideoWrapper, this.TRANSITION_VIDEO_SWIPE, () => {
             this.renderer.setStyle(this.videoWrapper.nativeElement, 'left', 0 + 'px')
             this.playVideo()
@@ -552,7 +564,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     console.log("currentTIME", this.wWindow)
     this.oPlayer.currentTime(this.oPlayer.duration() * (ev.center.x / this.wWindow))
     this.playVideo()
-    this.startProgressUpdater()
+    //this.startProgressUpdater()
   }
 
 
@@ -564,41 +576,43 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.oProgressUpdater = interval(this.INTERVAL_PROGRESS_UPDATER).subscribe(val => {
       if (this.bProgressUpdaterRunning) {
-        this.updateProgressBar(this.oPlayer.currentTime(), this.oPlayer.duration())
 
-        if (this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus! < 2) {
-          const secOverEnd = this.oPlayer.duration() - this.oPlayer.currentTime()
-          if (secOverEnd <= this.TIME_SIDEBAR_END) {
+          this.updateProgressBar(this.oPlayer.currentTime(), this.oPlayer.duration())
+
+          if (this.svWebinar.bsUnit.value?.oUnitPlayer?.tStatus! < 2) {
+            const secOverEnd = this.oPlayer.duration() - this.oPlayer.currentTime()
+            if (secOverEnd <= this.TIME_SIDEBAR_END) {
+              if (!this.bSidebarShown) {
+                this.showSidebar()
+              }
+            } else {
+              if (!this.bSidebarHidden) {
+                this.hideSidebar()
+              }
+            }
+          } else {
             if (!this.bSidebarShown) {
               this.showSidebar()
             }
+          }
+
+          // information
+          const secOverStart = this.TIME_INFORMATION_START - this.oPlayer.currentTime()
+          if (secOverStart > 0) {
+            if (!this.bInformationShown) {
+              this.showInformation()
+            }
           } else {
-            if (!this.bSidebarHidden) {
-              this.hideSidebar()
+            let secTimeout = 0
+            if (this.bVisibilityChange) {
+              secTimeout = this.TIME_INFORMATION_START
+              this.bVisibilityChange = false
+            }
+            if (!this.bInformationHidden) {
+              this.hideInformation(secTimeout)
             }
           }
-        } else {
-          if (!this.bSidebarShown) {
-            this.showSidebar()
-          }
-        }
 
-        // information
-        const secOverStart = this.TIME_INFORMATION_START - this.oPlayer.currentTime()
-        if (secOverStart > 0) {
-          if (!this.bInformationShown) {
-            this.showInformation()
-          }
-        } else {
-          let secTimeout = 0
-          if (this.bVisibilityChange) {
-            secTimeout = this.TIME_INFORMATION_START
-            this.bVisibilityChange = false
-          }
-          if (!this.bInformationHidden) {
-            this.hideInformation(secTimeout)
-          }
-        }
       }
     });
   }
@@ -636,17 +650,17 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   startProgressObserver() {
     this.oProgressObserver = interval(this.INTERVAL_PROGRESS_OBSERVER).subscribe(val => {
       if (this.bProgressUpdaterRunning) {
-        this.svWebinar.setUnitPlayerTime(this.oPlayer.currentTime())
+          this.svWebinar.setUnitPlayerTime(this.oPlayer.currentTime(), this.svWebinar.bsUnit.value?.oUnitPlayer!)
 
-        if (this.svWebinar.bsUnitInterval.value !== null) {
-          if (this.oPlayer.currentTime() > this.svWebinar.bsUnitInterval.value?.secEnd || this.oPlayer.currentTime() < this.svWebinar.bsUnitInterval.value?.secStart) {
+          if (this.svWebinar.bsUnitInterval.value !== null) {
+            if (this.oPlayer.currentTime() > this.svWebinar.bsUnitInterval.value?.secEnd || this.oPlayer.currentTime() < this.svWebinar.bsUnitInterval.value?.secStart) {
+              this.setNewUnitInterval()
+            }
+          } else {
             this.setNewUnitInterval()
           }
-        } else {
-          this.setNewUnitInterval()
-        }
 
-        this.updateIntervalThumbnails()
+          this.updateIntervalThumbnails()
       }
     })
   }
@@ -656,7 +670,9 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateProgressBar(secCurrent, secTotal) {
-    this.vProgressBar.nativeElement.style.width = (secCurrent / secTotal) * 100 + '%'
+    // needed so that there are no jumps in the beginning
+    const pWidth = Math.floor((secCurrent / secTotal) * 100*100)/100
+    this.vProgressBar.nativeElement.style.width = pWidth + '%'
   }
 
 
@@ -749,7 +765,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     let options = {
       fluid: false,
       fill: true,
-      autoplay: false,
+      autoplay: false, // default false
       controls: false,
     }
 
@@ -758,16 +774,36 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     // TODO add environment variable for dev and prod mode
     this.oPlayer.volume(environment2.VOLUME_VIDEO)
 
+    // check if needed TODO
+
     // ended callback
     this.oPlayer.on('ended', data => {
       this.bProgressUpdaterRunning = false
+      this.svWebinar.setUnitPlayerTime(0, this.svWebinar.bsUnit.value?.oUnitPlayer!)
       this.svWebinar.setNextUnit()
     });
 
     // play callback
     this.oPlayer.on('play', data => {
       this.setVideoSpeed()
+
+      if (this.bNewVideo) {
+        // this is needed on ios to bring balance to currentTime and wanted time since this can be different
+        if (this.oPlayer.currentTime() !== this.bNewVideoSec) {
+          // there is a dis balance on safari especially
+          this.oPlayer.pause()
+          this.oPlayer.currentTime(this.svWebinar.bsUnit.value?.oUnitPlayer?.secVideo ?? 0)
+          this.oPlayer.play()
+          this.startProgressUpdater()
+          this.bNewVideo = false
+        } else {
+          this.startProgressUpdater()
+        }
+      } else {
+        this.startProgressUpdater()
+      }
     });
+
 
     // pause callback
     this.oPlayer.on('pause', data => {
@@ -775,12 +811,17 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   playUnit(unit: Unit | null, play: boolean = true) {
-    this.updatePlayer(this.api.getUrl('webinar/unit/video/' + unit?.id), play)
+    this.updatePlayer(unit, this.api.getUrl('webinar/unit/video/' + unit?.id), play)
   }
 
-  updatePlayer(source: string, play: boolean = true) {
+  updatePlayer(aUnit: Unit | null, source: string, play: boolean = true) {
     if (this.oPlayer !== undefined) {
       this.oPlayer.src({src: source, type: 'video/mp4'});
+
+      // DO NOT SET CURRENT TIME HERE
+      this.bNewVideo = true
+      this.bNewVideoSec = aUnit?.oUnitPlayer?.secVideo ?? 0
+
       if (play) this.playVideo()
     }
   }
@@ -796,8 +837,11 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.hideVideoControls()
-      this.startProgressUpdater()
+
+
       this.oPlayer.play()
+
+
     }
   }
 
@@ -1052,6 +1096,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
         kComment: aComment.id,
         bLike: aComment.bLike ? 0 : 1
       }
+      console.log(data)
       this.api.safePost('comment/like', data, () => {
         aComment.bLike = !aComment.bLike
         if (aComment.bLike) {
@@ -1272,7 +1317,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
   onClick_Replay() {
     this.hideVideoControls()
-    this.oPlayer.currentTime(0)
+    this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = 0
     console.log("jo")
     this.playVideo()
   }

@@ -53,7 +53,7 @@
 
       </div>
 
-      <div class="bg-light flex-vertical align-items-center" style="position: relative; box-sizing: border-box; height: 13svh; width: 100%; font-weight: 700; justify-content: center">
+      <div class="bg-light flex-vertical align-items-center" style="position: relative; border-radius: 0.5rem 0.5rem 0rem 0rem; box-sizing: border-box; height: 13svh; width: 100%; font-weight: 700; justify-content: center">
         <p class="ts-xl tc-dark text-align-center">NACH OBEN WISCHEN</p>
         <div class="slide-bar-page bg-dark a-move-up" style="margin-top: 1rem"></div>
       </div>
@@ -369,7 +369,7 @@
   <!-- container for video -->
   <div #vVideoContainer class="flex flex-vertical bg-dark no-marker" style="position: fixed; height: calc(100lvh - 3.5rem); width: 100%; z-index: 5;">
 
-    <div #vVideoControls style="position:absolute; display: none; opacity: 0.9; align-items: center; z-index: 40; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div #vVideoControls (panstart)="onStart_Video()" (panend)="onEnd_Video($event)" (panmove)="onMove_Video($event)" style="position:absolute; display: none; opacity: 0.9; align-items: center; z-index: 40; top: 50%; left: 50%; transform: translate(-50%, -50%);">
       <div #vReplayStart style="">
         <mat-icon (click)="onClick_Replay()" class="is-xxl ic-light mr-2 sh-icon" fontIcon="replay"></mat-icon>
       </div>
@@ -498,7 +498,7 @@
           </div>
 
           <!-- video center - used with video.js -->
-          <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100lvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="none">
+          <video #video style="position:relative; z-index: 2;width: 100%; height: calc(100lvh - 3.5rem)" class="bg-dark vjs-custom video-js" playsinline preload="auto"> <!-- preload="none" default -->
 
           </video>
 
@@ -523,12 +523,12 @@
     <!-- centered play icon -->
 
 
-    <div #vPlay style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0;">
+    <div #vPlay (panstart)="onStart_Video()" (panend)="onEnd_Video($event)" (panmove)="onMove_Video($event)" style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0;">
       <mat-icon class="is-xxl ic-light" fontIcon="play_circle_filled"></mat-icon>
     </div>
 
     <!-- centered pause icon -->
-    <div #vPause style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0;">
+    <div #vPause (panstart)="onStart_Video()" (panend)="onEnd_Video($event)" (panmove)="onMove_Video($event)" style="position:absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0;">
       <mat-icon class="is-xxl ic-light" fontIcon="pause_circle_filled"></mat-icon>
     </div>
   </div>

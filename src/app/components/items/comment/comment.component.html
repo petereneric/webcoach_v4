@@ -23,10 +23,10 @@
 
         <div class="flex align-items-center">
           <div #vLike inline=true class="flex align-items-center" style="">
-            <mat-icon (click)="onLike($event)" inline=true class="is-xs ic-light" style="" [fontIcon]="aComment?.bLike ? 'thumb_up': 'thumb_up_off_alt'"></mat-icon>
+            <mat-icon (click)="onLike($event)" class="is-xs ic-light" style="padding-right: 0.25rem;" [fontIcon]="aComment?.bLike ? 'thumb_up': 'thumb_up_off_alt'"></mat-icon>
           </div>
-          <p class="ts-xxs tc-light" style="padding-left: 0.5rem;">{{aComment?.nLikes! > 0 ? aComment?.nLikes! : ''}}</p>
-          <mat-icon *ngIf="bButtonAnswer" (click)="onAnswer($event)" inline=true class="is-xs ic-light" style="position: relative; margin-left: 4rem" fontIcon="add_comment"></mat-icon>
+          <p class="ts-xxs tc-light" [ngStyle]="{'visibility': aComment?.nLikes! > 0 ? 'visible' : 'hidden'}" style="width: 4rem">{{aComment?.nLikes!}}</p>
+          <mat-icon *ngIf="bButtonAnswer" (click)="onAnswer($event)" class="is-xs ic-light" style="" fontIcon="add_comment"></mat-icon>
         </div>
 
         <div *ngIf="bShowAnswers && aComment?.nAnswers! > 0">

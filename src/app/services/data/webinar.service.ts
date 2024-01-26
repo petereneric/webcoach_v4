@@ -159,14 +159,14 @@ export class WebinarService {
     }
   }
 
-  setUnit(aUnit: Unit | null, secVideo = 0) {
+  setUnit(aUnit: Unit | null) {
     this.uploadUnitPlayer()
-
     if (aUnit !== null) this.bsUnit.next(aUnit)
   }
 
   checkUnitPlayer(aUnitPlayer = this.bsUnit.value!.oUnitPlayer!) {
     this.setUnitPlayerStatus(aUnitPlayer.tStatus! < 2 ? 2 : 1, aUnitPlayer)
+    this.uploadUnitPlayer(aUnitPlayer)
   }
 
   setUnitPlayerStatus(tStatus, aUnitPlayer = this.bsUnit.value!.oUnitPlayer!) {
@@ -174,10 +174,10 @@ export class WebinarService {
     if (aUnitPlayer.id === this.bsUnit.value!.oUnitPlayer!.id) this.bsUnit.value!.oUnitPlayer!.tStatus = tStatus
   }
 
-  setUnitPlayerTime(secVideo) {
-    this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
-    if (this.bsUnit.value!.oUnitPlayer!.tStatus < 1 && secVideo > 0) {
-      this.setUnitPlayerStatus(1)
+  setUnitPlayerTime(secVideo: number, aUnitPlayer: UnitPlayer = this.bsUnit.value!.oUnitPlayer!) {
+    aUnitPlayer.secVideo = secVideo
+    if (aUnitPlayer.tStatus < 1 && secVideo > 0) {
+      this.setUnitPlayerStatus(1, aUnitPlayer)
     }
   }
 
@@ -189,6 +189,7 @@ export class WebinarService {
       tStatus: aUnitPlayer.tStatus,
       secVideo: aUnitPlayer.secVideo,
     }
+    console.log(data)
     this.rUnitPlayer.safePost_UnitPlayer(data)
   }
 
@@ -204,18 +205,21 @@ export class WebinarService {
 
 
   // + 1
-  setNextUnit(secVideo = 0) {
+  setNextUnit() {
     console.log("CHHANGE 1")
     this.bsSection.value?.lUnits.forEach(aUnit => {
       if (aUnit.id === this.bsUnit.value!.id) {
-        aUnit.oUnitPlayer!.secVideo = secVideo
+        //aUnit.oUnitPlayer!.secVideo = secVideo
         // TODO Status
       }
     })
-    this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
+    //this.bsUnit.value!.oUnitPlayer!.secVideo = secVideo
+    /*
     if (secVideo > 0 && this.bsUnit.value!.oUnitPlayer!.tStatus == 0) {
       this.bsUnit.value!.oUnitPlayer!.tStatus = 1
     }
+
+     */
     console.log("NEEXT", this.bsUnit.value?.oUnitPlayer!)
     this.setUnit(this.getNextUnit())
   }

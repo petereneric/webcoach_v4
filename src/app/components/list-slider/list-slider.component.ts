@@ -57,7 +57,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
   readonly THRESHOLD_LIST_VELOCITY = 1.5 // px/ms
   readonly THRESHOLD_LIST_HEADER_VELOCITY = 0.30 // px/ms
   readonly THRESHOLD_LIST_INSIDE_VELOCITY = 0.30 // px/ms
-  readonly THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL = 0.95 // px/ms
+  readonly THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL = 0.007 // px/ms
   readonly TRANSITION_LIST_SWIPE = environment.TRANSITION_LIST_SWIPE // s
   readonly DIRECTION_LIST_START_UP = 1
   readonly DIRECTION_LIST_START_DOWN = 2
@@ -358,7 +358,7 @@ export class ListSliderComponent implements OnInit, AfterViewInit {
       if (!this.bPress) this.bScrollListInsideEnabled = false
     }
 
-    if (hListInside > hListOutside && topListInside >= gapListInsideOutside && ((deltaY < 0 && velocityY < this.THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL) && topListInside < 0) && velocityY !== 0) {
+    if (hListInside > hListOutside && topListInside >= gapListInsideOutside && ((deltaY < 0 && velocityY < -this.THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL) || (deltaY > 0 && velocityY > this.THRESHOLD_LIST_INSIDE_VELOCITY_FADEOUT_SCROLL) && topListInside < 0) && velocityY !== 0) {
       this.bScrollListInsideEnabled = true
       // fadeout scrolling
       console.log("fadeout scrolling")
