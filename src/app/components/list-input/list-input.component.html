@@ -1,17 +1,14 @@
 <!-- HEIGHT NEEDED SO THAT INPUT IS ABOVE KEYBOARD AND NOT UNCONTROLLED SOMEWHERE ELSE -->
-<div #vInputContainer class="bg-dark flex align-items-center" style="display: none; height: 4rem; width: 100%; z-index: 21; position: fixed; bottom: 0; box-sizing: border-box; padding-right: 0rem !important;">
-  <!--
- <div class="divider" style="position: absolute; top: 0"></div>
- <div class="divider" style="position: absolute; bottom: 0"></div>
- -->
-  <div class="i" style="margin-left: 1rem !important;">
+<div #vInputContainer class="bg-dark flex align-items-center" (panmove)="null"
+     style="display: none; padding-top: 0.75rem; padding-bottom: 0.75rem; max-height: 12rem; width: 100%; z-index: 21; position: fixed; bottom: 0; box-sizing: border-box; padding-right: 0rem !important;">
+
+  <div #vInputWrapper class="i" style="height: 100%; margin-left: 1rem !important;" (panmove)="null">
       <span *ngIf="cRegard !== null" class="ts-xs tc-primary_"
             style="">{{'@ ' + cRegard}}</span>
-    <textarea #vInput type="text" [placeholder]="cHint" style="margin-left: 0.25rem !important; width: 100%; word-wrap: break-word; white-space: pre-wrap; overflow: hidden"></textarea>
+    <textarea #vInput type="text" [placeholder]="cHint"
+              style="margin-left: 0.25rem !important; width: 100%; overflow-y: scroll; line-height: 1.2rem"></textarea>
+
   </div>
-  <!-- https://stackoverflow.com/questions/1760629/how-to-get-number-of-rows-in-textarea-using-javascript/1761203#1761203 -->
-
-
 
 
   <mat-icon (click)="onSubmit()" [ngClass]="vInput.value === '' ? 'ic-light-two' : 'ic-light'" class="is-s" style="padding: 1rem" fontIcon="send"></mat-icon>
@@ -22,5 +19,5 @@
 
 </ng-template>
 
-<div #vClickScreen (click)="close()" class="bg-dark" style="opacity: 0; position: fixed; width: 100dvw; height: 100dvh; z-index: 20">
+<div #vClickScreen (click)="close()" (panmove)="null" class="bg-dark" style="opacity: 0; position: fixed; width: 100dvw; height: 100dvh; z-index: 20">
 </div>
