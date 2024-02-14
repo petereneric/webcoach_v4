@@ -35,6 +35,39 @@ export class AnimationService {
       50);
   }
 
+  iconClickTwo(element) {
+    let vAnimation: HTMLSpanElement | null = null
+
+    for (let i = 0; i < element.nativeElement.children.length; i++) {
+      if (element.nativeElement.children[i].id === 'vAnimation') {
+        vAnimation = element.nativeElement.children[i]
+        this.renderer.removeClass(vAnimation, 'a-icon-click')
+      }
+    }
+
+    if (!vAnimation) {
+      vAnimation = document.createElement("span");
+      this.renderer.setStyle(vAnimation, 'position', 'absolute')
+      const dimenReference = element.nativeElement.getBoundingClientRect()
+      const diameter = Math.max(element.nativeElement.offsetWidth, element.nativeElement.offsetHeight) * 1.8;
+      const radius = diameter / 2;
+      this.renderer.setStyle(vAnimation, 'width', diameter + 'px')
+      this.renderer.setStyle(vAnimation, 'height', diameter + 'px')
+      this.renderer.setStyle(vAnimation, 'background', 'rgba(244,242,245,0.14)')
+      this.renderer.setStyle(vAnimation, 'opacity', 0)
+      this.renderer.setStyle(vAnimation, 'border-radius', '50%')
+      this.renderer.setStyle(vAnimation, 'z-index', -1)
+      this.renderer.setStyle(vAnimation, 'left', (dimenReference.x + (dimenReference.width/2) - radius) + 'px')
+      this.renderer.setStyle(vAnimation, 'top', (dimenReference.y + (dimenReference.height/2) - radius) + 'px')
+      this.renderer.setProperty(vAnimation, 'id', 'vAnimation')
+      element.nativeElement.appendChild(vAnimation)
+    }
+
+    setTimeout(() => {
+      this.renderer.addClass(vAnimation, 'a-icon-click');
+    }, )
+  }
+
   moveVertical(vElement, pxPosition, secTransition = 0, callback: any = null, speedCurve: string = '') {
     this.renderer.setStyle(vElement.nativeElement, 'transition', secTransition + 's' + ' ' + speedCurve)
     this.renderer.setStyle(vElement.nativeElement, 'top', pxPosition + 'px')
@@ -123,6 +156,30 @@ export class AnimationService {
         this.renderer.addClass(element.nativeElement, 'a-pump');
       },
       2);
+  }
+
+  ripple(nativeElement, vContainer, evPointer: any) {
+    const ripple = vContainer.getElementsByClassName("a-ripple")[0];
+    if (ripple) {
+      ripple.remove();
+    }
+
+    const vRipple = document.createElement("span");
+    this.renderer.setStyle(vRipple, 'position', 'absolute')
+
+    this.renderer.removeClass(nativeElement, 'a-ripple')
+    const diameter = Math.max(vContainer.offsetWidth, vContainer.offsetHeight);
+    const radius = diameter / 2;
+    this.renderer.setStyle(vRipple, 'width', diameter + 'px')
+    this.renderer.setStyle(vRipple, 'height', diameter + 'px')
+    this.renderer.setStyle(vRipple, 'left', (evPointer.layerX - radius) + 'px')
+    this.renderer.setStyle(vRipple, 'top', (evPointer.layerY - radius) + 'px')
+    console.log(vRipple)
+
+    setTimeout(() => {
+      this.renderer.addClass(vRipple, 'a-ripple')
+      vContainer.appendChild(vRipple)
+    }, 2)
   }
 
   backgroundOpacityIn(element) {

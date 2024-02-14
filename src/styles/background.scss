@@ -6,12 +6,20 @@
   --background: $colorBackgroundDark !important;
 }
 
+.bg-dark-trans {
+  background-color: $colorBackgroundDarkTrans !important;
+}
+
 .bg-dark-two {
   background-color: $colorBackgroundDarkTwo;
 }
 
 .bg-dark-two-transparent {
   background-color: $colorBackgroundDarkTwoTransparent;
+}
+
+.bg-dark-three {
+  background-color: $colorBackgroundDarkThree;
 }
 
 .bg-light {
@@ -28,5 +36,9 @@
 }
 
 .bg-primary {
-  background: $colorPrimary;
+  background: $colorPrimary !important;
+}
+
+.bg-accent {
+  background: $colorAccent !important;
 }

@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {DialogService} from "../services/dialogs/dialog.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import {DialogService} from "../services/dialogs/dialog.service";
 
 export class File {
 
-  constructor(private svDialog: DialogService) {
+  constructor(private sanitizer: DomSanitizer, private svDialog: DialogService) {
 
   }
 
@@ -131,5 +132,9 @@ export class File {
     const file = new Blob([blob], {type: 'application/pdf'});
     const fileURL = URL.createObjectURL(file);
     window.open(fileURL, '_blank');
+  }
+
+  base64ImageWebpToSourceImage(base64Image) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/webp;base64,' + base64Image);
   }
 }

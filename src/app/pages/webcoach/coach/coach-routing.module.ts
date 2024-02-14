@@ -5,7 +5,7 @@ import { CoachPage } from './coach.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: '_',
     pathMatch: 'full',
     redirectTo: 'portal'
   },

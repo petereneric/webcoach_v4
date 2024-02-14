@@ -9,7 +9,9 @@ export class UnitPlayerRepository {
 
   constructor(private api: ApiService) { }
 
-  safePost_UnitPlayer(data) {
-    this.api.safePost('webinar/auth/unit-player', data)
+  safePost_UnitPlayer(data, callback: any = null) {
+    this.api.safePost('webinar/auth/unit-player', data, () => {
+      callback()
+    })
   }
 }

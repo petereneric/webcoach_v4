@@ -5,7 +5,7 @@
 $sizeIcon: 2rem;
 
 .container {
-  @extend .page-horizontal;
+  @extend .window-horizontal;
   @extend .section-horizontal;
   height: $heightMenu;
   background: $colorWhite;

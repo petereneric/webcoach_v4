@@ -75,6 +75,10 @@ $colorHoverDark: $colorDarkTwo;
   color: $colorWhite;
 }
 
+.btc-accent {
+  color: $colorAccent;
+}
+
 button {
   all: unset;
   box-sizing: border-box;
@@ -135,6 +139,14 @@ button {
   @extend .bbc-dark;
   @extend .tc-dark;
   @extend .ts-standard;
+}
+
+// button - accent
+
+.b-3-accent {
+  @extend .btc-accent;
+  @extend .ts-standard;
+  font-weight: normal !important;
 }
 
 

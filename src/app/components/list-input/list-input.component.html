@@ -7,8 +7,9 @@
   <div class="i" style="margin-left: 1rem !important;">
       <span *ngIf="cRegard !== null" class="ts-xs tc-primary_"
             style="">{{'@ ' + cRegard}}</span>
-    <input #vInput  type="text" [placeholder]="cHint" style="margin-left: 0.25rem !important;">
+    <textarea #vInput type="text" [placeholder]="cHint" style="margin-left: 0.25rem !important; width: 100%; word-wrap: break-word; white-space: pre-wrap; overflow: hidden"></textarea>
   </div>
+  <!-- https://stackoverflow.com/questions/1760629/how-to-get-number-of-rows-in-textarea-using-javascript/1761203#1761203 -->
 
 
 

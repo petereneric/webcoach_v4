@@ -214,11 +214,11 @@
       <div (click)="onClick_InputAddNote()" (panmove)="null" class="flex-vertical bg-dark" style="height: 4rem; box-sizing: border-box; width: 100%; position: relative">
         <!-- structure needed to avoid overflow-x -->
         <div class="divider" style="position: absolute; top: 0"></div>
-        <div class="flex section align-items-center" style="box-sizing: border-box;">
+        <div class="flex section-horizontal align-items-center" style="height: 100%; box-sizing: border-box;">
           <div class="bg-light" style="border-radius: 0.75rem; padding: 0.5rem;">
             <p class="ts-xs tc-dark tw-bold" style="padding-top: 0.1rem">{{uDateTime.secondsToDefault(oPlayer.currentTime())}}</p>
           </div>
-          <div class="sph-1"></div>
+          <div class="sph-1" style=""></div>
           <input class="i" type="text" placeholder="Notiz hinzufügen...">
         </div>
 
@@ -350,8 +350,9 @@
 
     <!-- notes -->
     <div class="tab-container" (click)="cpListNotes.onOpenList()">
-      <mat-icon class="is-standard ic-light" fontIcon="edit_note"></mat-icon>
+      <mat-icon class="is-standard ic-light"  fontIcon="edit_note"></mat-icon>
       <p class="tab-title">Notizen</p>
+      <div *ngIf="this.svWebinar.bsUnit.value!.oUnitPlayer!.lNotes! && this.svWebinar.bsUnit.value!.oUnitPlayer!.lNotes!.length > 0" class="tab-marker"></div>
     </div>
 
 

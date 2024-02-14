@@ -58,6 +58,10 @@ export class ListInputComponent implements OnInit, AfterViewInit {
 
     })
 
+    this.vInput.nativeElement.addEventListener("input", () => {
+      console.log(this.vInput.nativeElement.getBoundingClientRect())
+    })
+
     window?.visualViewport?.addEventListener('resize', () => {
       let position = window!.visualViewport!.height - this.vInputContainer.nativeElement.offsetHeight
       //this.renderer.setStyle(this.vInputNoteContainer.nativeElement, 'top', position + 'px')
@@ -70,8 +74,6 @@ export class ListInputComponent implements OnInit, AfterViewInit {
   }
 
   show(cInput = '', cRegard: string | null = null, cHint: string | null = null) {
-    console.log("hello")
-    console.log(cRegard)
     this.cRegard = cRegard
     if (cRegard !== null) {
       this.cHint = ''
@@ -79,21 +81,13 @@ export class ListInputComponent implements OnInit, AfterViewInit {
       if (cHint !== null) this.cHint = cHint
     }
     // show input and keyboard
-
-
-
     this.renderer.setStyle(this.vClickScreen.nativeElement, 'display', 'block')
     this.svAnimation.backgroundOpacityIn(this.vClickScreen)
 
-
-
     this.vInput.nativeElement.value = cInput
     this.renderer.setStyle(this.vInputContainer.nativeElement, "display", 'flex')
-
-    //this.renderer.setStyle(this.vInput.nativeElement, 'opacity', 0)
     this.vInput.nativeElement.focus()
   }
-
 
   onSubmit() {
     if (this.vInput.nativeElement.value !== '') {

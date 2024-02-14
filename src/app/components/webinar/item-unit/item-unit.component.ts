@@ -50,7 +50,7 @@ export class ItemUnitComponent implements OnInit, AfterViewInit {
       this.currentUnit = unit
     })
      */
-
+    console.log("Unit", this.oUnit)
     this.svWebinar.bsUnit.subscribe(unit => {
       this.currentUnit = unit
     })

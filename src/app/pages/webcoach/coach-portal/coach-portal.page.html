@@ -1,0 +1,140 @@
+<div class="bg-dark-two" style="height: 100svh; overflow: hidden; position: relative">
+
+  <!-- header -->
+  <header class="window-horizontal flex align-items-center bg-dark-two sh-header" style="height: 3rem; position: relative; padding-top: 0.75rem; padding-bottom: 0.75rem; z-index: 3">
+    <mat-icon #vIconMenu [matTooltip]="bNavExpanded ? 'Menü minimieren' : 'Menü maximieren'" (click)="onClick_Menu()" class="ic-light-two is-l hc-light" style="cursor: pointer" fontIcon="menu"></mat-icon>
+    <img class="ml-1" style="height: 3rem" src="assets/logo/webcoach_light.webp">
+
+    <!-- search -->
+    <div class="bo-standard pv-05 ph-1" style="position: absolute; width: 30vw; left: 50%; transform: translateX(-50%)">
+      <input class="" placeholder="In deinem Trainingslager suchen" style="width: 100%">
+    </div>
+
+    <!-- help -->
+    <mat-icon #vIconHelp matTooltip="Hilfe" (click)="onClick_Help()" class="ic-light-two is-standard hc-light" style="margin-left: auto; cursor: pointer" fontIcon="help_outline"></mat-icon>
+
+    <!-- create new webinar button -->
+    <button class="bo-light-two bor-01 ml-1 flex align-items-center">
+      <mat-icon class="ic-primary is-standard mr-05" fontIcon="library_add"></mat-icon>
+      ERSTELLEN
+    </button>
+
+    <!-- coach profile -->
+    <div #vHeaderProfileImage matTooltip="Konto" style="margin-left: 2rem; height: 2rem; width: 2rem; cursor: pointer">
+      <img  class="img-circle" style="height: 100%" src="assets/favicon/favicon.webp">
+    </div>
+
+  </header>
+
+  <div #vLoad style="width: 100vw; height: 0.25rem; position:absolute; z-index: 3; background-color: transparent; display: none">
+    <div class="loader a-load" style="width: 100vw; max-width: 100vw !important; height: 0.25rem; position: absolute"></div>
+  </div>
+
+
+
+  <div class="flex" style="width: 100%; z-index: 2">
+
+    <!-- navigation -->
+
+    <div class="flex">
+      <nav #vNav class="bg-dark-two flex-vertical pb-1" [style.width]="wNavExpanded" style="position: relative; box-sizing: border-box; height: calc(100svh - 4.5rem); z-index: 1">
+
+
+        <!-- nav-one -->
+        <div #vNavOne style="">
+          <!-- header -->
+          <header class="flex-vertical align-items-center p-1">
+            <img class="img-circle" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0rem 0.5rem 0rem" src="assets/favicon/favicon.webp">
+            <div #vNavOneTitle class="mt-1 flex-vertical align-items-center">
+              <p class="tc-light tw-bold ts-standard t-no-wrap">Mein Account</p>
+              <p class="tc-light-two ts-s mt-05 t-no-wrap">Webcoach</p>
+            </div>
+          </header>
+
+          <div class="spv-1"></div>
+
+          <!-- nav-items-top -->
+          <div *ngFor="let aNavItem of lNavItemsOne" style="position: relative;">
+            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="kSelectedNavItem" (outputClick)="onClick_NavItem(aNavItem)"></app-nav-item>
+          </div>
+        </div>
+
+        <!-- nav-two -->
+        <div #vNavTwo style="padding-top: 0.5rem; display: none">
+
+          <!-- back -->
+          <div (click)="onClick_BackNavTwo()" style="width: 100%; height: 3rem; position: relative; cursor: pointer" class="flex align-items-center hb-dark">
+            <div class="flex align-items-center" style="position: absolute;">
+              <mat-icon class="ic-light-two is-standard" [style.width]="wNavCollapsed" style="text-align: center" fontIcon="keyboard_backspace"></mat-icon>
+              <p class="tc-light ts-standard tw-bold t-no-wrap">Inhalte des Kanals</p>
+            </div>
+          </div>
+
+
+          <!-- image -->
+          <div  #vNavTwoImage class="flex justify-content-center bg-dark-three mt-05" style="width: 17rem; height: 10rem; margin-left: 0.5rem; margin-right: 0.5rem; position: relative; box-sizing: border-box; border-radius: 0.3rem;" >
+            <img  style="height: 100%" src="assets/thumbnail/thumbnail.jpg">
+          </div>
+
+          <!-- title -->
+          <div #vNavTwoTitle class="flex-vertical ml-2 mt-2">
+            <p class="tc-light ts-standard tw-bold t-no-wrap">Webinar</p>
+            <p class="tc-light-two ts-s mt-05 t-no-wrap">Python Grundkurs für Anfänger</p>
+          </div>
+
+          <!-- nav-items-top -->
+          <div class="spv-2"></div>
+          <div *ngFor="let aNavItem of lNavItemsTwo" style="position: relative;">
+            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="kSelectedNavItem" (outputClick)="onClick_NavItem(aNavItem)"></app-nav-item>
+          </div>
+
+
+
+        </div>
+
+
+
+        <div class="spv-max"></div>
+
+        <!-- nav-items-bottom -->
+        <div *ngFor="let aNavItem of lNavItemsBottom">
+          <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="0" (outputClick)="onClick_NavItem(aNavItem)"></app-nav-item>
+        </div>
+
+
+
+      </nav>
+
+      <div class="dv-light-two-025"></div>
+    </div>
+
+
+    <!-- pages -->
+    <div class="bg-dark-two" style="width: 100%; z-index: 2; height: calc(100svh - 4.5rem)">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- menu-action profile-settings -->
+<div #vProfileSettings class="flex-vertical bg-dark-two sh-container mt-05" style="visibility: hidden; width: 20rem; border-radius: 0.2rem; position: absolute; z-index: 4">
+  <div class="flex section">
+    <img class="img-circle mr-1" style="height: 2.5rem" src="assets/favicon/favicon.webp">
+    <div class="flex-vertical">
+      <p class="tc-light ts-standard tw-bold">Eric Schumacher</p>
+      <p class="tc-light ts-s tw-bold mt-025">@petereneric</p>
+    </div>
+  </div>
+  <div class="divider-light-two-trans"></div>
+  <div class="flex-vertical" style="padding-top: 0.5rem; padding-bottom: 0.5rem; cursor: pointer">
+    <div (click)="onClick_NavItemProfileSettings(aNavItem)" *ngFor="let aNavItem of lNavItemsProfileSettings" class="flex align-items-center hb-dark-three" style="padding: 0.5rem 1rem 0.5rem 1rem">
+      <mat-icon class="is-s ic-light-two mr-1" [fontIcon]="aNavItem.cIcon!"></mat-icon>
+      <p class="ts-s tc-light">{{aNavItem.cTitle}}</p>
+    </div>
+  </div>
+</div>
+
+

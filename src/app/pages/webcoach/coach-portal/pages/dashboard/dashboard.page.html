@@ -1,0 +1,89 @@
+<div style="height: 100%; overflow-y: auto">
+  <app-page-header [cTitle]="'Dashboard'"></app-page-header>
+  <main class="page">
+    <div class="container">
+      <p class="title-container">Leistung des letzten Kurses</p>
+
+      <div style="position: relative">
+        <img class="image-container" [src]="aWebinarLast && uFile.base64ImageWebpToSourceImage(aWebinarLast!.base64Cover)">
+        <p class="tc-light t-standard tw-bold mb-05 ml-1 sh-text" style="position: absolute; bottom: 0">{{aWebinarLast?.cName}}</p>
+      </div>
+
+
+      <div class="flex align-items-center mt-05">
+        <mat-icon class="is-s ic-light-two" fontIcon="bar_chart"></mat-icon>
+        <p class="ts-xs tc-light-two ml-05">{{aWebinarLast?.nCalls}}</p>
+        <mat-icon class="is-s ic-light-two ml-2" fontIcon="comment"></mat-icon>
+        <p class="ts-xs tc-light-two ml-05">{{aWebinarLast?.nComments}}</p>
+        <mat-icon class="is-s ic-light-two ml-2" fontIcon="thumb_up_alt"></mat-icon>
+        <p class="ts-xs tc-light-two ml-05">{{aWebinarLast?.nLikes}}</p>
+      </div>
+
+      <div class="divider mt-1 mb-1"></div>
+
+      <div class="ts-s tc-light flex-vertical" style="gap: 1rem">
+        <div class="flex">
+          <p>Ranking nach Aufrufen</p>
+          <p style="margin-left: auto !important;">{{nRankingByCalls + ' von ' + lWebinarsOrderedByCalls.length}}</p>
+        </div>
+        <div class="flex">
+          <p>Aufrufe</p>
+          <p style="margin-left: auto !important;">{{aWebinarLast?.nCalls}}</p>
+        </div>
+        <div class="flex">
+          <p>Durchschnittliche Abschlussrate</p>
+          <p style="margin-left: auto !important;">{{aWebinarLast && (aWebinarLast.pCompleted * 100) + '%'}}</p>
+        </div>
+        <div class="flex">
+          <p>"Mag ich" Bewertungen</p>
+          <p style="margin-left: auto !important;">{{aWebinarLast?.nLikes}}</p>
+        </div>
+      </div>
+
+      <div class="spv-2"></div>
+
+      <button class="b-3-accent">KURSANALYSE AUFRUFEN</button>
+      <button class="b-3-accent">KOMMENTARE ANZEIGEN</button>
+
+    </div>
+
+    <div class="container mt-2">
+      <p class="title-container">Veröffentlichte Webinare</p>
+
+      <div class="flex-vertical"style="gap: 1rem">
+        <div class="flex align-items-center" *ngFor="let aWebinar of lWebinarsOrderedByDate">
+          <img class="bg-dark-three" style="width: 3rem; height: 2rem; object-fit: contain" [src]="uFile.base64ImageWebpToSourceImage(aWebinar.base64Cover)">
+          <div class="flex-vertical ml-05">
+            <p class="ts-s tc-light">{{aWebinar.cName}}</p>
+            <div class="flex align-items-center mt-025" style="gap: 2rem">
+              <div class="flex align-items-center">
+                <mat-icon class="is-xs ic-light-two" fontIcon="bar_chart"></mat-icon>
+                <p class="ts-xxs tc-light-two ml-025">{{aWebinar.nCalls}}</p>
+              </div>
+              <div class="flex align-items-center">
+                <mat-icon class="is-xs ic-light-two ml-2" fontIcon="comment"></mat-icon>
+                <p class="ts-xxs tc-light-two ml-025">{{aWebinar.nComments}}</p>
+              </div>
+              <div class="flex align-items-center">
+                <mat-icon class="is-xs ic-light-two ml-2" fontIcon="thumb_up_alt"></mat-icon>
+                <p class="ts-xxs tc-light-two ml-025">{{aWebinar.nLikes}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spv-2"></div>
+
+      <button class="b-3-accent">ZU DEN KURSEN</button>
+    </div>
+
+    <div class="flex mt-3 tc-light-two ts-xs ml-05" style="cursor: pointer; gap: 3rem">
+      <p class="hc-accent" [routerLink]="'/nutzungsbedingungen'">Nutzungsbedingungen</p>
+      <p class="hc-accent" [routerLink]="'/datenschutzbestimmungen'">Datenschutzerklärung</p>
+      <p class="hc-accent" [routerLink]="'/impressum'">Impressum</p>
+    </div>
+  </main>
+</div>
+
+

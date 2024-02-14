@@ -13,7 +13,7 @@ export class DialogService {
   showDialog(content: iDialog) {
     let dialogRef = this.dialog.open(DialogComponent, {
       height: 'auto',
-      backdropClass: "d-bg",
+      backdropClass: "d-backdrop",
       data: content
     })
 

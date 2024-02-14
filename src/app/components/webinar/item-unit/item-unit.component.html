@@ -6,7 +6,7 @@
     <p #tvTitle class="ts-s tc-light tw-bold" style="margin-bottom: 0.375rem !important;">{{oUnit?.cName}}</p>
     <div class="flex align-items-center">
       <mat-icon #ivPlayIcon [ngClass]="this.oUnit?.id === this.currentUnit?.id ? 'ic-primary' : 'ic-light-two'" class="is-s ic-light-two" fontIcon="play_circle"></mat-icon>
-      <p #tvSubtitle class="ts-xs tc-light-two ml-05">{{uDateTime.secondsToDefault(oUnit?.secDuration!) + " Min."}}</p>
+      <p #tvSubtitle class="ts-xs tc-light-two ml-05">{{uDateTime.secondsToDefault(oUnit?.secDuration!) + " Min." + (oUnit!.oUnitPlayer! && oUnit!.oUnitPlayer!.nNotes > 0 ? "\u00A0\u00A0•\u00A0\u00A0" + oUnit!.oUnitPlayer!.nNotes + (oUnit!.oUnitPlayer!.nNotes > 1 ? " Notizen" : " Notiz") : "")}}</p>
     </div>
   </div>
 

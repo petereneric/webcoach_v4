@@ -54,9 +54,14 @@ export class WebinarService {
         if (aWebinarPlayer) {
           this.bsWebinarPlayer.next(aWebinarPlayer)
         } else {
-          rWebinarPlayer.safePut_WebinarPlayer(aWebinar?.id, aWebinarPlayer => {
-            this.bsWebinarPlayer.next(aWebinarPlayer)
-          })
+
+          console.log("id", aWebinar?.id)
+          if (aWebinar) {
+            rWebinarPlayer.safePut_WebinarPlayer(aWebinar.id, aWebinarPlayer => {
+              this.bsWebinarPlayer.next(aWebinarPlayer)
+            })
+          }
+
         }
 
       })
@@ -181,7 +186,7 @@ export class WebinarService {
     }
   }
 
-  uploadUnitPlayer(aUnitPlayer: UnitPlayer = this.bsUnit.value?.oUnitPlayer!) {
+  uploadUnitPlayer(aUnitPlayer: UnitPlayer = this.bsUnit.value?.oUnitPlayer!, callback: any = null) {
     console.log("UPDATE UNIT PLAYER")
     console.log(aUnitPlayer)
     const data = {
@@ -190,9 +195,8 @@ export class WebinarService {
       secVideo: aUnitPlayer.secVideo,
     }
     console.log(data)
-    this.rUnitPlayer.safePost_UnitPlayer(data)
+    this.rUnitPlayer.safePost_UnitPlayer(data, callback)
   }
-
 
 
   updateWebinarPlayer() {
@@ -344,7 +348,7 @@ export class WebinarService {
           if (aUnit.oUnitPlayer !== null && aUnit.oUnitPlayer.tStatus === 2) nUnitsChecked++
         })
       })
-      this.bsWebinarProgress.next(Number((nUnitsChecked/nUnits).toFixed(2)))
+      this.bsWebinarProgress.next(Number((nUnitsChecked / nUnits).toFixed(2)))
     }
   }
 
@@ -355,13 +359,13 @@ export class WebinarService {
       nUnits++
       if (aUnit.oUnitPlayer !== null && aUnit.oUnitPlayer.tStatus === 2) nUnitsChecked++
     })
-    this.bsSectionProgress.next(Number((nUnitsChecked/nUnits).toFixed(2)))
+    this.bsSectionProgress.next(Number((nUnitsChecked / nUnits).toFixed(2)))
   }
 
   setCurrentUnitProgress() {
     const secProgress = this.bsUnit.value?.oUnitPlayer?.secVideo ?? 0
     const secTotal = this.bsUnit.value?.secDuration!
-    this.bsUnitProgress.next(Number((secProgress/secTotal).toFixed(2)))
+    this.bsUnitProgress.next(Number((secProgress / secTotal).toFixed(2)))
   }
 
 }

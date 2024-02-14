@@ -1,23 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "styles/text.scss"
-@import "styles/icon"
-@import "styles/dimen"
-@import "styles/color"
+
 @import "styles/animation"
-@import "styles/display"
-@import "styles/html"
-@import "styles/spacer"
-@import "styles/button"
-@import "styles/form"
-@import "styles/list"
 @import "styles/background"
-@import "styles/shadow"
-@import "styles/page"
 @import "styles/border"
-@import "styles/input"
+@import "styles/button"
+@import "styles/color"
 @import "styles/dialog"
+@import "styles/dimen"
+@import "styles/display"
+@import "styles/form"
+@import "styles/hover"
+@import "styles/html"
+@import "styles/icon"
+@import "styles/input"
+@import "styles/list"
+@import "styles/page"
+@import "styles/shadow"
+@import "styles/spacer"
 @import "styles/template"
+@import "styles/text.scss"
+@import "styles/divider"
+
+
+
 @import "theme/variables"
 @import "video.js/dist/video-js.css"
 
@@ -26,6 +32,7 @@
   //box-sizing: border-box
 
 html
+  //font-family: Verdana, sans-serif !important
 
 
 
@@ -34,8 +41,12 @@ body
   padding: 0
   background-color: $colorDark
 
+h1,h2,h3,h4,h5,h6
+  all: unset
 
 
+header
+  all: unset
 
 // margin need to be set to 0, however padding doesn't
 //  and is therefore preferred for setting dimen in html styling
@@ -200,7 +211,8 @@ ul
   user-select: none /* Standard syntax */
 
 
-
+.pointer
+  cursor: pointer
 
 ::placeholder
   color: $colorLightTwo
@@ -222,6 +234,13 @@ select:-webkit-autofill:focus
   -webkit-text-fill-color: $colorLight !important
   -webkit-box-shadow: 0 0 0px 1000px transparent inset
   transition: background-color 5000s ease-in-out 0s
+
+
+
+
+
+
+
 
 
 

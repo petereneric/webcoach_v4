@@ -8,4 +8,5 @@ export interface UnitPlayer {
   secVideo: number | null
   lNotes: Note[] | null
   bLike: boolean
+  nNotes: number
 }

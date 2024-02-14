@@ -66,7 +66,7 @@ const routes: Routes = [
         loadChildren: () => import('./legal-affairs/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyPageModule)
       },
       {
-        path: 'legal-affairs',
+        path: 'nutzungsbedingungen',
         loadChildren: () => import('./legal-affairs/legal-affairs.module').then(m => m.LegalAffairsPageModule)
       },
       {
@@ -100,7 +100,7 @@ const routes: Routes = [
       },
       {
         path: 'test-scroll',
-        loadChildren: () => import('../../../pages/test-scroll/test-scroll.module').then( m => m.TestScrollPageModule)
+        loadChildren: () => import('../../playground/playground.module').then(m => m.TestScrollPageModule)
       },
 
     ]

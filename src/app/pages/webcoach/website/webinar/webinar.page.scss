@@ -136,6 +136,17 @@
   margin-top: 0.1rem;
 }
 
+.tab-marker {
+  border-radius: 100%;
+  @extend .bg-primary;
+  height: 0.3rem;
+  width: 0.3rem;
+  position: absolute;
+  top: 0.6rem;
+  margin-left: 2rem;
+  transition: 0.2s;
+}
+
 /*
 .tab {
   width: 100%;

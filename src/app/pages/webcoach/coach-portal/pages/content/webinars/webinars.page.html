@@ -1,0 +1,41 @@
+<main class="window-vertical" style="">
+
+  <header class="flex align-items-center" style="position: relative; height: 3rem">
+    <div class="window-horizontal flex" style="width: 100%">
+      <p *ngFor="let aColumn of lColumns" class="ts-s tc-light-two tw-bold " [style.width]="aColumn.pWidth">{{aColumn.cName}}</p>
+    </div>
+
+    <div class="dh-light-two-025" style="position: absolute; bottom: 0"></div>
+  </header>
+
+  <div *ngFor="let aWebinar of lWebinars" class="flex hb-dark pointer" style="position: relative; padding-top: 0.5rem; padding-bottom: 0.5rem">
+
+    <div class="window-horizontal flex" style="width: 100%;">
+      <!-- webinar -->
+      <div class="flex" [style.width]="lColumns[0].pWidth" style="">
+        <div class="bg-dark-three flex-center" style="width: 10rem; height: 5rem; border-radius: 0.25rem">
+          <img class="image-container bg-dark-three" [src]="uFile.base64ImageWebpToSourceImage(aWebinar.base64Thumbnail)" style="object-fit: contain; height: 100%">
+        </div>
+        <div class="flex-vertical" style="padding: 0.5rem 1rem 0.5rem 1rem; width: 100%">
+          <p class="t-xs tc-light">{{aWebinar.cName}}</p>
+          <p class="t-xxs tc-light-two mt-025" [innerHTML]="aWebinar.cDescriptionShort !== '' ? aWebinar.cDescriptionShort.substring(0, 99)+'...' : 'Keine Beschreibung'"></p>
+        </div>
+      </div>
+
+      <!-- date -->
+      <p class="tc-light ts-xs" [style.width]="lColumns[1].pWidth" style="padding-top: 0.5rem">{{uDateTime.sqlDateToDefault(aWebinar.dtCreation)}}</p>
+
+      <!-- calls -->
+      <p class="tc-light ts-xs" [style.width]="lColumns[2].pWidth" style="padding-top: 0.5rem">{{aWebinar.nCalls}}</p>
+
+      <!-- comments -->
+      <p class="tc-light ts-xs" [style.width]="lColumns[3].pWidth" style="padding-top: 0.5rem">{{aWebinar.nComments}}</p>
+
+      <!-- likes -->
+      <p class="tc-light ts-xs" [style.width]="lColumns[4].pWidth" style="padding-top: 0.5rem">{{aWebinar.nLikes}}</p>
+    </div>
+
+    <!-- divider -->
+    <div class="dh-light-two-025" style="position: absolute; bottom: 0"></div>
+  </div>
+</main>

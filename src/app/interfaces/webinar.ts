@@ -4,6 +4,7 @@ import {Section} from "./section";
 
 export interface Webinar {
   id: number,
+  dtCreation: string
   dtLastUpdate: string
   oCoach: Coach
   oLevel: Level
@@ -17,4 +18,10 @@ export interface Webinar {
   lSections: Section[],
   sNet: number
   bVertical: boolean
+  nComments: number
+  nLikes: number
+  nCalls: number
+  pCompleted: number
+  base64Cover: string
+  base64Thumbnail: string
 }

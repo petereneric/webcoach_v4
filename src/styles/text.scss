@@ -134,6 +134,10 @@
   color: $colorLightTwo;
 }
 
+.tc-light-three {
+  color: $colorLightThree;
+}
+
 .tc-dark {
   color: $colorDark;
 }
@@ -209,4 +213,10 @@
   color: #9d86c0;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.t-no-wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

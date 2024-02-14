@@ -1,3 +1,5 @@
+@import "../theme/color.theme";
+
 // transition
 .a-transition {
   transition: all 200ms ease-in-out;
@@ -82,6 +84,27 @@
     transform: scale(1)
   }
 }
+
+
+
+// ripple
+
+.a-ripple {
+  display: flex !important;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: a-ripple-keyframes 500ms linear;
+  background-color: $colorAccent;
+  opacity: 0.4;
+}
+
+@keyframes a-ripple-keyframes {
+  to {
+    transform: scale(6);
+    opacity: 0;
+  }
+}
+
 
 // opacity
 .a-bg-opacity-in {

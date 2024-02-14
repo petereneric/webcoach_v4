@@ -1,0 +1,9 @@
+<div class="hb-dark" style="width: 100%" (click)="onClick()">
+  <div style="height: 3rem; position: relative; cursor: pointer" [style.width]="wNavCollapsed">
+    <div class="flex align-items-center" style="position: absolute; height: 100%">
+      <div *ngIf="isSelected" class="bg-primary" style="width: 0.3rem; height: 100%; position: absolute"></div>
+      <mat-icon class="is-l ic-light-two" [style.width]="wNavCollapsed" style="padding-top: 0.1rem" [class.ic-primary]="isSelected" [fontIcon]="aNavItem.cIcon!"></mat-icon>
+      <p class="tc-light-two tw-bold ts-standard t-no-wrap" [class.tc-primary_]="isSelected">{{aNavItem['cTitle']}}</p>
+    </div>
+  </div>
+</div>

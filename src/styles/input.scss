@@ -3,16 +3,25 @@
 .i {
   @extend .ts-s;
   caret-color: $colorLight;
-  width: 100%;
+  width: 100% !important;
   background: $colorBackgroundDark;
   color: $colorLight;
   border: 1px solid $colorLight;
   border-radius: 0.2rem;
-  padding: 0.5rem;
+  padding: 0.75rem 0.5rem 0.75rem 0.5rem;
   box-sizing: border-box;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  white-space: pre-wrap;
+  height: 2.5rem;
+  overflow: hidden;
 }
 
 input {
+  all: unset;
+}
+
+textarea {
   all: unset;
 }
 

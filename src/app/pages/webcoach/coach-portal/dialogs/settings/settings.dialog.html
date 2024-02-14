@@ -1,0 +1,7 @@
+<div class="dialog-container" style="">
+  <app-dialog-header [cTitle]="'Einstellungen'"></app-dialog-header>
+  <div class="flex" style="">
+    <app-dialog-nav [lNavItems]="lNavItems" (outputClick)="onClick_NavItem($event)"></app-dialog-nav>
+  </div>
+  <app-dialog-buttons [lButtons]="lButtons" (outputClick)="onClick_Button($event)" style="margin-top: auto"></app-dialog-buttons>
+</div>

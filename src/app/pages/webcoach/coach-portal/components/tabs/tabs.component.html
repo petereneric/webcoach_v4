@@ -1,0 +1,18 @@
+<div #vContainer style="width: 100%; position: relative;">
+  <div class="flex pt-1 window-horizontal">
+    <div #vTabs *ngFor="let aTab of lTabs" (click)="select($event, aTab)" style="box-sizing: border-box; margin-right: 3rem; cursor: pointer;">
+      <div [id]="aTab.id" class="flex-vertical"  style="  position: relative; overflow: hidden;">
+        <p class="ts-s tc-light-two tw-bold" style="padding-top: 0.5rem">{{aTab.cTitle}}</p>
+        <div class="spv-1"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div #vBar class="bg-accent" style="position: absolute; bottom: 0; height: 0.2rem; margin-bottom: 1px; width: 0%; border-radius: 0.5rem 0.5rem 0rem 0rem"></div>
+  <div class="divider-light-two-025"></div>
+
+</div>
+
+

@@ -161,9 +161,10 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   private pCoverScroll: number = 0
   private tsCoverScroll: number = 0
   public testText: string = ""
-  private bNewVideo: boolean = false
+  private bNewVideoTime: boolean = false
   private bNewVideoSec: number = 0
   private bVideoDelay: boolean = false
+  private bPlayAfterSeek: boolean = true
 
   public testName: string = 'cool'
 
@@ -193,19 +194,25 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
           break;
 
         case "hidden":
-          this.svWebinar.uploadUnitPlayer()
-
-          this.svWebinar.setCurrentUnitProgress()
-          this.svWebinar.setCurrentSectionProgress()
-          this.svWebinar.setWebinarProgress()
-
-
           this.pauseVideo()
-          this.vCover.nativeElement.style.zIndex = 7
-          // scroll to top
+          this.vCover.nativeElement.style.zIndex = 9
           this.resetScroll()
-          this.bVisibilityChange = true
-          this.closeAllLists()
+          this.svWebinar.uploadUnitPlayer(this.svWebinar.bsUnit.value?.oUnitPlayer!, () => {
+            window.location.reload();
+          })
+
+          //this.svWebinar.setCurrentUnitProgress()
+          //this.svWebinar.setCurrentSectionProgress()
+          //this.svWebinar.setWebinarProgress()
+
+
+
+
+          // scroll to top
+          //this.closeAllLists()
+
+          //this.bVisibilityChange = true
+
           break;
       }
     });
@@ -214,6 +221,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
 
+    this.vCover.nativeElement.style.zIndex = 9
 
     this.setDimensions()
 
@@ -327,10 +335,14 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
           }
         }
+
+        /*
         setTimeout(() => {
           window.scroll({top: 0, left: 0, behavior: "smooth"});
         }, 400)
+         */
       }, timeout);
+
     });
 
     this.showSidebar()
@@ -504,33 +516,28 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
           // transition is set and after swipe taken away for instant movement in onSwipeMove()
           this.pauseVideo(false)
           const nextIntervalTime = this.getNextIntervalTime()
-          console.log(nextIntervalTime)
-          if (nextIntervalTime) {
-            this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = nextIntervalTime
-            this.oPlayer.currentTime(nextIntervalTime)
-
-          } else {
-            this.svWebinar.setUnitPlayerTime(0, this.svWebinar.bsUnit.value?.oUnitPlayer!)
-            this.svWebinar.setNextUnit()
-          }
 
           this.svAnimation.moveHorizontal(this.videoWrapper, -this.wVideoWrapper, this.TRANSITION_VIDEO_SWIPE, () => {
-            this.renderer.setStyle(this.videoWrapper.nativeElement, 'left', 0 + 'px')
-            this.playVideo()
+            console.log(nextIntervalTime)
+            if (nextIntervalTime) {
+              this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = nextIntervalTime
+              this.oPlayer.currentTime(nextIntervalTime)
+            } else {
+              this.svWebinar.setUnitPlayerTime(0, this.svWebinar.bsUnit.value?.oUnitPlayer!)
+              this.svWebinar.setNextUnit()
+            }
           })
         }
 
         if (ev.deltaX > 0) {
           // left interval
           this.pauseVideo(false)
-          const lastIntervalTime = this.getLastIntervalTime()
-          this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = lastIntervalTime
-          this.oPlayer.currentTime(lastIntervalTime)
+
 
           this.svAnimation.moveHorizontal(this.videoWrapper, +this.wVideoWrapper, this.TRANSITION_VIDEO_SWIPE, () => {
-            this.renderer.setStyle(this.videoWrapper.nativeElement, 'left', 0 + 'px')
-            this.playVideo()
-            console.log(this.getLastIntervalTime())
+            const lastIntervalTime = this.getLastIntervalTime()
+            this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = lastIntervalTime
+            this.oPlayer.currentTime(lastIntervalTime)
           })
         }
       }
@@ -540,6 +547,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
   onStart_ProgressBar() {
     this.renderer.setStyle(this.vProcessThumbnails.nativeElement, 'display', 'flex')
+    if (!this.oPlayer.paused()) this.pauseVideo(false)
   }
 
   onMove_ProgressBar(ev) {
@@ -566,7 +574,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     }
     this.renderer.setStyle(this.vProcessThumbnail.nativeElement, 'left', (position + 'px'))
 
-    if (!this.oPlayer.paused()) this.pauseVideo(false)
+
   }
 
   onEnd_ProgressBar(ev) {
@@ -574,9 +582,15 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
     console.log("currentTIME", this.oPlayer.duration())
     console.log("currentTIME", ev.center.x)
     console.log("currentTIME", this.wWindow)
-    this.oPlayer.currentTime(this.oPlayer.duration() * (ev.center.x / this.wWindow))
-    this.playVideo()
-    //this.startProgressUpdater()
+    const videoTime = this.oPlayer.duration() * (ev.center.x / this.wWindow)
+    //this.bNewVideoTime = true
+    //this.bNewVideoSec = videoTime
+    this.svWebinar.bsUnit.value!.oUnitPlayer!.secVideo! = videoTime
+
+    // in callback seeking play() is called
+    this.pauseVideo(false)
+    this.oPlayer.currentTime(videoTime)
+    //this.playVideo()
   }
 
 
@@ -795,19 +809,24 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       this.svWebinar.setNextUnit()
     });
 
+    this.oPlayer.on('seeked', data => {
+      this.renderer.setStyle(this.videoWrapper.nativeElement, 'left', 0 + 'px')
+      if (this.oPlayer.paused()) this.oPlayer.play()
+    })
+
     // play callback
     this.oPlayer.on('play', data => {
       this.setVideoSpeed()
 
-      if (this.bNewVideo) {
+      if (this.bNewVideoTime) {
         // this is needed on ios to bring balance to currentTime and wanted time since this can be different
         if (this.oPlayer.currentTime() !== this.bNewVideoSec) {
           // there is a dis balance on safari especially
           this.oPlayer.pause()
+          this.bNewVideoTime = false
           this.oPlayer.currentTime(this.svWebinar.bsUnit.value?.oUnitPlayer?.secVideo ?? 0)
           this.oPlayer.play()
           this.startProgressUpdater()
-          this.bNewVideo = false
         } else {
           this.startProgressUpdater()
         }
@@ -831,7 +850,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       this.oPlayer.src({src: source, type: 'video/mp4'});
 
       // DO NOT SET CURRENT TIME HERE
-      this.bNewVideo = true
+      this.bNewVideoTime = true
       this.bNewVideoSec = aUnit?.oUnitPlayer?.secVideo ?? 0
 
       if (play) this.playVideo()
@@ -858,17 +877,17 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   pauseVideo(bShowInformation = true) {
-      this.oPlayer.pause()
-      this.stopProgressUpdater()
+    this.oPlayer.pause()
+    this.stopProgressUpdater()
 
-      if (bShowInformation) {
-        this.svAnimation.show([this.vInformation, this.vTitle])
-        this.svAnimation.show([this.vSidebar])
-        this.bSidebarShown = true
-        this.bSidebarHidden = false
-        this.bInformationShown = true
-        this.bInformationHidden = false
-      }
+    if (bShowInformation) {
+      this.svAnimation.show([this.vInformation, this.vTitle])
+      this.svAnimation.show([this.vSidebar])
+      this.bSidebarShown = true
+      this.bSidebarHidden = false
+      this.bInformationShown = true
+      this.bInformationHidden = false
+    }
   }
 
   setVideoSpeed() {
@@ -978,6 +997,16 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       this.svWebinar.bsUnit.value?.oUnitPlayer?.lNotes?.push(aNote)
       this.svWebinar.sortNotes()
       console.log('note added: toast')
+      this.svWebinar.bsSections.value?.forEach(aSection => {
+        aSection.lUnits.forEach(aUnit => {
+          if (aUnit.id === this.svWebinar.bsUnit.value?.id) {
+            console.log("jooooNOOO", aUnit.oUnitPlayer!.nNotes)
+            aUnit.oUnitPlayer!.nNotes = aUnit.oUnitPlayer!.nNotes + 1
+            console.log("joooo", aUnit.oUnitPlayer!.nNotes)
+          }
+
+        })
+      })
     })
   }
 
@@ -1003,6 +1032,11 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
       });
       this.svWebinar.bsNote.next(null)
       console.log('note deleted')
+      this.svWebinar.bsSections.value?.forEach(aSection => {
+        aSection.lUnits.forEach(aUnit => {
+          if (aUnit.id === this.svWebinar.bsUnit.value?.id) aUnit.oUnitPlayer!.nNotes = aUnit.oUnitPlayer!.nNotes - 1
+        })
+      })
     })
   }
 

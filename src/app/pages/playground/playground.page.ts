@@ -3,10 +3,10 @@ import {interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-test-scroll',
-  templateUrl: './test-scroll.page.html',
-  styleUrls: ['./test-scroll.page.scss'],
+  templateUrl: './playground.page.html',
+  styleUrls: ['./playgroundl.page.scss'],
 })
-export class TestScrollPage implements OnInit, OnDestroy {
+export class PlaygroundPage implements OnInit, OnDestroy {
 
   @ViewChild('test', { static: true }) vTest!: ElementRef
   @ViewChild('test_other', { static: true }) vTestOther!: ElementRef

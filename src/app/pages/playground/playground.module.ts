@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 
-import { TestScrollPageRoutingModule } from './test-scroll-routing.module';
+import { PlaygroundPageRoutingModule } from './playground-routing.module';
 
-import { TestScrollPage } from './test-scroll.page';
+import { PlaygroundPage } from './playground.page';
 import {AppModule} from "../../app.module";
 import {ListDirective} from "../../directives/list.directive";
 
@@ -13,9 +13,9 @@ import {ListDirective} from "../../directives/list.directive";
   imports: [
     CommonModule,
     FormsModule,
-    TestScrollPageRoutingModule,
+    PlaygroundPageRoutingModule,
     ListDirective,
   ],
-  declarations: [TestScrollPage],
+  declarations: [PlaygroundPage],
 })
 export class TestScrollPageModule {}

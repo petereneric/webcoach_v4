@@ -13,6 +13,10 @@ const routes: Routes = [
         loadChildren: () => import('./coach/coach.module').then(m => m.CoachPortalPageModule)
       },
       {
+        path: 'coach-portal',
+        loadChildren: () => import('./coach-portal/coach-portal.module').then(m => m.CoachPortalModule)
+      },
+      {
         path: '',
         loadChildren: () => import('./website/website.module').then( m => m.WebsitePageModule)
       },

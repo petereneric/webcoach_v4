@@ -13,6 +13,8 @@ import {VjsPlayerModule} from "../../components/vjs-player/vjs-player.module";
     MatIconModule,
     VjsPlayerModule
   ],
-  exports: []
+    exports: [
+        VideoDialog
+    ]
 })
 export class VideoModule { }

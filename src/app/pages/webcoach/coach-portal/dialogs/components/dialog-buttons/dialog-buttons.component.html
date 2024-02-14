@@ -1,0 +1,6 @@
+<div class="flex mt-05 mb-05 section-horizontal" style="justify-content: end">
+  <div *ngFor="let aButton of lButtons" class="" >
+    <button (click)="onClick(aButton)" class="b-3-accent" [class.tc-light-three]="!aButton.bEnabled" [style.cursor]="!aButton.bEnabled && 'auto'">{{aButton.cTitle}}</button>
+  </div>
+</div>
+

@@ -1,0 +1,5 @@
+<div class="flex-vertical mt-1" style="width: 15rem">
+  <div *ngFor="let aNavItem of lNavItems" (click)="onSelect(aNavItem)" class="window-horizontal " [class.h-dark-trans]="aNavItem.id !== aNavItemSelected.id" [class.bg-dark]="aNavItem.id === aNavItemSelected.id" style="cursor: pointer; padding-top: 1rem; padding-bottom: 1rem">
+    <p class="tc-light ts-standard tw-bold">{{aNavItem.cTitle}}</p>
+  </div>
+</div>
