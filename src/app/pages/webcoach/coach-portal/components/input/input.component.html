@@ -1,0 +1,10 @@
+<div id="vContainer" [class.bc-invalid]="nMax && nInput > nMax">
+  <div class="flex" style="align-items: end; height: 2rem;">
+    <p id="vTitle" [class.tc-invalid]="nMax && nInput > nMax" style="">{{cTitle}}</p>
+    <mat-icon *ngIf="cHelp" [matTooltip]="cHelp!" class="is-xs ic-light-two ml-05 pointer" style="" fontIcon="help_outline"></mat-icon>
+  </div>
+
+  <textarea #vTextarea id="vTextarea" ></textarea>
+  <p *ngIf="nMax" id="vMax" class="mt-05" [class.tc-invalid]="nMax && nInput > nMax">{{nInput + '/' + nMax}}</p>
+</div>
+

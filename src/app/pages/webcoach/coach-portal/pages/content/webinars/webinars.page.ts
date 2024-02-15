@@ -27,4 +27,8 @@ export class WebinarsPage implements OnInit {
   }
 
 
+  onClick_Webinar(aWebinar: Webinar) {
+    this.router.navigate(['coach-portal/webinar/' + aWebinar.id + '/details'])
+
+  }
 }

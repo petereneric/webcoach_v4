@@ -307,12 +307,27 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
         this.bScrollDisabled = true
         if (this.pCoverScroll >= 1) {
           window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
+
+          setTimeout(() => {
+            this.renderer.setStyle(this.vCover.nativeElement, 'overflow-y', 'hidden')
+            // this.vCover.nativeElement.style.position = 'fixed' --> does not work on ios
+            document.body.style.overflowY = "hidden";
+          }, 1000)
+
+          console.log("5", this.vCover.nativeElement.overflowY)
           if (this.bDocumentInteraction && document.visibilityState === "visible") this.playVideo()
         } else {
           if ((this.directionCoverScroll === 1 || this.pCoverScroll >= 0.3) && ((this.velocityCoverScroll > 2 && (new Date().getTime() - this.tsCoverScroll) < 50) || this.pCoverScroll >= 0.3)) {
             setTimeout(() => {
               window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
               this.vCover.nativeElement.style.zIndex = 0
+
+              setTimeout(() => {
+                this.renderer.setStyle(this.vCover.nativeElement, 'overflow-y', 'hidden')
+                // this.vCover.nativeElement.style.position = 'fixed' --> does not work on ios
+                document.body.style.overflowY = "hidden";
+              }, 1000)
+              console.log("4", this.vCover.nativeElement.style.overflow)
               if (this.bDocumentInteraction && document.visibilityState === "visible") this.playVideo()
             },)
             return
@@ -321,6 +336,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
               setTimeout(() => {
                 // does not scroll back on safari when just little scrolled
                 window.scroll({top: 0, left: 0, behavior: "smooth"});
+                console.log("3", this.vCover.nativeElement.style.overflow)
               }, 400)
               return
             }
@@ -328,6 +344,13 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
               setTimeout(() => {
                 window.scroll({top: this.vCover.nativeElement.offsetHeight, left: 0, behavior: "auto"});
                 this.vCover.nativeElement.style.zIndex = 0
+                setTimeout(() => {
+                  this.renderer.setStyle(this.vCover.nativeElement, 'overflow-y', 'hidden')
+                  // this.vCover.nativeElement.style.position = 'fixed' --> does not work on ios
+                  document.body.style.overflow = "hidden";
+                }, 1000)
+
+                console.log("2", this.vCover.nativeElement.style.overflow)
                 if (this.bDocumentInteraction && document.visibilityState === "visible") this.playVideo()
               },)
               return

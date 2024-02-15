@@ -150,8 +150,16 @@
   color: $colorPrimary;
 }
 
+.tc-accent {
+  color: $colorAccent;
+}
+
 .tc-transparent {
   color: transparent;
+}
+
+.tc-invalid {
+  color: $colorInvalid !important;
 }
 
 // text weight

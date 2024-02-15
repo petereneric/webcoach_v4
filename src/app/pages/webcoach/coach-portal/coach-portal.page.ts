@@ -3,7 +3,7 @@ import {NavItem} from "./components/nav-item/nav-item.interface";
 import {MatDialog} from "@angular/material/dialog";
 import {SettingsDialog} from "./dialogs/settings/settings.dialog";
 import {AnimationService} from "../../../services/animation.service";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 
 @Component({
@@ -45,8 +45,8 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   ]
 
   protected lNavItemsTwo: NavItem[] = [
-    {id: this.ID_NAV_ITEM_SETTINGS, cIcon: 'dashboard', cTitle: 'Dashboard', cLink: null},
-    {id: this.ID_NAV_ITEM_FEEDBACK, cIcon: 'smart_display', cTitle: 'Inhalte', cLink: null},
+    {id: this.ID_NAV_ITEM_SETTINGS, cIcon: 'edit', cTitle: 'Details', cLink: null},
+    {id: this.ID_NAV_ITEM_FEEDBACK, cIcon: 'video_settings', cTitle: 'Videos', cLink: null},
   ]
 
   protected lNavItemsBottom: NavItem[] = [
@@ -67,6 +67,16 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        console.log(event.url)
+        const url = event.url
+        if(url.includes('/webinar/') && url.includes('/details')) {
+          this.showNavTwo()
+        }
+      }
+
+    })
   }
 
 
@@ -147,13 +157,17 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   }
 
   onClick_BackNavTwo() {
+    this.showNavOne()
 
-    this.renderer.setStyle(this.vNavTwo.nativeElement, "display", 'none')
-    this.renderer.setStyle(this.vNavOne.nativeElement, "display", 'initial')
   }
 
   showNavTwo() {
     this.renderer.setStyle(this.vNavOne.nativeElement, "display", 'none')
     this.renderer.setStyle(this.vNavTwo.nativeElement, "display", 'initial')
+  }
+
+  showNavOne() {
+    this.renderer.setStyle(this.vNavTwo.nativeElement, "display", 'none')
+    this.renderer.setStyle(this.vNavOne.nativeElement, "display", 'initial')
   }
 }

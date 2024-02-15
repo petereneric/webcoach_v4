@@ -15,3 +15,8 @@
 .bor-01 {
   border-radius: 0.1rem;
 }
+
+.bc-invalid {
+  border: 0.1rem solid $colorInvalid !important;
+  border-color: $colorInvalid !important;
+}

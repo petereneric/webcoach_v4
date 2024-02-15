@@ -15,6 +15,10 @@ const routes: Routes = [
       {
         path: 'inhalte',
         loadChildren: () => import('./pages/content/content.module').then(m => m.ContentModule)
+      },
+      {
+        path: 'webinar/:id/details',
+        loadChildren: () => import('./pages/webinar/details/details.module').then(m => m.DetailsModule)
       }
     ],
   }

@@ -1,0 +1,42 @@
+@import "../../coach-portal.page"
+@import "../../../../../../styles/background"
+@import "../../../../../../styles/text"
+@import "../../../../../../theme/color.theme"
+
+#vContainer
+  width: 100%
+  border-radius: 0.3rem
+  border: 1px solid $colorLightTwo
+  height: 10rem
+  padding: 0.3rem 0.75rem 0.75rem 0.75rem
+  box-sizing: border-box
+  display: flex
+  flex-direction: column
+
+#vTitle
+  @extend .ts-s
+  @extend .tc-light-two
+  padding-bottom: 0.2rem
+
+#vTextarea
+  @extend .t-standard
+  @extend .bg-dark-two
+  width: 100%
+  overflow-y: auto
+  color: $colorLight !important
+  margin-bottom: 0rem !important
+  padding-bottom: 0rem !important
+  height: 100%
+
+#vContainer:focus-within
+  border: 1px solid $colorAccent
+
+  #vTitle
+    @extend .tc-accent
+
+#vMax
+  @extend .ts-xs
+  @extend .tc-light-two
+  text-align: end
+  width: 100%
+
