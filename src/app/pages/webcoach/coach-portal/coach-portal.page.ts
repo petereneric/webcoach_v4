@@ -18,8 +18,8 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   @ViewChild('vNavOneTitle') vNavOneTitle!: ElementRef
   @ViewChild('vProfileSettings') vProfileSettings!: ElementRef
   @ViewChild('vHeaderProfileImage') vHeaderProfileImage!: ElementRef
-  @ViewChild('vIconMenu', { read: ElementRef }) vIconMenu!: ElementRef
-  @ViewChild('vIconHelp', { read: ElementRef }) vIconHelp!: ElementRef
+  @ViewChild('vIconMenu', {read: ElementRef}) vIconMenu!: ElementRef
+  @ViewChild('vIconHelp', {read: ElementRef}) vIconHelp!: ElementRef
   @ViewChild('vNavOne') vNavOne!: ElementRef
   @ViewChild('vNavTwo') vNavTwo!: ElementRef
   @ViewChild('vLoad') vLoad!: ElementRef
@@ -45,8 +45,8 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   ]
 
   protected lNavItemsTwo: NavItem[] = [
-    {id: this.ID_NAV_ITEM_SETTINGS, cIcon: 'edit', cTitle: 'Details', cLink: null},
-    {id: this.ID_NAV_ITEM_FEEDBACK, cIcon: 'video_settings', cTitle: 'Videos', cLink: null},
+    {id: this.ID_NAV_ITEM_SETTINGS, cIcon: 'edit', cTitle: 'Details', cLink: '/details'},
+    {id: this.ID_NAV_ITEM_FEEDBACK, cIcon: 'video_settings', cTitle: 'Medien', cLink: '/medien'},
   ]
 
   protected lNavItemsBottom: NavItem[] = [
@@ -61,24 +61,20 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
     {id: 2, cIcon: 'logout', cTitle: 'Abmelden', cLink: null},
   ]
 
-
   constructor(private router: Router, private svAnimation: AnimationService, private renderer: Renderer2, private dialogSettings: MatDialog) {
   }
-
 
   ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         console.log(event.url)
         const url = event.url
-        if(url.includes('/webinar/') && url.includes('/details')) {
+        if (url.includes('/webinar/') && url.includes('/details')) {
           this.showNavTwo()
         }
       }
-
     })
   }
-
 
   ngAfterViewInit(): void {
     // place menu-action profile settings
@@ -107,8 +103,8 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
       // nav-two
       this.renderer.setStyle(this.vNavTwoTitle.nativeElement, 'display', 'none')
       this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'transition', this.MS_NAV_ANIMATION + 'ms linear')
-      this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'height',  5 + 'rem')
-      this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'width',  4 + 'rem')
+      this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'height', 5 + 'rem')
+      this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'width', 4 + 'rem')
     } else {
       // nav
       this.renderer.setStyle(this.vNav.nativeElement, 'transition', this.MS_NAV_ANIMATION + 'ms linear')
@@ -119,7 +115,7 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
       this.renderer.setStyle(this.vNavTwoTitle.nativeElement, 'display', 'flex')
       this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'transition', this.MS_NAV_ANIMATION + 'ms linear')
       this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'height', this.hNavTwoImage + 'rem')
-      this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'width',  17 + 'rem')
+      this.renderer.setStyle(this.vNavTwoImage.nativeElement, 'width', 17 + 'rem')
     }
     this.bNavExpanded = !this.bNavExpanded
 
@@ -135,9 +131,13 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
         })
         break
       default:
-
         aNavItem.cLink && this.router.navigate([aNavItem.cLink])
     }
+  }
+
+  onClick_NavItemTwo(aNavItem: NavItem) {
+    console.log('coach-portal/webinar/' + this.router.url.split('/')[3] + '/' + aNavItem.cLink)
+    aNavItem.cLink && this.router.navigate(['coach-portal/webinar/' + this.router.url.split('/')[3] + aNavItem.cLink])
   }
 
   onClick_NavItemProfileSettings(aNavItem: NavItem) {

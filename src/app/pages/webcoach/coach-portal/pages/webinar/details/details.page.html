@@ -1,6 +1,19 @@
-<div style="height: 100%; overflow-y: auto">
-  <app-page-header [cTitle]="'Details'"></app-page-header>
-  <main class="window-horizontal">
-    <app-input [cTitle]="'Titel'" [nMax]="10" [cHelp]="'Ein gut gewählter Titel kann helfen, Zuschauer anzuziehen. Dein Videotitel sollte Suchbegriffe enthalten, die Zuschauer für gewöhnlich verwenden, wenn sie nach Kursen wie deinem suchen.'"></app-input>
-  </main>
+<div style="height: 100%; overflow-y: auto; padding-bottom: 2rem; box-sizing: border-box">
+    <app-page-header [cTitle]="'Details'" [cWidth]="'50%'">
+      <ng-template #tpInteraction>
+        <button (click)="onClick_Save()" [disabled]="nChangeCounter === 0" [ngClass]="nChangeCounter === 0 ? 'b-1-light': 'b-1-accent'" style="margin-right: 1rem">SPEICHERN</button>
+      </ng-template>
+    </app-page-header>
+
+  <main class="page-horizontal flex">
+    <section class="section-horizontal block-one flex-vertical" style="gap: 1rem;">
+      <app-input #cpInputName (outputChange)="onInput($event)" [cTitle]="'Titel'" [cInput]="aWebinar?.cName ?? ''" [nMax]="100" [cHelp]="'Ein gut gewählter Titel kann helfen, Kursteilnehmer anzuziehen. Dein Videotitel sollte Suchbegriffe enthalten, die Zuschauer für gewöhnlich verwenden, wenn sie nach Kursen wie deinem suchen.'"></app-input>
+      <app-input #cpInputDescriptionShort (outputChange)="onInput($event)" [cInput]="aWebinar?.cDescriptionShort ?? ''" [cTitle]="'Beschreibung (kurz)'" [nMax]="500" [cHelp]="'Eine kurze Beschreibung gibt Kurs-Interessenten die Möglichkeit einen besseren Eindruck von deinem Online-Kurs zu erhalten und dir die Chance weiteres Interesse zu wecken.'"></app-input>
+      <app-input #cpDescriptionLong (outputChange)="onInput($event)" [cInput]="aWebinar?.cDescriptionLong ?? ''" [cTitle]="'Beschreibung (lang)'" [nMax]="5000" [cHelp]="'Eine lange Beschreibung zu diesem Online-Kurs lesen Interessenten, die darüber nachdenken deinen Online-Kurs zu buchen. Informiere daher über die Inhalte deines Online-Kursen und hebe die Besonderheiten hervor, die diesen Kurs von anderen unterscheiden.'"></app-input>
+      <app-input #cpStudyContent (outputChange)="onInput($event)" [cInput]="aWebinar?.cStudyContent ?? ''" [cTitle]="'Lerninhalt'" [nMax]="2500" [cHelp]="'Fasse hier zusammen, welche Lerninhalte Kursteilnehmer erwarten und achte darauf dass diese zu deinem Titel und den erzeugten Erwartungen passen.'"></app-input>
+      <app-input #cpRequirements (outputChange)="onInput($event)" [cInput]="aWebinar?.cRequirements ?? ''" [cTitle]="'Voraussetzungen'" [nMax]="2500" [cHelp]="'Liste hier die Voraussetzungen für eine Teilnahme an diesem Online-Kurs auf. Unterscheide dabei zwischen technischen Voraussetzungen wie einem PC oder persönlichen wie Vorkenntnissen zu einem bestimmten Thema.'"></app-input>
+      <app-input #cpTargetGroup (outputChange)="onInput($event)" [cInput]="aWebinar?.cTargetGroup ?? ''" [cTitle]="'Zielgruppe'" [nMax]="2500" [cHelp]="'Formuliere hier kurz aber konkret an wen sich dieser Online-Kurs richtet und wer sich damit angesprochen fühlen soll.'"></app-input>
+
+    </section>
+   </main>
 </div>

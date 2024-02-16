@@ -85,7 +85,7 @@
           <!-- nav-items-top -->
           <div class="spv-2"></div>
           <div *ngFor="let aNavItem of lNavItemsTwo" style="position: relative;">
-            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="kSelectedNavItem" (outputClick)="onClick_NavItem(aNavItem)"></app-nav-item>
+            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="kSelectedNavItem" (outputClick)="onClick_NavItemTwo(aNavItem)"></app-nav-item>
           </div>
 
 
@@ -110,7 +110,7 @@
 
 
     <!-- pages -->
-    <div class="bg-dark-two" style="width: 100%; z-index: 2; height: calc(100svh - 4.5rem)">
+    <div class="bg-dark-two" style="width: 100%; z-index: 2; height: calc(100svh - 4.5rem);">
       <router-outlet></router-outlet>
     </div>
 

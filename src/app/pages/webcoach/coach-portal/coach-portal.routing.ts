@@ -1,6 +1,8 @@
 import {RouterModule, Routes} from "@angular/router";
 import {CoachPortalPage} from "./coach-portal.page";
 import {NgModule} from "@angular/core";
+import {MediaComponent} from "./pages/webinar/media/media.component";
+import {MediaModule} from "./pages/webinar/media/media.module";
 
 
 const routes: Routes = [
@@ -19,6 +21,10 @@ const routes: Routes = [
       {
         path: 'webinar/:id/details',
         loadChildren: () => import('./pages/webinar/details/details.module').then(m => m.DetailsModule)
+      },
+      {
+        path: 'webinar/:id/medien',
+        component: MediaComponent
       }
     ],
   }

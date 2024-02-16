@@ -18,6 +18,11 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material/tooltip';
 import { ContentPage } from './pages/content/content.page';
 import { InputComponent } from './components/input/input.component';
+import {FormsModule} from "@angular/forms";
+import { MediaComponent } from './pages/webinar/media/media.component';
+import { UnitDialog } from './pages/webinar/media/unit/unit.dialog';
+import { SectionDialog } from './pages/webinar/media/section/section.dialog';
+import {MediaModule} from "./pages/webinar/media/media.module";
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 150,
@@ -28,15 +33,17 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 
 @NgModule({
   declarations: [CoachPortalPage, DashboardPage, TabsComponent, DefaultDialog, DialogHeaderComponent, SettingsDialog, DialogNavComponent, DialogButtonsComponent, ContentPage, InputComponent],
-  imports: [
-    CommonModule,
-    CoachPortalRouting,
-    MatIconModule,
-    NavItemModule,
-    PageHeaderModule,
-    MatTooltipModule,
-    NgOptimizedImage
-  ],
+    imports: [
+        CommonModule,
+        CoachPortalRouting,
+        MatIconModule,
+        NavItemModule,
+        PageHeaderModule,
+        MatTooltipModule,
+        NgOptimizedImage,
+        FormsModule,
+        MediaModule
+    ],
   providers: [
     {provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}
   ],

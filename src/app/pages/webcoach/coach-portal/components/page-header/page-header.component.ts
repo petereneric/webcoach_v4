@@ -10,5 +10,6 @@ export class PageHeaderComponent {
   @ContentChild('tpInteraction') tpInteraction!: TemplateRef<any>
 
   @Input('cTitle') cTitle!: string
+  @Input('cWidth') cWidth: string | null = null
 
 }

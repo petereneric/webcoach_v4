@@ -1,4 +1,4 @@
-<header class="flex align-items-center window-horizontal" style="margin-top: 2rem; margin-bottom: 1rem">
-  <p class="title-page">{{cTitle}}</p>
+<header class="flex align-items-center window-horizontal" style="margin-top: 2rem; margin-bottom: 1rem;" [style.width]="cWidth ?? cWidth">
+  <p class="title-page" style="width: 100%">{{cTitle}}</p>
   <ng-container *ngTemplateOutlet="tpInteraction || null"></ng-container>
 </header>

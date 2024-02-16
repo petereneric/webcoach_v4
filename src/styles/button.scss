@@ -45,6 +45,13 @@ $colorHoverDark: $colorDarkTwo;
   }
 }
 
+.bbg-accent {
+  background: $colorAccent;
+  &:hover {
+    background: $colorAccent;
+  }
+}
+
 .bbg-white {
   background: $colorWhite;
   &:hover {
@@ -142,6 +149,14 @@ button {
 }
 
 // button - accent
+
+.b-1-accent {
+  @extend .bbg-accent;
+  @extend .bb-standard;
+  @extend .bbc-dark;
+  @extend .tc-dark;
+  @extend .ts-standard;
+}
 
 .b-3-accent {
   @extend .btc-accent;
