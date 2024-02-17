@@ -1,94 +1,54 @@
-.a-load {
-  animation: a-load-keyframes 10s infinite normal;
+.example-container {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
 }
 
-
-
-@keyframes a-load-keyframes {
-0% {
-  transform: translateX(-10rem);
-}
-
-100% {
-  transform: translateX(100vw)
-}
-
-}
-
-
-
-
-
-
-
-
-
-.main {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-}
-pie {
-  border-radius: 50%;
-  background-color: green;
-}
-
-.piechart {
-  --x: 0%;
+.example-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
   display: block;
-  width: 50px;
-  height: 50px;
-  border-radius: var(--x);
-  transition: 3s ease-in-out;
-  -webkit-transition: background-image 2s ease-in-out;
-  transition: background-image 2s ease-in-out;
+}
+
+.example-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  position: absolute;
-  z-index: 2;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
 }
 
-.piechart-other {
-  --x: 50%;
-  display: block;
-  width: 50px;
-  height: 50px;
-  border-radius: var(--x);
-  transition: 3s ease-in-out;
-  -webkit-transition: background-image 2s ease-in-out;
-  transition: background-image 2s ease-in-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  z-index: 1;
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
-.number {
-  color: #171717;
-  font-size: 2rem;
-  line-height: 2rem;
-  font-weight: 600;
+.cdk-drag-placeholder {
+  opacity: 0;
 }
 
-.circle {
-  height: 5rem;
-  width: 5rem;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 10px solid red;
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.circle-inside {
-  position: absolute;
-  height: 9rem;
-  width: 9rem;
-  border-radius: 50%;
+.example-box:last-child {
+  border: none;
 }
 
-.circle-container {
-
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-

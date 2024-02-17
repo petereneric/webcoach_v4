@@ -99,7 +99,7 @@ const routes: Routes = [
         loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
       },
       {
-        path: 'test-scroll',
+        path: 'playground',
         loadChildren: () => import('../../playground/playground.module').then(m => m.TestScrollPageModule)
       },
 

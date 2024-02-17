@@ -1,51 +1,30 @@
 import {Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {interval, Subscription} from "rxjs";
+import {CdkDragDrop, CdkDragEnter, CdkDragMove, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-test-scroll',
   templateUrl: './playground.page.html',
   styleUrls: ['./playgroundl.page.scss'],
 })
-export class PlaygroundPage implements OnInit, OnDestroy {
+export class PlaygroundPage {
 
-  @ViewChild('test', { static: true }) vTest!: ElementRef
-  @ViewChild('test_other', { static: true }) vTestOther!: ElementRef
-  @ViewChild('number', { static: true }) vNumber!: ElementRef
 
-  @HostBinding("piechart.--x")
-  private value!: number;
-  private angle = 0
-  public seconds = 10
+  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
 
-  condition = true
-  process!: Subscription;
+  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
 
-  constructor(private renderer: Renderer2) { }
-
-  ngOnInit() {
-
-    this.vTest.nativeElement.style.setProperty('--x', '50%')
-    //this.renderer.setStyle(this.vTest.nativeElement, 'background-image', 'conic-gradient(pink 135deg, transparent 0)')
-    //this.renderer.setStyle(this.vTest.nativeElement, 'transition', 5 + 's')
-    this.process = interval(1000).subscribe(val => {
-      console.log(this.angle)
-      if (this.seconds === 0) {
-        this.process.unsubscribe()
-      } else {
-        this.seconds = this.seconds - 1
-        let a = 360 - this.seconds * 36
-        //this.renderer.setStyle(this.vTest.nativeElement, 'background-image', 'conic-gradient(pink ' + this.angle + 'deg, transparent 0)')
-        this.renderer.setStyle(this.vTestOther.nativeElement, 'background', 'conic-gradient(white ' + a + 'deg, transparent ' + 0 + 'deg)')
-        console.log("jo")
-      }
-
-    });
-    //this.renderer.setStyle(this.vTest.nativeElement, 'background-image', 'conic-gradient(pink 180deg, transparent 0)')
-    //this.vTest.nativeElement.style.backgroundImage = 'conic-gradient(pink 135deg, transparent 0);'
-  }
-
-  ngOnDestroy(): void {
-    this.process.unsubscribe()
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
 
 

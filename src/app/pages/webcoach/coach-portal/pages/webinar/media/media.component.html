@@ -8,13 +8,22 @@
         <div id="vSection" (click)="onClick_Section(aSection)">
           <p style="">{{aSection.cName}}</p>
         </div>
-        <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="onDrop_Unit($event)" style="width: 100%" class="flex" style="gap: 1rem">
-          <div *ngFor="let aUnit of aSection.lUnits" id="vUnit" (click)="onClick_Unit(aUnit)" cdkDrag>
-            <p>{{aUnit.cName}}</p>
+        <div cdkDropListGroup style="width: 100%" class="flex" style="gap: 1rem; flex-wrap: wrap;">
+
+          <div
+            cdkDropList
+          ></div>
+
+          <!-- units -->
+          <div cdkDropList cdkDropListOrientation="horizontal" *ngFor="let aUnit of aSection.lUnits"  (click)="onClick_Unit(aUnit)" (cdkDropListDropped)="onDrop_Unit($event)">
+            <p  cdkDrag id="vUnit" style="display: flex">{{aUnit.cName}}</p>
           </div>
+
+          <!-- unit-add -->
           <div id="vUnitAdd" (click)="onClick_AddUnit(aSection)">
             <mat-icon fontIcon="add"></mat-icon>
           </div>
+
         </div>
 
       </div>

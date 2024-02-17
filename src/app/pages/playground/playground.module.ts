@@ -8,6 +8,7 @@ import { PlaygroundPageRoutingModule } from './playground-routing.module';
 import { PlaygroundPage } from './playground.page';
 import {AppModule} from "../../app.module";
 import {ListDirective} from "../../directives/list.directive";
+import {CdkDrag, CdkDropList} from "@angular/cdk/drag-drop";
 
 @NgModule({
   imports: [
@@ -15,6 +16,8 @@ import {ListDirective} from "../../directives/list.directive";
     FormsModule,
     PlaygroundPageRoutingModule,
     ListDirective,
+    CdkDropList,
+    CdkDrag,
   ],
   declarations: [PlaygroundPage],
 })
