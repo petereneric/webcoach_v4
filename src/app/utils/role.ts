@@ -1,4 +1,5 @@
 import {Injectable} from "@angular/core";
+// @ts-ignore
 import jwt_decode from "jwt-decode";
 
 @Injectable({
@@ -15,5 +16,4 @@ export class Role {
     let tRole = tokenInfo['tRole'];
     return tRole == 1
   }
-
 }

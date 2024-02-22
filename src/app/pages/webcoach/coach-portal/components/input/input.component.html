@@ -1,10 +1,20 @@
-<div id="vContainer" [class.bc-invalid]="nMax && nInput > nMax" [style.height]="nHeight">
-  <div class="flex" style="align-items: end; height: 2rem;">
-    <p id="vTitle" [class.tc-invalid]="nMax && nInput > nMax" style="">{{cTitle}}</p>
+<div id="vContainer" [class.bc-invalid]="!isValid">
+  <div class="flex" style="align-items: end; padding-top: 0.25rem; padding-bottom: 0.25rem;">
+    <p id="vTitle" [class.tc-invalid]="!isValid" style="">{{cTitle + (bRequired ? ' (erforderlich)' : '')}}</p>
     <mat-icon *ngIf="cHelp" [matTooltip]="cHelp!" class="is-xs ic-light-two ml-05 pointer" style="" fontIcon="help_outline"></mat-icon>
   </div>
 
-  <textarea #vTextarea id="vTextarea" [(ngModel)]="cInput"></textarea>
-  <p *ngIf="nMax" id="vMax" class="mt-05" [class.tc-invalid]="nMax && nInput > nMax">{{nInput + '/' + nMax}}</p>
+  <textarea #vTextarea autosize [useImportant]="true" [maxRows]="30" id="vTextarea" [formControl]="formControl" style="">{{formControl.value}}</textarea> <!-- [(ngModel)]="cInput"  -->
+  <div class="flex align-items-center mt-05" style="width: 100%;">
+    <div class="ts-xs tc-invalid tw-bold flex" style="width: 100%;">
+      <p *ngIf="cInputInitial && formControl.errors && formControl.errors['required']">Eingabe erforderlich</p>
+      <p *ngIf="cInputInitial && formControl.errors && formControl.errors['maxLength']">Maximale Eingabelänge überschritten</p>
+      <p *ngIf="cInputInitial && formControl.errors && formControl.errors['pattern']" style="width: 100% !important;">Erlaubte Sonderzeichen: a-zA-Z0-9.,%()!?<>+:-</p>
+    </div>
+    <p *ngIf="nMax" id="vMax" class="" [class.tc-invalid]="!isValid">{{nInput + '/' + nMax}}</p>
+  </div>
+
 </div>
+
+<!-- https://www.npmjs.com/package/ngx-autosize -->
 

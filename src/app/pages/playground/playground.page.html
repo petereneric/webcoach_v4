@@ -1,29 +1,18 @@
-<div cdkDropListGroup>
-  <div class="example-container">
-    <h2>To do</h2>
-
-    <div
-      cdkDropList
-      [cdkDropListData]="todo"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)">
-      <div *ngFor="let item of todo">
-        <div class="example-box" cdkDrag>{{item}}</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="example-container">
-    <h2>Done</h2>
-
-    <div
-      cdkDropList
-      [cdkDropListData]="done"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)">
-      <div *ngFor="let item of done">
-        <div class="example-box" cdkDrag>{{item}}</div>
-      </div>
+<h1>Draggable hell</h1>
+<div class="item-container" cdkDropListGroup>
+  <div
+    cdkDropList
+    (cdkDropListDropped)="dropListDropped()"
+    (cdkDropListEntered)="cdkDropListEntered($event)"
+  ></div>
+  <div
+    cdkDropList
+    *ngFor="let item of items; trackBy: itemTrackBy"
+    (cdkDropListDropped)="dropListDropped()"
+    (cdkDropListEntered)="cdkDropListEntered($event)"
+  >
+    <div cdkDrag class="example-box">
+      {{ item }}
     </div>
   </div>
 </div>

@@ -56,6 +56,20 @@ export class ApiService {
     })
   }
 
+  safeGetBase64(url: string, bodyFunction: any) {
+
+    this.http.get(`${this.urlApi}${url}`, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}).set('Authorization', `Bearer ${localStorage.getItem('token')}`),
+      responseType: 'text'
+    }).subscribe({
+      next: response => {
+        bodyFunction(response)
+      }, error: error => {
+        console.log(error)
+      }
+    })
+  }
+
   longPost(url: string, json: any) {
     console.log(url);
     return this.http.post<HttpResponse<any>>(`${this.urlApi}${url}`, json, httpOptions);

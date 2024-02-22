@@ -3,6 +3,8 @@ import {ActivatedRoute} from "@angular/router";
 import {ApiService} from "../../../../../../services/api/api.service";
 import {Webinar} from "../../../../../../interfaces/webinar";
 import {InputComponent} from "../../../components/input/input.component";
+import {CoachPortalService} from "../../../coach-portal.service";
+import {DialogService} from "../../../../../../services/dialogs/dialog.service";
 
 @Component({
   selector: 'app-details',
@@ -17,24 +19,14 @@ export class DetailsPage implements OnInit {
   @ViewChild('cpStudyContent') cpStudyContent!: InputComponent
   @ViewChild('cpRequirements') cpRequirements!: InputComponent
   @ViewChild('cpTargetGroup') cpTargetGroup!: InputComponent
-
-  protected aWebinar: Webinar | null = null
   protected nChangeCounter: number = 0
 
 
 
-  constructor(private svApi: ApiService, private route: ActivatedRoute) {
+  constructor(private svDialog: DialogService, protected svCoachPortal: CoachPortalService, private svApi: ApiService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const kWebinar = params['id']
-
-      this.svApi.safeGet('coach-portal/webinar/details/' + kWebinar, (aWebinar: Webinar) => {
-        console.log(aWebinar)
-        this.aWebinar = aWebinar
-      })
-    })
   }
 
 
@@ -50,7 +42,12 @@ export class DetailsPage implements OnInit {
   }
 
   onClick_Save() {
-    console.log("safe")
+    if (!this.validationCheck()) {
+      this.svDialog.invalidInput()
+      return
+    }
+
+
     const data = {
       cName: this.cpInputName.cValue,
       cDescriptionShort: this.cpInputDescriptionShort.cValue,
@@ -59,9 +56,19 @@ export class DetailsPage implements OnInit {
       cRequirements: this.cpRequirements.cValue,
       cTargetGroup: this.cpTargetGroup.cValue,
     }
-    this.svApi.safePost('coach-portal/webinar/details/' + this.aWebinar?.id, data, () => {
+    this.svApi.safePost('coach-portal/webinar/details/' + this.svCoachPortal.bsWebinar.value?.id, data, () => {
       this.reset()
     })
+  }
+
+  validationCheck() {
+    if (!this.cpInputName.isValid) return false
+    if (!this.cpInputDescriptionShort.isValid) return false
+    if (!this.cpDescriptionLong.isValid) return false
+    if (!this.cpStudyContent.isValid) return false
+    if (!this.cpRequirements.isValid) return false
+    if (!this.cpTargetGroup.isValid) return false
+    return true
   }
 
   reset() {

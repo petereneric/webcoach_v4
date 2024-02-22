@@ -20,8 +20,8 @@ import { ContentPage } from './pages/content/content.page';
 import { InputComponent } from './components/input/input.component';
 import {FormsModule} from "@angular/forms";
 import { MediaComponent } from './pages/webinar/media/media.component';
-import { UnitDialog } from './pages/webinar/media/unit/unit.dialog';
-import { SectionDialog } from './pages/webinar/media/section/section.dialog';
+import { UnitDialog } from './pages/webinar/media/unit-dialog/unit.dialog';
+import { SectionDialog } from './pages/webinar/media/section-dialog/section.dialog';
 import {MediaModule} from "./pages/webinar/media/media.module";
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -32,7 +32,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 
 
 @NgModule({
-  declarations: [CoachPortalPage, DashboardPage, TabsComponent, DefaultDialog, DialogHeaderComponent, SettingsDialog, DialogNavComponent, DialogButtonsComponent, ContentPage, InputComponent],
+  declarations: [CoachPortalPage, DashboardPage, TabsComponent, ContentPage],
     imports: [
         CommonModule,
         CoachPortalRouting,
@@ -42,13 +42,11 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
         MatTooltipModule,
         NgOptimizedImage,
         FormsModule,
-        MediaModule
     ],
   providers: [
     {provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}
   ],
   exports: [
-    InputComponent
   ]
 })
 export class CoachPortalModule { }

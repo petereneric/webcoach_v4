@@ -51,7 +51,7 @@ export class DialogService {
   }
 
   invalidFileSize() {
-    this.showDialog({cTitle: "Ungültiges Datei-Größe", cText: "Deine Datei ist leider zu groß."})
+    this.showDialog({cTitle: "Ungültige Datei-Größe", cText: "Deine Datei ist leider zu groß."})
   }
 
 

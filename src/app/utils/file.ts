@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {DialogService} from "../services/dialogs/dialog.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {Dialog} from "@angular/cdk/dialog";
 
 @Injectable({
   providedIn: 'root'
@@ -46,16 +47,32 @@ export class File {
   }
 
   async getUrl(file: any): Promise<string | ArrayBuffer | null> {
+    if (!this.defaultCheckType(file)) return null
+    if (!this.defaultCheckSize(file)) return null
     return new Promise<string | ArrayBuffer | null>((resolve) => {
       let reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (_event) => {
         let url = reader.result;
-        console.log(url)
         resolve(url)
       };
     })
   }
+
+  async getUrlVideo(file: any): Promise<string | ArrayBuffer | null> {
+    if (!this.checkVideoType(file)) return null
+    if (!this.checkVideoSize(file)) return null
+    return new Promise<string | ArrayBuffer | null>((resolve) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (_event) => {
+        let url = reader.result;
+        resolve(url)
+      };
+    })
+  }
+
+
 
   openUrl(url: any) {
     const contentType = 'application/pdf';
@@ -128,6 +145,19 @@ export class File {
     })
   }
 
+  playVideoInNewTab(video: Blob) {
+    var blob = new Blob([video], { type: 'video/mp4' });
+    var url= window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  pushVideoToDownloadFolder(video: Blob, cFileName: string) {
+    const anchor = document.createElement('a');
+    anchor.download = cFileName + ".mp4";
+    anchor.href = (window.webkitURL || window.URL).createObjectURL(video);
+    anchor.click();
+  }
+
   openPDF(blob: Blob) {
     const file = new Blob([blob], {type: 'application/pdf'});
     const fileURL = URL.createObjectURL(file);
@@ -136,5 +166,55 @@ export class File {
 
   base64ImageWebpToSourceImage(base64Image) {
     return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/webp;base64,' + base64Image);
+  }
+
+  base64DocumentToSourcePDF(base64PDF) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(base64PDF);
+  }
+
+  base64ToBlob( base64, type = "application/octet-stream" ) {
+    const binStr = atob( base64 );
+    const len = binStr.length;
+    const arr = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      arr[ i ] = binStr.charCodeAt( i );
+    }
+    return new Blob( [ arr ], { type: type } );
+  }
+
+  defaultCheckSize(file: any) {
+    console.log(file.size)
+    if (file.size <= 10000000) {
+      return true
+    }
+    this.svDialog.invalidFileSize()
+    return false
+  }
+
+  defaultCheckType(file: any) {
+    switch (file.type) {
+      case "application/pdf":
+        return true
+    }
+    this.svDialog.invalidFileFormat()
+    return false
+  }
+
+  checkVideoSize(file: any) {
+    if (file.size <= 100000000) {
+      return true
+    }
+    this.svDialog.invalidFileSize()
+    return false
+  }
+
+  checkVideoType(file: any) {
+    console.log(file.type)
+    switch (file.type) {
+      case "video/mp4":
+        return true
+    }
+    this.svDialog.invalidFileFormat()
+    return false
   }
 }

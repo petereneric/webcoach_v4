@@ -4,9 +4,11 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Section} from "../../../../../../interfaces/section";
 import {Unit} from "../../../../../../interfaces/unit";
 import {MatDialog} from "@angular/material/dialog";
-import {UnitDialog} from "./unit/unit.dialog";
-import {SectionDialog} from "./section/section.dialog";
+import {UnitDialog} from "./unit-dialog/unit.dialog";
+import {SectionDialog} from "./section-dialog/section.dialog";
 import {CdkDrag, CdkDropList} from "@angular/cdk/drag-drop";
+import {CoachPortalService} from "../../../coach-portal.service";
+import {Webinar} from "../../../../../../interfaces/webinar";
 
 @Component({
   selector: 'app-media',
@@ -17,6 +19,7 @@ export class MediaComponent implements OnInit {
 
   // data
   lSections: Section[] = []
+  private kWebinar: number = 0
 
   @ViewChild(CdkDropList) placeholder: CdkDropList | undefined;
   public activeContainer;
@@ -25,31 +28,40 @@ export class MediaComponent implements OnInit {
   public target!: CdkDropList;
   public targetIndex!: number;
 
-  constructor(private route: ActivatedRoute, private svApi: ApiService, private dialog: MatDialog) {
+  constructor(private svCoachPortal: CoachPortalService, private route: ActivatedRoute, private svApi: ApiService, private dialog: MatDialog) {
     this.source = null;
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const kWebinar = params['id']
-      this.svApi.safeGet('coach-portal/webinar/media/' + kWebinar, (lSections: Section[]) => {
+    this.svCoachPortal.bsWebinar.subscribe(aWebinar => {
+      this.svApi.safeGet('coach-portal/webinar/media/' + aWebinar!.id, (lSections: Section[]) => {
         console.log(lSections)
         this.lSections = lSections
       })
     })
+
+
 
   }
 
 
   onClick_Section(aSection: Section) {
     const dialogSection = this.dialog.open(SectionDialog, {
+      data: aSection,
       backdropClass: "d-backdrop",
     })
   }
 
-  onClick_Unit(aUnit: Unit) {
+  onClick_Unit(lUnits: Unit[], aUnit: Unit) {
     const dialogUnit = this.dialog.open(UnitDialog, {
+      data: aUnit,
       backdropClass: "d-backdrop",
+    }).afterClosed().subscribe((aResponse) => {
+      if (aResponse && aResponse.tCode === "DELETE") {
+        lUnits.splice(lUnits.indexOf(aUnit), 1)
+        this.updateUnitPositions(lUnits)
+      }
+
     })
   }
 
@@ -57,57 +69,72 @@ export class MediaComponent implements OnInit {
 
   }
 
-  onDrop_Unit($event: any) {
+  updateUnitPositions(lUnits: Unit[]) {
+    console.log("here", lUnits)
 
+    let data: any[] = []
+    lUnits.forEach((unit, index) => {
+      unit.nPosition = index
+      let object = {
+        kUnit: unit.id,
+        nPosition: index
+      }
+      data.push(object)
+    })
+
+    this.svApi.safePost('coach-portal/webinar/media/unit-positions', data, null)
   }
 
   onClick_AddSection() {
+    const aSection = {
+      id: 0,
+      kWebinar: this.kWebinar,
+      cName: "",
+      cDescription: "",
+      nPosition: this.lSections.length,
+      lUnits: [],
+      bEdit: false,
+      bExpand: false,
+    }
 
+    const dialogAddSection = this.dialog.open(SectionDialog, {
+      data: aSection,
+      backdropClass: "d-backdrop",
+    }).afterClosed().subscribe((aSection: Section) => {
+      console.log(aSection)
+      if (aSection) this.lSections.push(aSection)
+    })
   }
 
   onClick_AddUnit(aSection: Section) {
-
-  }
-
-  /*
-  dropListEnterPredicate = (drag: CdkDrag, drop: CdkDropList) => {
-    if (drop == this.placeholder)
-      return true;
-
-    if (drop != this.activeContainer)
-      return false;
-
-    let phElement = this.placeholder.element.nativeElement;
-    let sourceElement = drag.dropContainer.element.nativeElement;
-    let dropElement = drop.element.nativeElement;
-
-    let dragIndex = this.__indexOf(dropElement.parentElement!.children, (this.source ? phElement : sourceElement));
-    let dropIndex = this.__indexOf(dropElement.parentElement!.children, dropElement);
-
-    if (!this.source) {
-      this.sourceIndex = dragIndex;
-      this.source = drag.dropContainer;
-
-      phElement.style.width = sourceElement.clientWidth + 'px';
-      phElement.style.height = sourceElement.clientHeight + 'px';
-
-      sourceElement.parentElement!.removeChild(sourceElement);
+    const aUnit = {
+      id: 0,
+      dCreation: "",
+      kSection: aSection.id,
+      cName: "",
+      cDescription: "",
+      secDuration: 0,
+      oUnitPlayer: null,
+      imgThumbnail: "",
+      bMaterial: false,
+      lMaterials: [],
+      bVideo: false,
+      nPosition: aSection.lUnits.length,
+      bSample: 0,
+      lComments: [],
+      lIntervals: [],
+      lProgressThumbnails: [],
+      nComments: 0,
+      nLikes: 0,
+      nCalls: 0,
     }
 
-    this.targetIndex = dropIndex;
-    this.target = drop;
-
-    phElement.style.display = '';
-    dropElement.parentElement!.insertBefore(phElement, (dropIndex > dragIndex
-      ? dropElement.nextSibling : dropElement));
-
-    this.placeholder.enter(drag, drag.element.nativeElement.offsetLeft, drag.element.nativeElement.offsetTop);
-    return false;
+    const dialogAddUnit = this.dialog.open(UnitDialog, {
+      data: aUnit,
+      backdropClass: "d-backdrop",
+    }).afterClosed().subscribe((aUnit: Unit) => {
+      if (aUnit) aSection.lUnits.push(aUnit)
+    })
   }
 
-  __indexOf(collection, node) {
-    return Array.prototype.indexOf.call(collection, node);
-  };
-
-   */
 }

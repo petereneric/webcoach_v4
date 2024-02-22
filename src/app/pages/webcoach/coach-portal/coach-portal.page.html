@@ -1,9 +1,16 @@
+<div #vClickScreen (click)="onClick_ClickScreen()" style="visibility: hidden; width: 100%; height: 100%; position: absolute; background-color: transparent; z-index: 4;">
+</div>
+
 <div class="bg-dark-two" style="height: 100svh; overflow: hidden; position: relative">
 
   <!-- header -->
   <header class="window-horizontal flex align-items-center bg-dark-two sh-header" style="height: 3rem; position: relative; padding-top: 0.75rem; padding-bottom: 0.75rem; z-index: 3">
+
+    <!-- menu icon -->
     <mat-icon #vIconMenu [matTooltip]="bNavExpanded ? 'Menü minimieren' : 'Menü maximieren'" (click)="onClick_Menu()" class="ic-light-two is-l hc-light" style="cursor: pointer" fontIcon="menu"></mat-icon>
-    <img class="ml-1" style="height: 3rem" src="assets/logo/webcoach_light.webp">
+
+    <!-- webcoach icon -->
+    <img class="ml-1 pointer" style="height: 3rem" src="assets/logo/webcoach_light.webp" (click)="onClick_WebcoachIcon()">
 
     <!-- search -->
     <div class="bo-standard pv-05 ph-1" style="position: absolute; width: 30vw; left: 50%; transform: translateX(-50%)">
@@ -20,7 +27,7 @@
     </button>
 
     <!-- coach profile -->
-    <div #vHeaderProfileImage matTooltip="Konto" style="margin-left: 2rem; height: 2rem; width: 2rem; cursor: pointer">
+    <div #vHeaderProfileImage (click)="onClick_ProfileMenu()" matTooltip="Konto" [matTooltipDisabled]="vProfileMenu.style.visibility === 'visible'" style="margin-left: 2rem; height: 2rem; width: 2rem; cursor: pointer">
       <img  class="img-circle" style="height: 100%" src="assets/favicon/favicon.webp">
     </div>
 
@@ -35,13 +42,12 @@
   <div class="flex" style="width: 100%; z-index: 2">
 
     <!-- navigation -->
-
     <div class="flex">
       <nav #vNav class="bg-dark-two flex-vertical pb-1" [style.width]="wNavExpanded" style="position: relative; box-sizing: border-box; height: calc(100svh - 4.5rem); z-index: 1">
 
+        <!-- main navigation -->
+        <div #vNavOne style="display: flex; flex-direction: column; height: 100%;">
 
-        <!-- nav-one -->
-        <div #vNavOne style="">
           <!-- header -->
           <header class="flex-vertical align-items-center p-1">
             <img class="img-circle" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0rem 0.5rem 0rem" src="assets/favicon/favicon.webp">
@@ -53,16 +59,25 @@
 
           <div class="spv-1"></div>
 
-          <!-- nav-items-top -->
-          <div *ngFor="let aNavItem of lNavItemsOne" style="position: relative;">
-            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="kSelectedNavItem" (outputClick)="onClick_NavItem(aNavItem)"></app-nav-item>
+          <!-- main navigation items -->
+          <div *ngFor="let aNavItem of lNavItemsMain" style="position: relative;">
+            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="aSelectedNavItemMain.id" (outputClick)="onClick_NavItemMain(aNavItem)"></app-nav-item>
           </div>
+
+
+          <!-- nav-items-bottom -->
+          <div style="margin-top: auto">
+            <div *ngFor="let aNavItem of lNavItemsBottom">
+              <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="0" (outputClick)="onClick_NavItemMain(aNavItem)"></app-nav-item>
+            </div>
+          </div>
+
         </div>
 
-        <!-- nav-two -->
-        <div #vNavTwo style="padding-top: 0.5rem; display: none">
+        <!-- webinar navigation -->
+        <div #vNavTwo style="padding-top: 0.5rem; display: none; flex-direction: column; height: 100%">
 
-          <!-- back -->
+          <!-- back icon -->
           <div (click)="onClick_BackNavTwo()" style="width: 100%; height: 3rem; position: relative; cursor: pointer" class="flex align-items-center hb-dark">
             <div class="flex align-items-center" style="position: absolute;">
               <mat-icon class="ic-light-two is-standard" [style.width]="wNavCollapsed" style="text-align: center" fontIcon="keyboard_backspace"></mat-icon>
@@ -70,35 +85,30 @@
             </div>
           </div>
 
-
           <!-- image -->
-          <div  #vNavTwoImage class="flex justify-content-center bg-dark-three mt-05" style="width: 17rem; height: 10rem; margin-left: 0.5rem; margin-right: 0.5rem; position: relative; box-sizing: border-box; border-radius: 0.3rem;" >
-            <img  style="height: 100%" src="assets/thumbnail/thumbnail.jpg">
-          </div>
+            <div  #vNavTwoImage class="flex justify-content-center bg-dark-three mt-05" style="height: 10rem; margin-left: 0.5rem; margin-right: 0.5rem; display: flex; position: relative; box-sizing: border-box; border-radius: 0.3rem;" >
+              <img  style="height: 100%" src="assets/thumbnail/thumbnail.jpg">
+            </div>
 
           <!-- title -->
           <div #vNavTwoTitle class="flex-vertical ml-2 mt-2">
             <p class="tc-light ts-standard tw-bold t-no-wrap">Webinar</p>
-            <p class="tc-light-two ts-s mt-05 t-no-wrap">Python Grundkurs für Anfänger</p>
+            <p class="tc-light-two t-s mt-05 t-no-wrap">{{svCoachPortal.bsWebinar.value?.cName}}</p>
           </div>
 
-          <!-- nav-items-top -->
           <div class="spv-2"></div>
-          <div *ngFor="let aNavItem of lNavItemsTwo" style="position: relative;">
-            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="kSelectedNavItem" (outputClick)="onClick_NavItemTwo(aNavItem)"></app-nav-item>
+
+          <!-- webinar navigation items -->
+          <div *ngFor="let aNavItem of lNavItemsWebinar" style="position: relative;">
+            <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="aSelectedNavItemWebinar.id" (outputClick)="onClick_NavItemWebinar(aNavItem)"></app-nav-item>
           </div>
 
+          <ng-container *ngIf="bNavExpanded" [ngSwitch]="svCoachPortal.bsWebinar.value?.tStatus">
+            <button *ngSwitchCase="0" #vButtonWebinarStatus (click)="onClick_PublishWebinar()" class="b-1-primary" style="margin: auto 1rem 1rem 1rem;">VERÖFFENTLICHEN</button>
+            <button *ngSwitchCase="1" class="b-1-light" style="margin: auto 1rem 1rem 1rem;">ONLINE</button>
+            <button *ngSwitchCase="2" class="b-1-light" style="margin: auto 1rem 1rem 1rem;">OFFLINE</button>
+          </ng-container>
 
-
-        </div>
-
-
-
-        <div class="spv-max"></div>
-
-        <!-- nav-items-bottom -->
-        <div *ngFor="let aNavItem of lNavItemsBottom">
-          <app-nav-item [aNavItem]="aNavItem" [wNavCollapsed]="wNavCollapsed" [kSelected]="0" (outputClick)="onClick_NavItem(aNavItem)"></app-nav-item>
         </div>
 
 
@@ -120,21 +130,23 @@
 
 
 <!-- menu-action profile-settings -->
-<div #vProfileSettings class="flex-vertical bg-dark-two sh-container mt-05" style="visibility: hidden; width: 20rem; border-radius: 0.2rem; position: absolute; z-index: 4">
-  <div class="flex section">
-    <img class="img-circle mr-1" style="height: 2.5rem" src="assets/favicon/favicon.webp">
+<div #vProfileMenu class="flex-vertical bg-dark-two sh-container mt-05" style="visibility: hidden; width: 20rem; border-radius: 0.2rem; position: absolute; z-index: 4">
+  <div class="flex section align-items-center">
+    <img class="img-circle mr-1" style="height: 2.5rem" [src]="uFile.base64ImageWebpToSourceImage(aCoach?.base64Thumbnail)">
     <div class="flex-vertical">
-      <p class="tc-light ts-standard tw-bold">Eric Schumacher</p>
-      <p class="tc-light ts-s tw-bold mt-025">@petereneric</p>
+      <p class="tc-light ts-standard tw-bold">{{aCoach?.cPrename! + ' ' + aCoach?.cSurname!}}</p>
+      <p class="tc-light ts-xs tw-bold mt-025">{{'&#64;' + aCoach?.cName}}</p>
     </div>
   </div>
   <div class="divider-light-two-trans"></div>
   <div class="flex-vertical" style="padding-top: 0.5rem; padding-bottom: 0.5rem; cursor: pointer">
-    <div (click)="onClick_NavItemProfileSettings(aNavItem)" *ngFor="let aNavItem of lNavItemsProfileSettings" class="flex align-items-center hb-dark-three" style="padding: 0.5rem 1rem 0.5rem 1rem">
+    <div (click)="onClick_NavItemProfileSettings(aNavItem)" *ngFor="let aNavItem of lNavItemsProfileMenu" class="flex align-items-center hb-dark-three" style="padding: 0.5rem 1rem 0.5rem 1rem">
       <mat-icon class="is-s ic-light-two mr-1" [fontIcon]="aNavItem.cIcon!"></mat-icon>
       <p class="ts-s tc-light">{{aNavItem.cTitle}}</p>
     </div>
   </div>
 </div>
+
+
 
 

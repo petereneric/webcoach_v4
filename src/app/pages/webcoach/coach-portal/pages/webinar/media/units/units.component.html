@@ -1,0 +1,22 @@
+<div cdkDropListGroup style="width: 100%" class="flex" style="gap: 1rem; flex-wrap: wrap;">
+
+  <div
+    cdkDropList
+    (cdkDropListDropped)="dropListDropped()"
+    (cdkDropListEntered)="cdkDropListEntered($event)"
+  ></div>
+
+  <!-- units -->
+  <div cdkDropList [cdkDropListData]="index" (cdkDropListDropped)="dropListDropped()" (cdkDropListEntered)="cdkDropListEntered($event)" *ngFor="let aUnit of lUnits; let index = index; trackBy: itemTrackBy" (click)="onClick_Unit(aUnit)">
+    <p  cdkDrag id="vUnit" style="display: flex">{{aUnit.cName}}</p>
+  </div>
+
+  <!-- add -->
+  <div>
+    <div id="vUnitAdd" (click)="onClick_AddUnit()">
+      <mat-icon fontIcon="add"></mat-icon>
+    </div>
+  </div>
+
+
+</div>

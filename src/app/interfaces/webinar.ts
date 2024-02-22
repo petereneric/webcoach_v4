@@ -24,4 +24,5 @@ export interface Webinar {
   pCompleted: number
   base64Cover: string
   base64Thumbnail: string
+  tStatus: number
 }

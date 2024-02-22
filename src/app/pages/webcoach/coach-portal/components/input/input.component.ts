@@ -1,32 +1,54 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatIconModule} from "@angular/material/icon";
+import {FormControl, FormsModule, ReactiveFormsModule, ValidatorFn, Validators} from "@angular/forms";
+import {CommonModule} from "@angular/common";
+import {AutosizeModule} from "ngx-autosize";
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.sass']
+  styleUrls: ['./input.component.sass'],
+  standalone: true,
+  imports: [MatTooltipModule, MatIconModule, FormsModule, CommonModule, ReactiveFormsModule, AutosizeModule]
 })
 export class InputComponent implements OnInit, AfterViewInit {
+
+  formControl = new FormControl('');
 
   @ViewChild('vTextarea') vTextarea!: ElementRef
 
   @Input('cTitle') cTitle: string = ''
   @Input('cHelp') cHelp: string | null = null
+
+  @Input('cInput') set cInput(cInput: string) {
+    this.nInput = cInput.length
+    this.formControl.setValue(cInput)
+  }
+
   @Input('nMax') nMax: number | null = null
-  @Input('cInput') cInput: string = ''
+  @Input('bRequired') bRequired: boolean = false
 
   @Output() outputChange: EventEmitter<boolean> = new EventEmitter<boolean>()
 
   protected nInput: number = 0
-  private isChanged: boolean = false
-  private cInputInitial: string | null = null
+  private bChanged: boolean = false
+  protected cInputInitial: string | null = null
 
 
   ngOnInit(): void {
+    console.log(this.nMax)
+    const lValidators: ValidatorFn[] = []
+    if (this.nMax) lValidators.push(Validators.maxLength(this.nMax))
+    if (this.bRequired) lValidators.push(Validators.required)
+    //lValidators.push(Validators.pattern('^[a-zA-Z0-9.,%()!?<>/-+]+$'))
+    lValidators.push(Validators.pattern('^[a-zA-Z0-9.,%()/!?<>+:äöüÄÖÜß\\-\\s ]+$'))
+    this.formControl.setValidators(lValidators)
+
+
   }
 
   ngAfterViewInit(): void {
-
-
     if (this.nMax) {
       this.vTextarea.nativeElement.addEventListener('input', () => {
         this.nInput = this.vTextarea.nativeElement.value.length
@@ -34,19 +56,20 @@ export class InputComponent implements OnInit, AfterViewInit {
     }
 
     this.vTextarea.nativeElement.addEventListener('beforeinput', () => {
-      if (!this.cInputInitial) this.cInputInitial = this.cInput
+      if (!this.cInputInitial) this.cInputInitial = this.formControl.value
     })
 
     this.vTextarea.nativeElement.addEventListener('input', () => {
-      if (this.cInput === this.cInputInitial) {
-        if (this.isChanged) {
-          this.isChanged = false
-          this.outputChange.emit(this.isChanged)
+      console.log(this.formControl.valid)
+      if (this.formControl.value === this.cInputInitial) {
+        if (this.bChanged) {
+          this.bChanged = false
+          this.outputChange.emit(this.bChanged)
         }
       } else {
-        if (!this.isChanged) {
-          this.isChanged = true
-          this.outputChange.emit(this.isChanged)
+        if (!this.bChanged) {
+          this.bChanged = true
+          this.outputChange.emit(this.bChanged)
         }
       }
 
@@ -64,12 +87,21 @@ export class InputComponent implements OnInit, AfterViewInit {
   }
 
   get cValue() {
-    return this.cInput
+    return this.formControl.value
+  }
+
+  get isChanged() {
+    return this.bChanged
+  }
+
+  get isValid() {
+    //console.log(this.formControl.errors)
+    return !this.cInputInitial || this.formControl.valid
   }
 
   reset() {
     this.cInputInitial = null
-    this.isChanged = false
+    this.bChanged = false
   }
 
 

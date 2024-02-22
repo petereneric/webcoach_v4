@@ -941,7 +941,7 @@ export class WebinarPage implements OnInit, AfterViewInit, OnDestroy {
 
   onClick_TabOverview() {
     console.log(this.aHeights)
-    const pxPositionOne = this.aHeights.pxHeightSection * (this.svWebinar.bsSection.value!.nPosition) + 1
+    const pxPositionOne = (this.aHeights.pxHeightSection * (this.svWebinar.bsSection.value!.nPosition)) + 2
     const pxUnitGap = this.aHeights.pxHeightUnit * (this.svWebinar.bsUnit.value!.nPosition + 1) + this.aHeights.pxHeightSection
     const pxPositionTwo = this.aHeights.pxHeightSection * (this.svWebinar.bsSection.value!.nPosition + 1) +
       this.aHeights.pxHeightUnit * (this.svWebinar.bsUnit.value!.nPosition > 0 ? (this.svWebinar.bsUnit.value!.nPosition - 1) : this.svWebinar.bsUnit.value!.nPosition)

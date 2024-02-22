@@ -76,10 +76,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "webcoach_v4:build:production"
+              "buildTarget": "webcoach_v4:build:production"
             },
             "development": {
-              "browserTarget": "webcoach_v4:build:development"
+              "buildTarget": "webcoach_v4:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -87,7 +87,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "webcoach_v4:build"
+            "buildTarget": "webcoach_v4:build"
           }
         },
         "test": {

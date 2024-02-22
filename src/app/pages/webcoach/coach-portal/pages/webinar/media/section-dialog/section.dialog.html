@@ -1,0 +1,19 @@
+<div class="dialog-container" style="">
+  <app-dialog-header [cTitle]="aSection.cName"></app-dialog-header>
+  <div class="flex" style="">
+    <app-dialog-nav [lNavItems]="lNavItems" (outputClick)="onClick_NavItem($event)"></app-dialog-nav>
+    <main class="section" style="width: 100%; height: 100%">
+
+      <!-- general -->
+      <section *ngIf="aNavItemSelected.id === 0">
+        <app-input #cpInputName (outputChange)="onInput($event)" [cTitle]="'Titel'" [cInput]="aSection?.cName ?? ''" [nMax]="50"
+                   [cHelp]="'Wähle einen kurzen Titel der diesen Kursabschnitt passend beschreibt. Wenn es Dir schwerfällt einen passenden Titel zu finden, kann es sinnvoll sein die Inhalte in zwei oder mehr Kursabschnitte aufzuteilen und diese damit besser Betiteln zu können.'"></app-input>
+        <div class="spv-1"></div>
+        <app-input #cpInputDescription (outputChange)="onInput($event)" [cTitle]="'Beschreibung'" [cInput]="aSection?.cDescription ?? ''" [nMax]="500"
+                   [cHelp]="'Eine kurze Beschreibung hilft Kursteilnehmern die wichtigsten Informationen zu diesem Kursabschnitt zu lesen.'"></app-input>
+      </section>
+
+    </main>
+  </div>
+  <app-dialog-buttons [lButtons]="lButtons" (outputClick)="onClick_Button($event)" style="margin-top: auto"></app-dialog-buttons>
+</div>
