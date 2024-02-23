@@ -8,7 +8,7 @@ import {DialogService} from "../../../../../services/dialogs/dialog.service";
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  styleUrls: ['./login.page.sass'],
 })
 export class LoginPage implements OnInit {
 

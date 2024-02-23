@@ -4,7 +4,7 @@ import {ApiService} from "../../../../../../services/api/api.service";
 @Component({
   selector: 'app-verification',
   templateUrl: './verification.page.html',
-  styleUrls: ['./verification.page.scss'],
+  styleUrls: ['./verification.page.sass'],
 })
 export class VerificationPage implements OnInit {
 

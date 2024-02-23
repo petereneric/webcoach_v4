@@ -8,7 +8,7 @@ import {VjsPlayerComponent} from "../../components/vjs-player/vjs-player.compone
 @Component({
   selector: 'app-dialog-webinar-intro',
   templateUrl: './dialog-webinar-intro.component.html',
-  styleUrls: ['./dialog-webinar-intro.component.scss'],
+  styleUrls: ['./dialog-webinar-intro.component.sass'],
 })
 export class DialogWebinarIntroComponent  implements OnInit {
 

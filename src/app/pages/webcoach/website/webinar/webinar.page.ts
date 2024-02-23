@@ -28,7 +28,7 @@ import {ItemSectionComponent} from "../../../../components/webinar/item-section/
 @Component({
   selector: 'app-webinar',
   templateUrl: './webinar.page.html',
-  styleUrls: ['./webinar.page.scss'],
+  styleUrls: ['./webinar.page.sass'],
   providers: [MainMenuService, DateTime],
 })
 

@@ -5,7 +5,7 @@ import {ApiService} from "../../../../../../services/api/api.service";
 @Component({
   selector: 'app-confirmation',
   templateUrl: './confirmation.page.html',
-  styleUrls: ['./confirmation.page.scss'],
+  styleUrls: ['./confirmation.page.sass'],
 })
 export class ConfirmationPage implements OnInit {
 

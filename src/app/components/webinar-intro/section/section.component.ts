@@ -4,7 +4,7 @@ import {Section} from "../../../interfaces/section";
 @Component({
   selector: 'app-section',
   templateUrl: './section.component.html',
-  styleUrls: ['./section.component.scss'],
+  styleUrls: ['./section.component.sass'],
 })
 export class SectionComponent  implements OnInit {
 

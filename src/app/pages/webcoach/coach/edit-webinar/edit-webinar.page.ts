@@ -6,7 +6,7 @@ import {Communication} from "../../../../services/communication/communication.se
 @Component({
   selector: 'app-edit-webinar',
   templateUrl: './edit-webinar.page.html',
-  styleUrls: ['./edit-webinar.page.scss'],
+  styleUrls: ['./edit-webinar.page.sass'],
 })
 export class EditWebinarPage implements OnInit {
 

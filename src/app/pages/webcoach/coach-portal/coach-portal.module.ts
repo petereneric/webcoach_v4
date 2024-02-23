@@ -19,10 +19,10 @@ import {MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/ma
 import { ContentPage } from './pages/content/content.page';
 import { InputComponent } from './components/input/input.component';
 import {FormsModule} from "@angular/forms";
-import { MediaComponent } from './pages/webinar/media/media.component';
-import { UnitDialog } from './pages/webinar/media/unit-dialog/unit.dialog';
-import { SectionDialog } from './pages/webinar/media/section-dialog/section.dialog';
-import {MediaModule} from "./pages/webinar/media/media.module";
+import { ContentComponent } from './pages/webinar/content/content.component';
+import { UnitDialog } from './pages/webinar/content/unit-dialog/unit.dialog';
+import { SectionDialog } from './pages/webinar/content/section-dialog/section.dialog';
+import {ContentModule} from "./pages/webinar/content/content.module";
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 150,

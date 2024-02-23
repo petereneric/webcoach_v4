@@ -1,0 +1,45 @@
+@import "../theme/color.theme"
+
+.ion-input
+  //--padding-top: 1rem !important
+  //--padding-bottom: 1rem !important
+  @extend .ts-standard
+
+ion-item
+  //height: 3rem
+  padding: 0rem !important
+  margin: 0rem !important
+  --padding: 0rem !important
+  --margin: 0rem !important
+
+.input-border
+  max-height: 10rem !important
+  --border-width: 1px !important
+  --border-radius: 0.1rem !important
+  --ion-border-color: #BDBDBD
+  padding: 0rem !important
+  --padding: 0rem !important
+
+.input-border-textarea
+  --border-width: 1px !important
+  --border-radius: 1rem !important
+  --ion-border-color: #BDBDBD
+
+ion-item.item-has-focus
+  --ion-border-color: #673AB7 !important
+  --highlight-background: #673AB7 !important
+
+ion-item.item-has-focus > ion-label
+  color: $colorPrimary !important
+
+
+.input-info-container
+  display: flex
+  flex-direction: row
+  width: 100%
+
+.input-info-text
+  padding: 0.5rem
+
+.input-info-text-error
+  color: $colorError

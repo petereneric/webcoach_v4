@@ -1,0 +1,19 @@
+<div class="dialog-container" style="">
+  <app-dialog-header [cTitle]="'Webinar erstellen'"></app-dialog-header>
+  <div class="flex-vertical window" style="">
+    <p class="t-standard tc-light">Im folgenden informieren wir dich in aller Kürze wie Du ein Webinar hier bei Webcoach erstellen und veröffentlichen kannst. In diesem Dialog
+      gibst Du einfach nur einen Arbeitstitel für dein Webinar ein. Dein Webinar wird erstellt und Du kannst anschließend mit der Bearbeitung beginnen. Wenn Du alle Informationen
+      und Inhalte hinzugefügt hast, kannst Du dein Webinar veröffentlichen, sodass es online über webcoach.digital abgerufen werden kann. Viel Spaß beim Erstellen dieses
+      Webinars!</p>
+
+
+    <div class="spv-1"></div>
+
+    <app-input #cpInputName [cTitle]="'Arbeitstitel für dieses Webinar'" (outputChange)="onInput($event)" [bRequired]="true" [nMax]="100"
+               [cHelp]="'Du kannst den Titel des Webinars jederzeit ändern und hier zunächst einen vorläufigen eingeben.'"></app-input>
+
+
+  </div>
+
+  <app-dialog-buttons [lButtons]="lButtons" (outputClick)="onClick_Button($event)" style="margin-top: auto"></app-dialog-buttons>
+</div>

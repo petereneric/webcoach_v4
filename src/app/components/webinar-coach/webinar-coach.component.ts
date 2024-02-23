@@ -4,7 +4,7 @@ import {Webinar} from "../../interfaces/webinar";
 @Component({
   selector: 'app-webinar-coach',
   templateUrl: './webinar-coach.component.html',
-  styleUrls: ['./webinar-coach.component.scss'],
+  styleUrls: ['./webinar-coach.component.sass'],
 })
 export class WebinarCoachComponent  implements OnInit {
 

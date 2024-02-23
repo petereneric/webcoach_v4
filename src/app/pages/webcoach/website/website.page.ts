@@ -8,7 +8,7 @@ import {MainMenuService} from "../../../services/menu/main-menu.service";
 @Component({
   selector: 'app-website',
   templateUrl: './website.page.html',
-  styleUrls: ['./website.page.scss'],
+  styleUrls: ['./website.page.sass'],
   providers: [MainMenuService]
 })
 export class WebsitePage implements OnInit, AfterViewInit{

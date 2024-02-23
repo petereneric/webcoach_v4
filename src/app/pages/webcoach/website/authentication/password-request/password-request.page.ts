@@ -7,7 +7,7 @@ import {DialogService} from "../../../../../services/dialogs/dialog.service";
 @Component({
   selector: 'app-password-request',
   templateUrl: './password-request.page.html',
-  styleUrls: ['./password-request.page.scss'],
+  styleUrls: ['./password-request.page.sass'],
 })
 export class PasswordRequestPage implements OnInit {
 

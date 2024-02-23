@@ -1,0 +1,24 @@
+<!-- https://material.angular.io/cdk/drag-drop/overview -->
+
+<div style="height: 100%; overflow-y: auto; padding-bottom: 2rem; box-sizing: border-box">
+  <app-page-header [cTitle]="'Medien'" [cWidth]="'100%'"></app-page-header>
+  <main cdkDropList (cdkDropListDropped)="onDrop_Section($event)" class="page-horizontal flex-vertical" style="gap: 1rem">
+    <section *ngFor="let aSection of lSections; let indexSelection = index" class="flex-vertical section-horizontal" style="" cdkDrag>
+      <div class="flex" style="gap: 1rem">
+        <div id="vSection" (click)="onClick_Section(aSection)">
+          <p style="">{{aSection.cName}}</p>
+        </div>
+        <app-units [lUnits]="aSection.lUnits"
+                   (outputPositionChange)="updateUnitPositions(aSection.lUnits)"
+                   (outputClickUnit)="onClick_Unit(aSection.lUnits, $event)"
+                   (outputAddUnit)="onClick_AddUnit(aSection)"></app-units>
+      </div>
+
+    </section>
+    <div class="section-horizontal">
+      <div id="vSectionAdd" (click)="onClick_AddSection()">
+        <mat-icon fontIcon="add"></mat-icon>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,84 @@
+@import "../theme/color.theme"
+
+// icon size
+$isStandard: 1.5rem
+$isItem: 1rem
+$isItemSub: 0.8rem
+
+.i-center
+  display: flex !important
+  align-items: center !important
+  justify-content: center !important
+
+.is-xxs
+  @extend .i-center
+  font-size: 0.7rem
+  height: 0.7rem
+  width: 0.7rem
+
+.is-xs
+  @extend .i-center
+  font-size: 1rem
+  height: 1rem
+  width: 1rem
+
+.is-s
+  @extend .i-center
+  font-size: 1.2rem
+  height: 1.2rem
+  width: 1.2rem
+
+.is-standard
+  @extend .i-center
+  font-size: $isStandard
+  height: $isStandard
+  width: $isStandard
+
+.is-l
+  @extend .i-center
+  font-size: 1.8rem
+  height: 1.8rem
+  width: 1.8rem
+
+.is-xl
+  @extend .i-center
+  font-size: 2.5rem
+  height: 2.5rem
+  width: 2.5rem
+
+.is-xxl
+  @extend .i-center
+  font-size: 4rem
+  height: 4rem
+  width: 4rem
+
+.is-item
+  font-size: $isItem
+
+.is-item-sub
+
+// icon color
+.ic-text-primary
+  color: $colorTextPrimary
+
+
+.ic-text-secondary
+  color: $colorTextSecondary
+
+.ic-light
+  color: $colorLight
+
+.ic-light-two
+  color: $colorLightTwo
+
+.ic-dark
+  color: $colorDark
+
+.ic-primary
+  color: $colorPrimary
+
+// specific
+.i-eye
+  @extend .is-s
+  @extend .ic-text-primary
+  margin-top: 0.25rem

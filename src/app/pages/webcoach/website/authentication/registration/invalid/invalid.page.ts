@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-invalid',
   templateUrl: './invalid.page.html',
-  styleUrls: ['./invalid.page.scss'],
+  styleUrls: ['./invalid.page.sass'],
 })
 export class InvalidPage implements OnInit {
 

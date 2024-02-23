@@ -1,8 +1,10 @@
-import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Inject, INJECTOR, Injector, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NavItem} from "../../components/nav-item/nav-item.interface";
 import {DialogButton} from "../components/dialog-buttons/dialog-button.interface";
 import {DialogHeaderComponent} from "../components/dialog-header/dialog-header.component";
+import {DialogService} from "../../../../../services/dialogs/dialog.service";
+import {ApiService} from "../../../../../services/api/api.service";
 
 @Component({
   selector: 'app-default',
@@ -18,7 +20,12 @@ export class DefaultDialog implements OnInit {
 
   protected aNavItemSelected!: NavItem
 
-  constructor(public dialog: MatDialogRef<any>) {
+
+  protected svDialog = this.injector.get(DialogService)
+  protected svApi = this.injector.get(ApiService)
+  protected dialog = this.injector.get(MatDialogRef<any>)
+
+  constructor(@Inject(INJECTOR) protected injector: Injector) {
   }
 
   ngOnInit(): void {

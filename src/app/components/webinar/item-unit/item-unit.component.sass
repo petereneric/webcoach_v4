@@ -1,0 +1,43 @@
+@import "../../../../styles/text"
+@import "../../../../styles/icon"
+@import "../../../../styles/dimen"
+@import "../../../../styles/button"
+@import "../../../../styles/background"
+@import "../../../../theme/variables"
+
+.container
+  display: flex
+  padding: 0.5rem 1rem 0.5rem 1rem
+  align-items: center
+  cursor: pointer
+  @extend .bg-dark
+  margin-bottom: 0.5rem
+
+
+  // used to prevent marking while scrolling
+  -webkit-user-select: none /* Safari */
+  -ms-user-select: none /* IE 10 and IE 11 */
+  user-select: none /* Standard syntax */
+
+  &:hover
+    //background-color: $colorHighlight
+
+.container-text
+  display: flex
+  flex-direction: column
+  width: 100%
+  margin-left: 1rem
+
+.button
+  @extend .bbg-transparent
+  @extend .bb-standard
+  @extend .bbc-dark
+  @extend .btc-dark
+  @extend .ts-xs
+  min-height: 2rem !important
+  width: auto
+
+  ion-icon
+    @extend .mr-05
+    font-size: 1.2rem
+

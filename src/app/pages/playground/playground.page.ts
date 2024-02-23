@@ -6,7 +6,7 @@ import {ViewportRuler} from "@angular/cdk/overlay";
 @Component({
   selector: 'app-test-scroll',
   templateUrl: './playground.page.html',
-  styleUrls: ['./playgroundl.page.scss'],
+  styleUrls: ['./playgroundl.page.sass'],
 })
 export class PlaygroundPage implements OnInit, AfterViewInit {
   @ViewChild(CdkDropListGroup) listGroup!: CdkDropListGroup<CdkDropList>;

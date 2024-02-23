@@ -5,7 +5,7 @@ import {MenuItem} from "../../../../interfaces/menu-item";
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
-  styleUrls: ['./settings.page.scss'],
+  styleUrls: ['./settings.page.sass'],
 })
 export class SettingsPage implements OnInit {
 

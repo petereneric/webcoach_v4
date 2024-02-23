@@ -9,7 +9,7 @@ import {DialogService} from "../../../../../services/dialogs/dialog.service";
 @Component({
   selector: 'app-password-reset',
   templateUrl: './password-reset.page.html',
-  styleUrls: ['./password-reset.page.scss'],
+  styleUrls: ['./password-reset.page.sass'],
   providers: [Toast]
 })
 export class PasswordResetPage implements OnInit {

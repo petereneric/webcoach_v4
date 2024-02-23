@@ -8,6 +8,9 @@ import {CoachPortalService} from "./coach-portal.service";
 import {ApiService} from "../../../services/api/api.service";
 import {Coach} from "../../../interfaces/coach";
 import {File} from "../../../utils/file";
+import {CreateWebinarDialog} from "./dialogs/create-webinar/create-webinar.dialog";
+import {Webinar} from "../../../interfaces/webinar";
+import {DialogService} from "../../../services/dialogs/dialog.service";
 
 
 @Component({
@@ -54,9 +57,14 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   protected aSelectedNavItemMain: NavItem = this.lNavItemsMain[0]
 
   // navigation webinar
+  readonly ID_NAV_WEBINAR_TEXT = 1
+  readonly ID_NAV_WEBINAR_CONTENT = 2
+  readonly ID_NAV_WEBINAR_MEDIA = 3
+
   protected lNavItemsWebinar: NavItem[] = [
-    {id: this.ID_NAV_ITEM_SETTINGS, cIcon: 'edit', cTitle: 'Details', cLink: '/details'},
-    {id: this.ID_NAV_ITEM_FEEDBACK, cIcon: 'video_settings', cTitle: 'Medien', cLink: '/medien'},
+    {id: this.ID_NAV_WEBINAR_TEXT, cIcon: 'edit', cTitle: 'Name & Texte', cLink: '/details'},
+    {id: this.ID_NAV_WEBINAR_CONTENT, cIcon: 'video_settings', cTitle: 'Kurs-Inhalte', cLink: '/kurs-inhalte'},
+    {id: this.ID_NAV_WEBINAR_MEDIA, cIcon: 'image', cTitle: 'Medien', cLink: '/medien'},
   ]
   protected aSelectedNavItemWebinar: NavItem = this.lNavItemsWebinar[0]
 
@@ -74,7 +82,7 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
     {id: this.ID_NAV_PROFILE_LOGOUT, cIcon: 'logout', cTitle: 'Abmelden', cLink: null},
   ]
 
-  constructor(protected uFile: File, private svApi: ApiService, protected svCoachPortal: CoachPortalService, private router: Router, private svAnimation: AnimationService, private renderer: Renderer2, private dialogSettings: MatDialog) {
+  constructor(private svDialog: DialogService, protected uFile: File, private svApi: ApiService, protected svCoachPortal: CoachPortalService, private router: Router, private svAnimation: AnimationService, private renderer: Renderer2, private dialogSettings: MatDialog, private dialogCreateWebinar: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -221,9 +229,17 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   }
 
   onClick_PublishWebinar() {
-    this.svApi.safePost('coach-portal/webinar/publish/' + this.svCoachPortal.bsWebinar.value!.id, null, () => {
-      console.log("jooooo")
-      this.svCoachPortal.bsWebinar.value!.tStatus = 1
+    this.svApi.safePost('coach-portal/webinar/publish/' + this.svCoachPortal.bsWebinar.value!.id, null, (response) => {
+      if (response.bPublished) {
+        console.log("published")
+        this.svCoachPortal.bsWebinar.value!.tStatus = 1
+      } else {
+        console.log(response.lShortcomings)
+        const cShortcomings = response.lShortcomings.join('\r\n')
+        console.log(cShortcomings)
+        this.svDialog.info('Nicht veröffentlicht', 'Leider fehlen uns noch folgende Daten zu deinem Online-Kurs:\r\n\r\n' + cShortcomings + '\r\n\r\nBitte erstelle diese hier im Coach-Portal und klicke erneut auf Veröffentlichen.')
+      }
+
     })
   }
 
@@ -256,5 +272,16 @@ export class CoachPortalPage implements OnInit, AfterViewInit {
   onClick_ClickScreen() {
     this.hideProfileMenu()
     this.hideClickScreen()
+  }
+
+  onClick_Create() {
+    const dialogCreateWebinar = this.dialogSettings.open(CreateWebinarDialog, {
+      backdropClass: 'd-backdrop',
+    }).afterClosed().subscribe((aWebinar: Webinar) => {
+      if (aWebinar) {
+        this.svCoachPortal.bsWebinars.value?.push(aWebinar)
+        this.router.navigate(['coach-portal/webinar/' + aWebinar.id + '/details'])
+      }
+    })
   }
 }

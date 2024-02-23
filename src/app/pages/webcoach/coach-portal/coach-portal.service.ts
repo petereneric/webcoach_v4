@@ -8,6 +8,7 @@ import {Webinar} from "../../../interfaces/webinar";
 export class CoachPortalService {
 
   public bsWebinar: BehaviorSubject<Webinar | null> = new BehaviorSubject<Webinar | null>(null)
+  public bsWebinars: BehaviorSubject<Webinar[] | null> = new BehaviorSubject<Webinar[] | null>([])
 
   constructor() { }
 }

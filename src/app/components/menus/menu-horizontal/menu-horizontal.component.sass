@@ -1,0 +1,38 @@
+@import "../../../../styles/template"
+
+// menu
+.menu
+  @extend .scroll-horizontal
+  display: flex
+
+
+.menu-item
+  width: auto
+  display: flex
+  flex-direction: column
+  margin-left: 0.5rem
+  margin-right: 0.5rem
+  cursor: pointer
+
+.menu-title
+  font-size: 1rem
+  color: $colorTextSecondary
+  font-weight: 500
+  text-align: center
+
+.menu-title-select
+  @extend .menu-title
+  color: $colorTextPrimary
+
+
+.menu-selector
+  width: 100%
+  height: 0.1rem
+  border-radius: 5rem
+  background-color: $colorTextPrimary
+  margin-top: 0.5rem
+
+.menu-divider
+  height: 0.5px
+  background-color: rgb(54, 54, 54)
+  width: 100%

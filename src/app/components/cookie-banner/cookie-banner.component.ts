@@ -3,7 +3,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 @Component({
   selector: 'app-cookie-banner',
   templateUrl: './cookie-banner.component.html',
-  styleUrls: ['./cookie-banner.component.scss'],
+  styleUrls: ['./cookie-banner.component.sass'],
   providers: []
 })
 export class CookieBannerComponent  implements OnInit, AfterViewInit {

@@ -1,7 +1,7 @@
 import {RouterModule, Routes} from "@angular/router";
 import {CoachPortalPage} from "./coach-portal.page";
 import {NgModule} from "@angular/core";
-import {MediaComponent} from "./pages/webinar/media/media.component";
+import {ContentComponent} from "./pages/webinar/content/content.component";
 
 
 const routes: Routes = [

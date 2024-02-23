@@ -11,7 +11,7 @@ import {ItemUnitComponent} from "../item-unit/item-unit.component";
 @Component({
   selector: 'app-item-section',
   templateUrl: './item-section.component.html',
-  styleUrls: ['./item-section.component.scss'],
+  styleUrls: ['./item-section.component.sass'],
   providers: [DateTime]
 })
 export class ItemSectionComponent implements OnInit, AfterViewInit {

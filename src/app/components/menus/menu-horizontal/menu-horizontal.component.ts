@@ -5,7 +5,7 @@ import {MenuItem} from "../../../interfaces/menu-item";
 @Component({
   selector: 'app-menu-horizontal',
   templateUrl: './menu-horizontal.component.html',
-  styleUrls: ['./menu-horizontal.component.scss'],
+  styleUrls: ['./menu-horizontal.component.sass'],
 })
 export class MenuHorizontalComponent  implements OnInit {
 

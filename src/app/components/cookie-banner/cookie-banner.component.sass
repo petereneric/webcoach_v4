@@ -1,0 +1,61 @@
+@import "../../../theme/color.theme"
+@import "../../../styles/text"
+@import "../../../styles/button"
+
+.container
+  max-width: 75rem
+  margin-left: auto
+  margin-right: auto
+  animation-duration: 1s
+  animation-name: slideIn
+
+
+@keyframes slideIn
+  from
+    transform: translateY(110%)
+    opacity: 0.5
+
+  to
+    transform: translateY(0)
+    opacity: 1
+
+.cookie-container
+  //width: 100rem
+  background: $colorBackgroundDark
+  border: 0.05rem solid $colorWhite
+  margin: 2rem
+  border-radius: 0.2rem
+
+
+@media screen and (max-width: $screenMobile)
+  .cookie-container
+    margin: 0rem 1rem 1rem 1rem
+    //width: 100% !important;
+
+.text-container
+  padding: 1rem !important
+
+
+.text
+  @extend .t-standard
+  @extend .tsl-s
+  @extend .tc-light
+
+
+.button-container
+  padding: 1rem !important
+
+
+.button-one
+  @extend .b-1-light
+  @extend .ts-s
+
+
+.button-two
+  @extend .b-2-light
+  @extend .ts-s
+
+
+.padding-extra
+  padding: 0.25rem !important
+

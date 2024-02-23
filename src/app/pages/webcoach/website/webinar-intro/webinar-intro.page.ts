@@ -17,7 +17,7 @@ import {VideoDialog} from "../../../../dialogs/video/video.dialog";
 @Component({
   selector: 'app-webinar-intro',
   templateUrl: './webinar-intro.page.html',
-  styleUrls: ['./webinar-intro.page.scss'],
+  styleUrls: ['./webinar-intro.page.sass'],
 })
 export class WebinarIntroPage implements OnInit {
 

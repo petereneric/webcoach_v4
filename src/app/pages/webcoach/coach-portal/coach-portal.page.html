@@ -21,7 +21,7 @@
     <mat-icon #vIconHelp matTooltip="Hilfe" (click)="onClick_Help()" class="ic-light-two is-standard hc-light" style="margin-left: auto; cursor: pointer" fontIcon="help_outline"></mat-icon>
 
     <!-- create new webinar button -->
-    <button class="bo-light-two bor-01 ml-1 flex align-items-center">
+    <button (click)="onClick_Create()" class="bo-light-two bor-01 ml-1 flex align-items-center">
       <mat-icon class="ic-primary is-standard mr-05" fontIcon="library_add"></mat-icon>
       ERSTELLEN
     </button>

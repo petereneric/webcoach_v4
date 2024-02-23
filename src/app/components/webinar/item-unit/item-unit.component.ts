@@ -22,7 +22,7 @@ import {WebinarService} from "../../../services/data/webinar.service";
 @Component({
   selector: 'app-item-unit',
   templateUrl: './item-unit.component.html',
-  styleUrls: ['./item-unit.component.scss'],
+  styleUrls: ['./item-unit.component.sass'],
   providers: [DateTime]
 })
 export class ItemUnitComponent implements OnInit, AfterViewInit {

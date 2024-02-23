@@ -8,7 +8,7 @@ import {Currency} from "../../utils/currency";
 @Component({
   selector: 'app-webinar-preview',
   templateUrl: './webinar-preview.component.html',
-  styleUrls: ['./webinar-preview.component.scss'],
+  styleUrls: ['./webinar-preview.component.sass'],
 })
 export class WebinarPreviewComponent  implements OnInit {
 

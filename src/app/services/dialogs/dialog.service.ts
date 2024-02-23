@@ -14,7 +14,8 @@ export class DialogService {
     let dialogRef = this.dialog.open(DialogComponent, {
       height: 'auto',
       backdropClass: "d-backdrop",
-      data: content
+      data: content,
+      panelClass: "d-default"
     })
 
     dialogRef.afterClosed().subscribe(result => {
@@ -52,6 +53,10 @@ export class DialogService {
 
   invalidFileSize() {
     this.showDialog({cTitle: "Ungültige Datei-Größe", cText: "Deine Datei ist leider zu groß."})
+  }
+
+  info(cTitle, cText) {
+    this.showDialog({cTitle: cTitle, cText: cText})
   }
 
 

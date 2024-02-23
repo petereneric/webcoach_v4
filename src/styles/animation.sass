@@ -1,0 +1,131 @@
+@import "../theme/color.theme"
+
+// transition
+.a-transition
+  transition: all 200ms ease-in-out
+
+
+// chevron
+.a-chevron
+  transform: rotate(0deg)
+  transition: transform 0.1875s linear
+
+
+.a-chevron.switch
+  transform: rotate(180deg)
+  transition: transform 0.1875s linear
+
+// popup
+.a-popup
+  animation: a-pop-keyframes 1s
+
+@keyframes a-pop-keyframes
+  0%
+    opacity: 0
+
+  50%
+    opacity: 1
+
+  100%
+    opacity: 0
+
+// move-up
+.a-move-up
+  animation: MoveUpDown 1s infinite alternate
+
+@keyframes MoveUpDown
+  0%
+    transform: translateY(0)
+
+  100%
+    transform: translateY(-5px)
+
+// icon click
+.a-icon-click
+  animation: a-icon_click-keyframes 0.5s ease-in-out
+
+@keyframes a-icon_click-keyframes
+  0%
+    opacity: 0
+
+  50%
+    opacity: 1
+
+  100%
+    opacity: 0
+
+
+// pump
+// gets small and becomes normal sized afterwards
+.a-pump
+  animation: a-pump-keyframes 0.25s ease-in-out
+
+
+@keyframes a-pump-keyframes
+  0%
+    transform: scale(1)
+  50%
+    transform: scale(0.92)
+  100%
+    transform: scale(1)
+
+// ripple
+
+.a-ripple
+  display: flex !important
+  border-radius: 50%
+  transform: scale(0)
+  animation: a-ripple-keyframes 500ms linear
+  background-color: $colorAccent
+  opacity: 0.4
+
+@keyframes a-ripple-keyframes
+  to
+    transform: scale(6)
+    opacity: 0
+
+// opacity
+.a-bg-opacity-in
+  animation: a-bg-opacity-in-keyframes 0.25s forwards
+
+
+@keyframes a-bg-opacity-in-keyframes
+  0%
+    opacity: 0
+  100%
+    opacity: 0.5
+
+// opacity
+.a-bg-opacity-out
+  animation: a-bg-opacity-out-keyframes 0.25s forwards
+
+@keyframes a-bg-opacity-out-keyframes
+  0%
+    opacity: 0.5
+
+  100%
+    opacity: 0
+
+// opacity
+.a-swing-in-opacity
+  animation: a-swing-in-opacity-keyframes 0.25s forwards
+
+@keyframes a-swing-in-opacity-keyframes
+  0%
+    opacity: 0
+
+  100%
+    opacity: 1
+
+// opacity
+.a-swing-out-opacity
+  animation: a-swing-out-opacity-keyframes 0.25s forwards
+
+@keyframes a-swing-out-opacity-keyframes
+  0%
+    opacity: 1
+  100%
+    opacity: 0
+
+
+

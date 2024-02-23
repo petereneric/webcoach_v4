@@ -5,7 +5,7 @@ import {ApiService} from "../../../../services/api/api.service";
 @Component({
   selector: 'app-webinars',
   templateUrl: './webinars.page.html',
-  styleUrls: ['./webinars.page.scss'],
+  styleUrls: ['./webinars.page.sass'],
 })
 export class WebinarsPage implements OnInit {
 

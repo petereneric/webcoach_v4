@@ -8,7 +8,7 @@
     <div class="dh-light-two-025" style="position: absolute; bottom: 0"></div>
   </header>
 
-  <div *ngFor="let aWebinar of lWebinars" (click)="onClick_Webinar(aWebinar)" class="flex hb-dark pointer" style="position: relative; padding-top: 0.5rem; padding-bottom: 0.5rem">
+  <div *ngFor="let aWebinar of svCoachPortal.bsWebinars.value" (click)="onClick_Webinar(aWebinar)" class="flex hb-dark pointer" style="position: relative; padding-top: 0.5rem; padding-bottom: 0.5rem">
 
     <div class="window-horizontal flex" style="width: 100%;">
       <!-- webinar -->

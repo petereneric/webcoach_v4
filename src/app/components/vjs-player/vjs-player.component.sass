@@ -1,0 +1,18 @@
+@import "../../../theme/color.theme"
+
+.vjs-custom.video-js
+  background-color:  $colorBackgroundDark
+
+/* Change the color of various "bars". */
+.vjs-custom .vjs-control-bar
+  background: linear-gradient(0deg, $colorBackgroundDark, rgba(38, 38, 38, 0))
+
+.container-video
+  height: 80vh !important
+
+@media screen and (max-width: $screenMobile)
+  .container-video
+    //height: 20rem !important
+    height: 92% !important
+    width: 110% !important
+

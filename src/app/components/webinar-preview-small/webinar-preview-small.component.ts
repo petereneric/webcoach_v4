@@ -5,7 +5,7 @@ import {ApiService} from "../../services/api/api.service";
 @Component({
   selector: 'app-webinar-preview-small',
   templateUrl: './webinar-preview-small.component.html',
-  styleUrls: ['./webinar-preview-small.component.scss'],
+  styleUrls: ['./webinar-preview-small.component.sass'],
 })
 export class WebinarPreviewSmallComponent  implements OnInit {
 
