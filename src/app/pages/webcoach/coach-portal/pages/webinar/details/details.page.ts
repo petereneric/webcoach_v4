@@ -21,16 +21,11 @@ export class DetailsPage implements OnInit {
   @ViewChild('cpTargetGroup') cpTargetGroup!: InputComponent
   protected nChangeCounter: number = 0
 
-
-
   constructor(private svDialog: DialogService, protected svCoachPortal: CoachPortalService, private svApi: ApiService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
   }
-
-
-
 
   onInput($event) {
     if ($event) {

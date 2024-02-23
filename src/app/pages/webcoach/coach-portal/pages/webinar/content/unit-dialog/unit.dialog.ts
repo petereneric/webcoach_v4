@@ -60,11 +60,11 @@ export class UnitDialog extends DefaultDialog implements OnInit {
       this.lButtons.push({id: 2, cTitle: 'HINZUFÜGEN', bEnabled: false})
     }
 
-    this.svApi.safeGet('coach-portal/webinar/media/unit/material/' + this.aUnit.id, (lUnitMaterials: UnitMaterial[]) => {
+    this.svApi.safeGet('coach-portal/webinar/content/unit/material/' + this.aUnit.id, (lUnitMaterials: UnitMaterial[]) => {
       this.lUnitMaterials = lUnitMaterials
     })
 
-    this.svApi.safeGet('coach-portal/webinar/media/unit/content/has-content/' + this.aUnit.id, (response: any) => {
+    this.svApi.safeGet('coach-portal/webinar/content/unit/content/has-content/' + this.aUnit.id, (response: any) => {
       this.hasContent = response.hasContent
     })
   }
@@ -93,7 +93,7 @@ export class UnitDialog extends DefaultDialog implements OnInit {
         cDescription: this.cpInputDescription.cValue,
       }
 
-      this.svApi.safePost('coach-portal/webinar/media/unit/general', data, () => {
+      this.svApi.safePost('coach-portal/webinar/content/unit/general', data, () => {
         this.aUnit.cName = data.cName ?? ''
         this.aUnit.cDescription = data.cDescription
       })
@@ -109,7 +109,7 @@ export class UnitDialog extends DefaultDialog implements OnInit {
         nPosition: this.aUnit.nPosition
       }
 
-      this.svApi.safePut('coach-portal/webinar/media/unit', data, (aUnit: Unit) => {
+      this.svApi.safePut('coach-portal/webinar/content/unit', data, (aUnit: Unit) => {
         this.dialog.close(aUnit);
       })
     }
@@ -148,7 +148,7 @@ export class UnitDialog extends DefaultDialog implements OnInit {
           base64Material: data
         }
 
-        this.svApi.safeUpload('coach-portal/webinar/media/unit/material', aUnitMaterial).subscribe({next: (data: any) => {
+        this.svApi.safeUpload('coach-portal/webinar/content/unit/material', aUnitMaterial).subscribe({next: (data: any) => {
             this.lUnitMaterials.push(aUnitMaterial)
           }, error: error => {
             console.log(error)
@@ -161,7 +161,7 @@ export class UnitDialog extends DefaultDialog implements OnInit {
   onClick_UnitMaterial(aUnitMaterial: UnitMaterial) {
     console.log(aUnitMaterial.id)
     console.log("jow")
-    this.svApi.safeGetBase64('coach-portal/webinar/media/unit/material/file/' + aUnitMaterial.id, (data: any) => {
+    this.svApi.safeGetBase64('coach-portal/webinar/content/unit/material/file/' + aUnitMaterial.id, (data: any) => {
       console.log(data)
       this.uFile.openUrl(data)
       //this.uFile.openBlob(blob.base64Material)
@@ -169,19 +169,19 @@ export class UnitDialog extends DefaultDialog implements OnInit {
   }
 
   onClick_DeleteMaterial(aUnitMaterial: UnitMaterial, nIndex: number) {
-    this.svApi.safeDelete('coach-portal/webinar/media/unit/material/' + aUnitMaterial.id, () => {
+    this.svApi.safeDelete('coach-portal/webinar/content/unit/material/' + aUnitMaterial.id, () => {
       this.lUnitMaterials.splice(nIndex, 1)
     })
   }
 
   onClick_DownloadVideo() {
-    this.svApi.safeGetFile('coach-portal/webinar/media/unit/content/video/' + this.aUnit.id, (video: any) => {
+    this.svApi.safeGetFile('coach-portal/webinar/content/unit/content/video/' + this.aUnit.id, (video: any) => {
       this.uFile.pushVideoToDownloadFolder(video, this.aUnit.cName)
     })
   }
 
   onClick_DeleteVideo() {
-    this.svApi.safeDelete('coach-portal/webinar/media/unit/content/video/' + this.aUnit.id, () => {
+    this.svApi.safeDelete('coach-portal/webinar/content/unit/content/video/' + this.aUnit.id, () => {
       this.hasContent = false
     })
   }
@@ -195,7 +195,7 @@ export class UnitDialog extends DefaultDialog implements OnInit {
           base64Video: data
         }
 
-        this.svApi.safeUpload('coach-portal/webinar/media/unit/content/video', d).subscribe({next: (data: any) => {
+        this.svApi.safeUpload('coach-portal/webinar/content/unit/content/video', d).subscribe({next: (data: any) => {
             this.hasContent = true
           }, error: error => {
             console.log(error)
@@ -205,7 +205,7 @@ export class UnitDialog extends DefaultDialog implements OnInit {
   }
 
   onClick_DeleteUnit() {
-    this.svApi.safeDelete("coach-portal/webinar/media/unit/" + this.aUnit.id, () => {
+    this.svApi.safeDelete("coach-portal/webinar/content/unit/" + this.aUnit.id, () => {
       const aResponse = {
         tCode: "DELETE"
       }

@@ -50,7 +50,7 @@ export class ContentComponent implements OnInit {
 
     this.svCoachPortal.bsWebinar.subscribe(aWebinar => {
       if (aWebinar) {
-        this.svApi.safeGet('coach-portal/webinar/media/' + aWebinar!.id, (lSections: Section[]) => {
+        this.svApi.safeGet('coach-portal/webinar/content/' + aWebinar!.id, (lSections: Section[]) => {
           console.log('second', lSections)
           this.kWebinar = aWebinar!.id
           this.lSections = lSections
@@ -100,7 +100,7 @@ export class ContentComponent implements OnInit {
       data.push(object)
     })
 
-    this.svApi.safePost('coach-portal/webinar/media/unit-positions', data, null)
+    this.svApi.safePost('coach-portal/webinar/content/unit-positions', data, null)
   }
 
   onClick_AddSection() {

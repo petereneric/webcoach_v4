@@ -3,6 +3,7 @@ import {NgModule} from "@angular/core";
 import {WebinarPage} from "./webinar.page";
 import {ContentComponent} from "./content/content.component";
 import {MediaComponent} from "./media/media.component";
+import {MediaModule} from "./media/media.module";
 
 
 const routes: Routes = [

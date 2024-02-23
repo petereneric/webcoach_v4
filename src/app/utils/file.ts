@@ -59,6 +59,19 @@ export class File {
     })
   }
 
+  async getUrlImage(file: any): Promise<string | ArrayBuffer | null> {
+    if (!this.checkImageType(file)) return null
+    if (!this.checkVideoSize(file)) return null
+    return new Promise<string | ArrayBuffer | null>((resolve) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (_event) => {
+        let url = reader.result;
+        resolve(url)
+      };
+    })
+  }
+
   async getUrlVideo(file: any): Promise<string | ArrayBuffer | null> {
     if (!this.checkVideoType(file)) return null
     if (!this.checkVideoSize(file)) return null
@@ -182,6 +195,10 @@ export class File {
     return new Blob( [ arr ], { type: type } );
   }
 
+  base64CutOffMetaData(base64) {
+    return base64.split(',')[1]
+  }
+
   defaultCheckSize(file: any) {
     console.log(file.size)
     if (file.size <= 10000000) {
@@ -212,6 +229,24 @@ export class File {
     console.log(file.type)
     switch (file.type) {
       case "video/mp4":
+        return true
+    }
+    this.svDialog.invalidFileFormat()
+    return false
+  }
+
+  checkImageSize(file: any) {
+    if (file.size <= 10000000) {
+      return true
+    }
+    this.svDialog.invalidFileSize()
+    return false
+  }
+
+  checkImageType(file: any) {
+    console.log(file.type)
+    switch (file.type) {
+      case "image/webp":
         return true
     }
     this.svDialog.invalidFileFormat()

@@ -1,1 +1,76 @@
-<p>media works!</p>
+<div style="height: 100%; overflow-y: auto; padding-bottom: 2rem; box-sizing: border-box">
+  <app-page-header [cTitle]="'Medien'" [cWidth]="'50%'">
+  </app-page-header>
+
+  <main class="window-horizontal flex-vertical section-vertical" style="width: 50%">
+    <!-- cover -->
+    <section class="flex-vertical" style="">
+      <p class="title">Cover-Bild</p>
+      <p class="text">Dein Cover-Bild für diesen Online-Kurs wird u.a. in der Detail-Seite auf der Website von Webcoach angezeigt.</p>
+
+      <div class="container-content">
+        <div>
+          <img class="image" [src]="base64Cover && uFile.base64ImageWebpToSourceImage(base64Cover)">
+        </div>
+        <div class="flex-vertical">
+          <p class="text">Am besten verwendest du ein Bild mit einer Auflösung von mindestens 400 x 200 Pixel und einer Dateigröße von höchstens 50 KB. Die Datei muss das Format WEBP haben. JPG und PNG Dateien kannst Du unter diesem Link in das WEBP Format umwandeln: https://convertio.co/de/jpg-webp/.</p>
+          <div class="flex" style="gap: 1rem; margin-top: 1rem;">
+            <button *ngIf="!base64Cover" (click)="vAddCover.click()" class="b-3-accent">HINZUFÜGEN</button>
+            <input style="display: none" type="file" (change)="onClick_AddCover(vAddCover.files)" #vAddCover>
+            <button *ngIf="base64Cover" (click)="vChangeCover.click()" class="b-3-accent">ÄNDERN</button>
+            <input style="display: none" type="file" (change)="onClick_ChangeCover(vChangeCover.files)" #vChangeCover>
+            <button *ngIf="base64Cover" (click)="onClick_DeleteCover()" class="b-3-accent">ENTFERNEN</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- thumbnail -->
+    <section class="flex-vertical" style="">
+      <p class="title">Thumbnail-Bild</p>
+      <p class="text">Dein Thumbnail-Bild für diesen Online-Kurs wird u.a. in der Listen-Ansicht auf der Website von Webcoach angezeigt.</p>
+
+      <div class="container-content">
+        <div>
+          <img class="image" [src]="base64Thumbnail && uFile.base64ImageWebpToSourceImage(base64Thumbnail)">
+        </div>
+        <div class="flex-vertical">
+          <p class="text">Am besten verwendest du ein Bild mit einer Auflösung von mindestens 100 x 50 Pixel und einer Dateigröße von höchstens 10 KB. Die Datei muss das Format WEBP haben. JPG und PNG Dateien kannst Du unter diesem Link in das WEBP Format umwandeln: https://convertio.co/de/jpg-webp/.</p>
+          <div class="flex" style="gap: 1rem; margin-top: 1rem;">
+            <button *ngIf="!base64Thumbnail" (click)="vAddThumbnail.click()" class="b-3-accent">HINZUFÜGEN</button>
+            <input style="display: none" type="file" (change)="onClick_AddThumbnail(vAddThumbnail.files)" #vAddThumbnail>
+            <button *ngIf="base64Thumbnail" (click)="vChangeThumbnail.click()" class="b-3-accent">ÄNDERN</button>
+            <input style="display: none" type="file" (change)="onClick_ChangeThumbnail(vChangeThumbnail.files)" #vChangeThumbnail>
+            <button *ngIf="base64Thumbnail" (click)="onClick_DeleteThumbnail()" class="b-3-accent">ENTFERNEN</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- trailer -->
+    <section class="flex-vertical" style="">
+      <p class="title">Trailer</p>
+      <p class="text">Dein Video-Trailer für diesen Online-Kurs kann auf der Detail-Seite zu deinem Online-Kurs aufgerufen und abgespielt werden.</p>
+
+      <div class="container-content">
+        <div>
+          <img class="image" [src]="base64TrailerThumbnail && uFile.base64ImageWebpToSourceImage(base64TrailerThumbnail)">
+        </div>
+        <div class="flex-vertical">
+          <p class="text">Am besten verwendest Du ein kurzes Video, das nicht länger als 30 Sekunden ist. Die Datei muss das Format mp4 haben.</p>
+          <div class="flex" style="gap: 1rem; margin-top: 1rem;">
+            <button *ngIf="!bTrailer" (click)="vAddTrailer.click()" class="b-3-accent">HINZUFÜGEN</button>
+            <input style="display: none" type="file" (change)="onClick_AddTrailer(vAddTrailer.files)" #vAddTrailer>
+            <button *ngIf="bTrailer" (click)="vChangeTrailer.click()" class="b-3-accent">ÄNDERN</button>
+            <input style="display: none" type="file" (change)="onClick_ChangeTrailer(vChangeTrailer.files)" #vChangeTrailer>
+            <button *ngIf="bTrailer" (click)="onClick_DeleteTrailer()" class="b-3-accent">ENTFERNEN</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+

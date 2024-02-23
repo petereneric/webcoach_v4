@@ -72,7 +72,7 @@ export class SectionDialog extends DefaultDialog implements OnInit {
         cDescription: this.cpInputDescription.cValue,
       }
 
-      this.svApi.safePost('coach-portal/webinar/media/section/general', data, () => {
+      this.svApi.safePost('coach-portal/webinar/content/section/general', data, () => {
         this.aSection.cName = data.cName ?? ''
         this.aSection.cDescription = data.cDescription ?? ''
       })
@@ -88,7 +88,7 @@ export class SectionDialog extends DefaultDialog implements OnInit {
         nPosition: this.aSection.nPosition
       }
 
-      this.svApi.safePut('coach-portal/webinar/media/section', data, (aSection: Section) => {
+      this.svApi.safePut('coach-portal/webinar/content/section', data, (aSection: Section) => {
         this.dialog.close(aSection);
       })
     }
